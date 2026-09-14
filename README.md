@@ -258,3 +258,15 @@ python3 -m pytest -v
 1. **私有依賴與 GITHUB_TOKEN**：請在 Railway 的 **Variables** 新增 `GITHUB_TOKEN`（具備 `fastapi-auth-lite` Read 權限的 PAT），建置時自動安裝。
 2. **記憶體極致優化 (RAM < 250MB)**：當使用 `gemini`、`openai` 或 `ollama_cloud` 時，服務採用 Lazy Loading 機制，不載入本地龐大模型，記憶體佔用小於 250MB RAM。
 3. **資料持久化**：於 Railway 新增 Volume 並掛載至 `/app/data`，確保 SQLite 使用者資料庫重啟不遺失。
+
+---
+
+## License & Intellectual Property
+
+This project is licensed under the **[GNU Affero General Public License v3.0 (AGPL-3.0)](./LICENSE)**.
+
+- **Open Source & Copyleft**: You are free to inspect, modify, and host this software. However, if you run a modified version of this software as a network service (SaaS / Web Service), you must make the corresponding source code available to all users accessing that service under the terms of the AGPL-3.0.
+- **Commercial & Enterprise Licensing**: For commercial use without AGPL-3.0 copyleft obligations, or for integrating into proprietary closed-source systems, please contact the maintainers for commercial licensing options.
+- **Copyright**: Copyright (c) 2026 ArchCet. All rights reserved.
+- **Third-Party Dependencies**: All third-party libraries and frameworks (e.g., FastAPI, LangGraph, PyMuPDF, LiteLLM) are subject to their respective open-source licenses.
+
