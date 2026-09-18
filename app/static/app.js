@@ -1854,8 +1854,6 @@ if ($('#sidebarOverlay')) {
   $('#sidebarOverlay').addEventListener('click', () => toggleSidebar(false));
 }
 
-$('#generateBtn')?.addEventListener('click', () => generateDeckAction());
-
 function renderDeck() {
   const d = state.deck;
   if (!d) {
@@ -3383,13 +3381,35 @@ document.addEventListener('click', async (e) => {
 
 function setBtnLoading(btn, isLoading, originalHtml) {
   if (!btn) return;
-  if (isLoading) {
-    btn.dataset.origHtml = btn.innerHTML;
-    btn.disabled = true;
-    btn.innerHTML = `<span class="btn-inline-spinner"></span> ${state.lang === 'en' ? 'Generating...' : '生成中...'}`;
+  btn.disabled = isLoading;
+  const spinner = btn.querySelector('.btn-inline-spinner');
+  const lbl = btn.querySelector('.btn-lbl') || btn.querySelector('[data-i18n]');
+
+  if (spinner) {
+    spinner.classList.toggle('hidden', !isLoading);
+  }
+
+  if (lbl) {
+    if (isLoading) {
+      if (!lbl.dataset.origText) lbl.dataset.origText = lbl.textContent;
+      lbl.textContent = state.lang === 'en' ? 'Generating...' : '生成中...';
+    } else {
+      const i18nKey = lbl.dataset.i18n;
+      if (i18nKey && typeof t === 'function' && t(i18nKey)) {
+        lbl.textContent = t(i18nKey);
+      } else if (lbl.dataset.origText) {
+        lbl.textContent = lbl.dataset.origText;
+      }
+      delete lbl.dataset.origText;
+    }
   } else {
-    btn.disabled = false;
-    btn.innerHTML = btn.dataset.origHtml || originalHtml;
+    if (isLoading) {
+      if (!btn.dataset.origText) btn.dataset.origText = btn.textContent;
+      btn.innerHTML = `<span class="btn-inline-spinner"></span> ${state.lang === 'en' ? 'Generating...' : '生成中...'}`;
+    } else {
+      btn.innerHTML = btn.dataset.origText || originalHtml || (state.lang === 'en' ? 'Generate' : '生成');
+      delete btn.dataset.origText;
+    }
   }
 }
 
