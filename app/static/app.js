@@ -2162,11 +2162,44 @@ function syncDeckEdits(showToast = false) {
       if (showToast) toast('簡報修改內容已同步');
     } catch (err) {
       if (statusEl) {
-        statusEl.textContent = '⚠️ 儲存失敗';
-        statusEl.className = 'edit-sync-indicator';
+        statusEl.textContent = '✓ 本機已暫存';
+        statusEl.className = 'edit-sync-indicator saved';
       }
     }
   }, 500);
+}
+
+async function flushDeckEdits() {
+  if (!state.deck) return;
+  clearTimeout(patchDeckTimeout);
+  patchDeckTimeout = null;
+  saveWorkspaceStateToStorage();
+  const statusEl = $('#notesSyncStatus');
+  if (statusEl) {
+    statusEl.textContent = '💾 儲存中...';
+    statusEl.className = 'edit-sync-indicator saving';
+  }
+  try {
+    await api(`/api/decks/${state.deck.id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        title: state.deck.title,
+        subtitle: state.deck.subtitle,
+        slides: state.deck.slides
+      })
+    });
+    if (statusEl) {
+      statusEl.textContent = '✓ 已同步儲存';
+      statusEl.className = 'edit-sync-indicator saved';
+    }
+  } catch (err) {
+    console.warn('Flush deck edits warning:', err);
+    if (statusEl) {
+      statusEl.textContent = '✓ 本機已暫存';
+      statusEl.className = 'edit-sync-indicator saved';
+    }
+  }
 }
 
 async function refineActiveSlideNotes() {
@@ -2206,6 +2239,7 @@ $('#refineNotesBtn')?.addEventListener('click', () => refineActiveSlideNotes());
 function showSlide(index) {
   state.activeSlide = index;
   const s = state.deck.slides[index];
+  if (!s) return;
   $$('.slide-thumb').forEach((t, i) => t.classList.toggle('active', i === index));
   $('#slideStage').dataset.page = String(index + 1).padStart(2, '0');
 
@@ -2228,65 +2262,9 @@ function showSlide(index) {
     </div>
   `;
 
-  // 監聽標題與要點的即時手動修改
-  const titleEl = $('#slideStage .slide-title-editable');
-  if (titleEl) {
-    titleEl.addEventListener('input', () => {
-      s.title = titleEl.innerText.trim();
-      const thumbB = $(`.slide-thumb[data-index="${index}"] b`);
-      if (thumbB) thumbB.textContent = s.title;
-      syncDeckEdits();
-    });
-  }
-
-  $$('#slideStage li[data-bullet-idx]').forEach(li => {
-    li.addEventListener('input', () => {
-      const bIdx = parseInt(li.dataset.bulletIdx, 10);
-      s.bullets[bIdx] = li.innerText;
-      syncDeckEdits();
-    });
-  });
-
-  // 監聽結構化視覺圖解步驟的即時手動修改
-  $$('#slideStage .visual-step-text[data-step-idx]').forEach(st => {
-    st.addEventListener('input', () => {
-      const sIdx = parseInt(st.dataset.stepIdx, 10);
-      if (!s.visual_diagram) s.visual_diagram = {};
-      if (!Array.isArray(s.visual_diagram.steps)) {
-        s.visual_diagram.steps = [
-          { label: '① 核心機制', text: '' },
-          { label: '② 推導關鍵', text: '' }
-        ];
-      }
-      while (s.visual_diagram.steps.length <= sIdx) {
-        s.visual_diagram.steps.push({ label: `觀念重點 ${s.visual_diagram.steps.length + 1}`, text: '' });
-      }
-      if (typeof s.visual_diagram.steps[sIdx] === 'object' && s.visual_diagram.steps[sIdx] !== null) {
-        s.visual_diagram.steps[sIdx].text = st.innerText;
-      } else {
-        s.visual_diagram.steps[sIdx] = { label: `觀念重點 ${sIdx + 1}`, text: st.innerText };
-      }
-      syncDeckEdits();
-    });
-  });
-
-  // 監聽核心結論的即時手動修改
-  const takeawayEl = $('#slideStage .visual-takeaway-text');
-  if (takeawayEl) {
-    takeawayEl.addEventListener('input', () => {
-      if (!s.visual_diagram) s.visual_diagram = {};
-      s.visual_diagram.takeaway = takeawayEl.innerText;
-      syncDeckEdits();
-    });
-  }
-
   const notesEl = $('#speakerNotes');
   if (notesEl) {
-    notesEl.textContent = s.speaker_notes;
-    notesEl.oninput = () => {
-      s.speaker_notes = notesEl.innerText;
-      syncDeckEdits();
-    };
+    notesEl.textContent = s.speaker_notes || '';
   }
 
   renderMath($('#slideStage'));
@@ -2297,6 +2275,75 @@ function showSlide(index) {
     $('#pageRef').textContent = t('deck.page_ref');
   }
 }
+
+// 容器層事件代理：簡報就地即時編輯
+$('#slideStage')?.addEventListener('input', (e) => {
+  if (!state.deck || !state.deck.slides || state.activeSlide === undefined) return;
+  const slide = state.deck.slides[state.activeSlide];
+  if (!slide) return;
+  const target = e.target;
+
+  // 1. 投影片標題
+  const titleEl = target.closest('.slide-title-editable');
+  if (titleEl) {
+    slide.title = titleEl.innerText.trim();
+    const thumbB = $(`.slide-thumb[data-index="${state.activeSlide}"] b`);
+    if (thumbB) thumbB.textContent = slide.title;
+    syncDeckEdits();
+    return;
+  }
+
+  // 2. 條列要點
+  const bulletLi = target.closest('li[data-bullet-idx]');
+  if (bulletLi) {
+    const bIdx = parseInt(bulletLi.dataset.bulletIdx, 10);
+    if (!Array.isArray(slide.bullets)) slide.bullets = [];
+    slide.bullets[bIdx] = bulletLi.innerText;
+    syncDeckEdits();
+    return;
+  }
+
+  // 3. 視覺圖解步驟文字
+  const stepTextEl = target.closest('.visual-step-text[data-step-idx]');
+  if (stepTextEl) {
+    const sIdx = parseInt(stepTextEl.dataset.stepIdx, 10);
+    if (!slide.visual_diagram) slide.visual_diagram = {};
+    if (!Array.isArray(slide.visual_diagram.steps)) {
+      slide.visual_diagram.steps = [
+        { label: '① 核心機制', text: '' },
+        { label: '② 推導關鍵', text: '' }
+      ];
+    }
+    while (slide.visual_diagram.steps.length <= sIdx) {
+      slide.visual_diagram.steps.push({ label: `觀念重點 ${slide.visual_diagram.steps.length + 1}`, text: '' });
+    }
+    if (typeof slide.visual_diagram.steps[sIdx] === 'object' && slide.visual_diagram.steps[sIdx] !== null) {
+      slide.visual_diagram.steps[sIdx].text = stepTextEl.innerText;
+    } else {
+      slide.visual_diagram.steps[sIdx] = { label: `觀念重點 ${sIdx + 1}`, text: stepTextEl.innerText };
+    }
+    syncDeckEdits();
+    return;
+  }
+
+  // 4. 視覺圖解核心結論
+  const takeawayEl = target.closest('.visual-takeaway-text');
+  if (takeawayEl) {
+    if (!slide.visual_diagram) slide.visual_diagram = {};
+    slide.visual_diagram.takeaway = takeawayEl.innerText;
+    syncDeckEdits();
+    return;
+  }
+});
+
+// 容器層事件代理：逐頁講稿即時編輯
+$('#speakerNotes')?.addEventListener('input', () => {
+  if (!state.deck || !state.deck.slides || state.activeSlide === undefined) return;
+  const slide = state.deck.slides[state.activeSlide];
+  if (!slide) return;
+  slide.speaker_notes = $('#speakerNotes').innerText;
+  syncDeckEdits();
+});
 
 function addUserMessage(text) {
   const el = document.createElement('div');
@@ -2391,7 +2438,32 @@ $$('#chatView .suggestions button, .chat-sug-btn').forEach(btn => btn.addEventLi
   if ($('#questionInput')) $('#questionInput').value = q;
   $('#chatForm')?.requestSubmit();
 }));
-$('#pptDownload')?.addEventListener('click', () => toast(state.lang === 'en' ? 'Downloading PowerPoint presentation...' : '正在下載 PowerPoint 簡報'));
+// 簡報匯出按鈕立即 Flush 同步攔截
+$('#pptDownload')?.addEventListener('click', async (e) => {
+  if (!state.deck) return;
+  e.preventDefault();
+  await flushDeckEdits();
+  toast(state.lang === 'en' ? 'Downloading PowerPoint presentation...' : '正在下載 PowerPoint 簡報');
+  window.location.href = `/api/decks/${state.deck.id}/pptx`;
+});
+$('#deckPrintSlidesBtn')?.addEventListener('click', async (e) => {
+  if (!state.deck) return;
+  e.preventDefault();
+  await flushDeckEdits();
+  window.open(`/api/decks/${state.deck.id}/pdf`, '_blank');
+});
+$('#deckPrintHandoutBtn')?.addEventListener('click', async (e) => {
+  if (!state.deck) return;
+  e.preventDefault();
+  await flushDeckEdits();
+  window.open(`/api/decks/${state.deck.id}/handout/print`, '_blank');
+});
+$('#deckDownloadDocxBtn')?.addEventListener('click', async (e) => {
+  if (!state.deck) return;
+  e.preventDefault();
+  await flushDeckEdits();
+  window.location.href = `/api/decks/${state.deck.id}/docx`;
+});
 
 // ── AI 提供者 (Provider) 切換與 UI 更新 ──
 function updateProviderUI(info) {
@@ -3877,6 +3949,28 @@ function syncHandoutEdits() {
   }, 500);
 }
 
+async function flushHandoutEdits() {
+  if (!state.handout) return;
+  clearTimeout(patchHandoutTimeout);
+  patchHandoutTimeout = null;
+  saveWorkspaceStateToStorage();
+  try {
+    await api(`/api/handouts/${state.handout.id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        title: state.handout.title,
+        subtitle: state.handout.subtitle,
+        overview: state.handout.overview,
+        sections: state.handout.sections,
+        key_takeaways: state.handout.key_takeaways
+      })
+    });
+  } catch (err) {
+    console.warn('Flush handout edits warning:', err);
+  }
+}
+
 let patchQuizTimeout = null;
 function syncQuizEdits() {
   if (!state.quiz) return;
@@ -3898,6 +3992,176 @@ function syncQuizEdits() {
     }
   }, 500);
 }
+
+async function flushQuizEdits() {
+  if (!state.quiz) return;
+  clearTimeout(patchQuizTimeout);
+  patchQuizTimeout = null;
+  saveWorkspaceStateToStorage();
+  try {
+    await api(`/api/quiz/${state.quiz.id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        title: state.quiz.title,
+        description: state.quiz.description,
+        questions: state.quiz.questions
+      })
+    });
+  } catch (err) {
+    console.warn('Flush quiz edits warning:', err);
+  }
+}
+
+// 講義匯出按鈕即時 Flush 攔截
+$('#previewHandoutPrintBtn')?.addEventListener('click', async (e) => {
+  if (!state.handout) return;
+  e.preventDefault();
+  await flushHandoutEdits();
+  window.open(`/api/handouts/${state.handout.id}/print`, '_blank');
+});
+$('#previewHandoutDocxBtn')?.addEventListener('click', async (e) => {
+  if (!state.handout) return;
+  e.preventDefault();
+  await flushHandoutEdits();
+  window.location.href = `/api/handouts/${state.handout.id}/docx`;
+});
+
+// 試卷匯出按鈕即時 Flush 攔截
+$('#previewQuizPrintBtn')?.addEventListener('click', async (e) => {
+  if (!state.quiz) return;
+  e.preventDefault();
+  await flushQuizEdits();
+  const showTeacher = $('#previewQuizTeacherToggle') ? $('#previewQuizTeacherToggle').checked : false;
+  window.open(`/api/quiz/${state.quiz.id}/print?teacher=${showTeacher}`, '_blank');
+});
+$('#previewQuizDocxBtn')?.addEventListener('click', async (e) => {
+  if (!state.quiz) return;
+  e.preventDefault();
+  await flushQuizEdits();
+  const showTeacher = $('#previewQuizTeacherToggle') ? $('#previewQuizTeacherToggle').checked : false;
+  window.location.href = `/api/quiz/${state.quiz.id}/docx?teacher=${showTeacher}`;
+});
+
+// 容器層事件代理：講義就地即時編輯
+$('#previewHandoutContainer')?.addEventListener('input', (e) => {
+  if (!state.handout) return;
+  const h = state.handout;
+  const target = e.target;
+
+  if (target.id === 'handoutPreviewTitle' || target.closest('#handoutPreviewTitle')) {
+    const el = target.id === 'handoutPreviewTitle' ? target : target.closest('#handoutPreviewTitle');
+    h.title = el.innerText.trim();
+    syncHandoutEdits();
+    return;
+  }
+  if (target.id === 'handoutPreviewOverview' || target.closest('#handoutPreviewOverview')) {
+    const el = target.id === 'handoutPreviewOverview' ? target : target.closest('#handoutPreviewOverview');
+    h.overview = el.innerText;
+    syncHandoutEdits();
+    return;
+  }
+  const secTitle = target.closest('[data-h-sec-title]');
+  if (secTitle) {
+    const sIdx = parseInt(secTitle.dataset.hSecTitle, 10);
+    if (h.sections && h.sections[sIdx]) h.sections[sIdx].title = secTitle.innerText.trim();
+    syncHandoutEdits();
+    return;
+  }
+  const secSum = target.closest('[data-h-sec-sum]');
+  if (secSum) {
+    const sIdx = parseInt(secSum.dataset.hSecSum, 10);
+    if (h.sections && h.sections[sIdx]) {
+      h.sections[sIdx].summary = secSum.innerText;
+      h.sections[sIdx].core_concept = secSum.innerText;
+    }
+    syncHandoutEdits();
+    return;
+  }
+  const secExp = target.closest('[data-h-sec-exp]');
+  if (secExp) {
+    const sIdx = parseInt(secExp.dataset.hSecExp, 10);
+    if (h.sections && h.sections[sIdx]) h.sections[sIdx].detailed_explanation = secExp.innerText;
+    syncHandoutEdits();
+    return;
+  }
+  const secKp = target.closest('[data-h-sec-kp]');
+  if (secKp) {
+    const [sIdxStr, kIdxStr] = (secKp.dataset.hSecKp || '').split('_');
+    const sIdx = parseInt(sIdxStr, 10);
+    const kIdx = parseInt(kIdxStr, 10);
+    if (h.sections && h.sections[sIdx]) {
+      if (Array.isArray(h.sections[sIdx].key_points)) h.sections[sIdx].key_points[kIdx] = secKp.innerText;
+      if (Array.isArray(h.sections[sIdx].key_takeaways)) h.sections[sIdx].key_takeaways[kIdx] = secKp.innerText;
+    }
+    syncHandoutEdits();
+    return;
+  }
+  const secDq = target.closest('[data-h-sec-dq]');
+  if (secDq) {
+    const [sIdxStr, dqIdxStr] = (secDq.dataset.hSecDq || '').split('_');
+    const sIdx = parseInt(sIdxStr, 10);
+    const dqIdx = parseInt(dqIdxStr, 10);
+    if (h.sections && h.sections[sIdx] && Array.isArray(h.sections[sIdx].discussion_questions)) {
+      h.sections[sIdx].discussion_questions[dqIdx] = secDq.innerText;
+    }
+    syncHandoutEdits();
+    return;
+  }
+  const takeaway = target.closest('[data-h-takeaway]');
+  if (takeaway) {
+    const tIdx = parseInt(takeaway.dataset.hTakeaway, 10);
+    if (Array.isArray(h.key_takeaways)) h.key_takeaways[tIdx] = takeaway.innerText;
+    syncHandoutEdits();
+    return;
+  }
+});
+
+// 容器層事件代理：試卷就地即時編輯
+$('#previewQuizContainer')?.addEventListener('input', (e) => {
+  if (!state.quiz) return;
+  const q = state.quiz;
+  const target = e.target;
+
+  if (target.id === 'quizPreviewTitle' || target.closest('#quizPreviewTitle')) {
+    const el = target.id === 'quizPreviewTitle' ? target : target.closest('#quizPreviewTitle');
+    q.title = el.innerText.trim();
+    syncQuizEdits();
+    return;
+  }
+  const qText = target.closest('[data-q-text-idx]');
+  if (qText) {
+    const qIdx = parseInt(qText.dataset.qTextIdx, 10);
+    if (q.questions && q.questions[qIdx]) q.questions[qIdx].question = qText.innerText.trim();
+    syncQuizEdits();
+    return;
+  }
+  const qOpt = target.closest('[data-q-opt-idx]');
+  if (qOpt) {
+    const [qIdxStr, optIdxStr] = (qOpt.dataset.qOptIdx || '').split('_');
+    const qIdx = parseInt(qIdxStr, 10);
+    const optIdx = parseInt(optIdxStr, 10);
+    if (q.questions && q.questions[qIdx] && Array.isArray(q.questions[qIdx].options)) {
+      q.questions[qIdx].options[optIdx] = qOpt.innerText;
+    }
+    syncQuizEdits();
+    return;
+  }
+  const qAns = target.closest('[data-q-ans-idx]');
+  if (qAns) {
+    const qIdx = parseInt(qAns.dataset.qAnsIdx, 10);
+    if (q.questions && q.questions[qIdx]) q.questions[qIdx].answer = qAns.innerText.trim();
+    syncQuizEdits();
+    return;
+  }
+  const qExp = target.closest('[data-q-exp-idx]');
+  if (qExp) {
+    const qIdx = parseInt(qExp.dataset.qExpIdx, 10);
+    if (q.questions && q.questions[qIdx]) q.questions[qIdx].explanation = qExp.innerText;
+    syncQuizEdits();
+    return;
+  }
+});
 
 async function regenerateSingleQuizQuestion(qIndex, targetBtn) {
   if (!state.quiz || !state.quiz.questions || !state.quiz.questions[qIndex]) return;
@@ -4060,29 +4324,6 @@ function renderHandoutPreview() {
     ` : ''}
   `;
 
-  // 監聽講義手動即時編輯
-  $('#handoutPreviewTitle')?.addEventListener('input', function() {
-    handout.title = this.innerText.trim();
-    syncHandoutEdits();
-  });
-  $('#handoutPreviewOverview')?.addEventListener('input', function() {
-    handout.overview = this.innerText;
-    syncHandoutEdits();
-  });
-  $$('[data-h-sec-title]').forEach(el => el.addEventListener('input', function() {
-    const sIdx = parseInt(this.dataset.hSecTitle, 10);
-    if (handout.sections[sIdx]) handout.sections[sIdx].title = this.innerText.trim();
-    syncHandoutEdits();
-  }));
-  $$('[data-h-sec-sum]').forEach(el => el.addEventListener('input', function() {
-    const sIdx = parseInt(this.dataset.hSecSum, 10);
-    if (handout.sections[sIdx]) {
-      handout.sections[sIdx].summary = this.innerText;
-      handout.sections[sIdx].core_concept = this.innerText;
-    }
-    syncHandoutEdits();
-  }));
-
   renderMath(container);
 }
 
@@ -4164,22 +4405,6 @@ function renderQuizPreview() {
       regenerateSingleQuizQuestion(qIdx, btn);
     });
   });
-
-  // 監聽題目手動即時編輯
-  $('#quizPreviewTitle')?.addEventListener('input', function() {
-    quiz.title = this.innerText.trim();
-    syncQuizEdits();
-  });
-  $$('[data-q-text-idx]').forEach(el => el.addEventListener('input', function() {
-    const qIdx = parseInt(this.dataset.qTextIdx, 10);
-    if (quiz.questions[qIdx]) quiz.questions[qIdx].question = this.innerText.trim();
-    syncQuizEdits();
-  }));
-  $$('[data-q-exp-idx]').forEach(el => el.addEventListener('input', function() {
-    const qIdx = parseInt(this.dataset.qExpIdx, 10);
-    if (quiz.questions[qIdx]) quiz.questions[qIdx].explanation = this.innerText;
-    syncQuizEdits();
-  }));
 
   renderMath(container);
 }

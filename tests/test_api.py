@@ -434,6 +434,100 @@ def test_docx_and_print_endpoints():
         app.dependency_overrides.clear()
 
 
+def test_patch_sync_endpoints():
+    client = TestClient(app)
+    from app.main import store
+    from app.models import Deck, Slide, Handout, HandoutSection, QuizSheet, QuizQuestion
+
+    # 1. Test Deck PATCH and Export sync
+    deck = Deck(
+        id="deck_patch_sync_1",
+        document_id="doc_sync_1",
+        title="原始簡報標題",
+        subtitle="原始副標題",
+        duration=30,
+        mode="gemini",
+        slides=[
+            Slide(title="原始第一頁", bullets=["原始重點 A"], speaker_notes="原始講稿", visual_diagram={"steps": [{"label": "① 原始", "text": "原始說明"}]})
+        ],
+    )
+    store.decks[deck.id] = deck
+
+    res_patch_deck = client.patch(
+        f"/api/decks/{deck.id}",
+        json={
+            "title": "修改後簡報標題",
+            "slides": [
+                {
+                    "title": "修改後第一頁",
+                    "bullets": ["修改後重點 1", "新增重點 2"],
+                    "speaker_notes": "修改後的逐頁講稿",
+                    "visual_diagram": {"steps": [{"label": "① 核心機制", "text": "更新後的推導"}], "takeaway": "核心結論"},
+                }
+            ],
+        },
+    )
+    assert res_patch_deck.status_code == 200
+    updated_deck = store.decks[deck.id]
+    assert updated_deck.title == "修改後簡報標題"
+    assert updated_deck.slides[0].title == "修改後第一頁"
+    assert updated_deck.slides[0].bullets == ["修改後重點 1", "新增重點 2"]
+    assert updated_deck.slides[0].speaker_notes == "修改後的逐頁講稿"
+
+    # Test PPTX and PDF export with updated content
+    res_pptx = client.get(f"/api/decks/{deck.id}/pptx")
+    assert res_pptx.status_code == 200
+    assert len(res_pptx.content) > 0
+
+    res_pdf = client.get(f"/api/decks/{deck.id}/pdf")
+    assert res_pdf.status_code == 200
+    assert "修改後第一頁" in res_pdf.text
+
+    # 2. Test Handout PATCH
+    handout = Handout(
+        id="handout_patch_sync_1",
+        document_id="doc_sync_1",
+        title="原始講義標題",
+        subtitle="原始副標題",
+        overview="原始課程總覽",
+        sections=[HandoutSection(title="原始章節", summary="原始導讀", key_points=["原始要點"])],
+    )
+    store.handouts[handout.id] = handout
+
+    res_patch_handout = client.patch(
+        f"/api/handouts/{handout.id}",
+        json={
+            "title": "修改後講義標題",
+            "sections": [{"title": "修改後章節", "summary": "修改後導讀", "key_points": ["最新要點 100"]}],
+        },
+    )
+    assert res_patch_handout.status_code == 200
+    assert store.handouts[handout.id].title == "修改後講義標題"
+    assert store.handouts[handout.id].sections[0].title == "修改後章節"
+
+    # 3. Test Quiz PATCH
+    quiz = QuizSheet(
+        id="quiz_patch_sync_1",
+        document_id="doc_sync_1",
+        title="原始試卷標題",
+        description="原始試卷說明",
+        questions=[QuizQuestion(id="q1", type="single_choice", question="原始題目？", options=["A", "B"], answer="A", explanation="原始解析")],
+    )
+    store.quizzes[quiz.id] = quiz
+
+    res_patch_quiz = client.patch(
+        f"/api/quiz/{quiz.id}",
+        json={
+            "title": "修改後試卷標題",
+            "questions": [{"id": "q1", "type": "single_choice", "question": "修改後題目？", "options": ["A", "B", "C"], "answer": "B", "explanation": "修改後解析"}],
+        },
+    )
+    assert res_patch_quiz.status_code == 200
+    assert store.quizzes[quiz.id].title == "修改後試卷標題"
+    assert store.quizzes[quiz.id].questions[0].question == "修改後題目？"
+    assert store.quizzes[quiz.id].questions[0].answer == "B"
+
+
 
 
 

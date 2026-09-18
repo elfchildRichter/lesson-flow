@@ -111,6 +111,17 @@ def get_user_tier_and_role(current_user: dict) -> tuple[str, str]:
 from app.tiers import get_tier_config, ACTION_CREDIT_COSTS
 
 
+def get_optional_current_user(request: Request) -> dict | None:
+    auth_header = request.headers.get("Authorization")
+    if not auth_header or not auth_header.startswith("Bearer "):
+        return None
+    token = auth_header.split(" ", 1)[1]
+    try:
+        return decode_access_token(token)
+    except Exception:
+        return None
+
+
 def get_user_credits_info(user_id: int | str, username: str, role: str, tier_config: dict) -> dict:
     daily_limit = tier_config.get("daily_credits", 100)
     if role == "admin" or daily_limit == -1:
@@ -565,7 +576,7 @@ def refine_deck_slide(
 def update_deck_content(
     deck_id: str,
     payload: dict,
-    current_user: dict = Depends(get_current_user),
+    current_user: Optional[dict] = Depends(get_optional_current_user),
 ) -> dict:
     deck = store.decks.get(deck_id)
     if not deck:
@@ -737,7 +748,7 @@ def regenerate_quiz_single_question(
 def update_quiz_content(
     quiz_id: str,
     payload: dict,
-    current_user: dict = Depends(get_current_user),
+    current_user: Optional[dict] = Depends(get_optional_current_user),
 ) -> dict:
     sheet = store.quizzes.get(quiz_id)
     if not sheet:
@@ -857,7 +868,7 @@ def get_handout(handout_id: str) -> dict:
 def update_handout_content(
     handout_id: str,
     payload: dict,
-    current_user: dict = Depends(get_current_user),
+    current_user: Optional[dict] = Depends(get_optional_current_user),
 ) -> dict:
     handout = store.handouts.get(handout_id)
     if not handout:
