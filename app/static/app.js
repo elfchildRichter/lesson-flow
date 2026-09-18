@@ -170,6 +170,7 @@ const translations = {
     'deck.desc': '投影片大綱、視覺圖解與逐頁講稿',
     'deck.web_search': '開啟網路補充搜尋（延伸案例數據）',
     'deck.btn': '✦ 生成教學簡報',
+    'deck.btn_pdf': '📑 下載簡報 (PDF)',
     'deck.btn_pptx': '📊 下載簡報 (.pptx)',
     'deck.btn_print_handout': '🖨️ 講稿列印 (另存 PDF)',
     'deck.btn_docx': '📄 下載講稿 (.docx)',
@@ -239,6 +240,7 @@ const translations = {
     'deck.eyebrow': '教學內容已就緒',
     'deck.title': '教學簡報',
     'deck.subtitle': '上傳教材後開始生成。',
+    'deck.btn_pdf': '📑 下載簡報 (PDF)',
     'deck.btn_script': '🖨️ 講稿列印 (另存 PDF)',
     'deck.btn_pptx': '📊 下載簡報 (.pptx)',
     'deck.empty_slide': '還沒有簡報',
@@ -503,6 +505,7 @@ const translations = {
     'deck.desc': 'Slide outlines, visual diagrams & speaker scripts',
     'deck.web_search': 'Enable Web Search (Supplement cases & data)',
     'deck.btn': '✦ Generate Slide Deck',
+    'deck.btn_pdf': '📑 Download Deck (PDF)',
     'deck.btn_pptx': '📊 Download Deck (.pptx)',
     'deck.btn_print_handout': '🖨️ Speaker Notes Print (PDF)',
     'deck.btn_docx': '📄 Download Notes (.docx)',
@@ -572,6 +575,7 @@ const translations = {
     'deck.eyebrow': 'Lesson Content Ready',
     'deck.title': 'Teaching Deck',
     'deck.subtitle': 'Upload materials to start generating.',
+    'deck.btn_pdf': '📑 Download Deck (PDF)',
     'deck.btn_script': '🖨️ Speaker Notes Print (PDF)',
     'deck.btn_pptx': '📊 Download Deck (.pptx)',
     'deck.empty_slide': 'No slides yet',
@@ -1858,6 +1862,7 @@ function renderDeck() {
     if ($('#deckEmptyState')) $('#deckEmptyState').classList.remove('hidden');
     if ($('#deckLayout')) $('#deckLayout').classList.add('hidden');
     if ($('#pptDownload')) $('#pptDownload').classList.add('disabled');
+    if ($('#deckPrintSlidesBtn')) $('#deckPrintSlidesBtn').classList.add('disabled');
     if ($('#deckPrintHandoutBtn')) $('#deckPrintHandoutBtn').classList.add('disabled');
     if ($('#deckDownloadDocxBtn')) $('#deckDownloadDocxBtn').classList.add('disabled');
     return;
@@ -1880,6 +1885,10 @@ function renderDeck() {
     $('#pptDownload').href = `/api/decks/${d.id}/pptx`;
     $('#pptDownload').classList.remove('disabled');
   }
+  if ($('#deckPrintSlidesBtn')) {
+    $('#deckPrintSlidesBtn').href = `/api/decks/${d.id}/pdf`;
+    $('#deckPrintSlidesBtn').classList.remove('disabled');
+  }
   if ($('#deckPrintHandoutBtn')) {
     $('#deckPrintHandoutBtn').href = `/api/decks/${d.id}/handout/print`;
     $('#deckPrintHandoutBtn').classList.remove('disabled');
@@ -1889,7 +1898,7 @@ function renderDeck() {
     $('#deckDownloadDocxBtn').classList.remove('disabled');
   }
   if ($('#slideList')) {
-    $('#slideList').innerHTML = d.slides.map((s, i) => `<div class="slide-thumb ${i === 0 ? 'active' : ''}" data-index="${i}"><small>${String(i + 1).padStart(2, '0')}</small><div class="mini-slide"><b>${escapeHtml(s.title)}</b>${s.bullets.slice(0, 3).map(() => '<i></i>').join('')}</div></div>`).join('');
+    $('#slideList').innerHTML = d.slides.map((s, i) => `<div class="slide-thumb ${i === 0 ? 'active' : ''}" data-index="${i}"><small>${String(i + 1).padStart(2, '0')}</small><div class="mini-slide"><b>${formatMarkdown(s.title)}</b>${s.bullets.slice(0, 3).map(() => '<i></i>').join('')}</div></div>`).join('');
     $$('.slide-thumb').forEach(t => t.addEventListener('click', () => showSlide(+t.dataset.index)));
   }
   showSlide(0);
@@ -2036,45 +2045,6 @@ function renderMarkdownToHtml(mdText) {
   return processed;
 }
 
-function wrapSvgText(text, maxLineChars = 8) {
-  if (!text) return [];
-  let cleaned = text.replace(/[\*`"']/g, '').replace(/^[•\-\d\.\s、:：]+/, '').trim();
-  if (!cleaned) return [];
-  if (cleaned.length <= maxLineChars) return [cleaned];
-
-  const clauses = cleaned.split(/[，,；;。]/);
-  if (clauses.length > 1 && clauses[0].length >= 2 && clauses[0].length <= maxLineChars + 2) {
-    return [clauses[0], clauses.slice(1).join(' ').slice(0, maxLineChars)];
-  }
-
-  return [
-    cleaned.slice(0, maxLineChars),
-    cleaned.slice(maxLineChars, maxLineChars * 2)
-  ];
-}
-
-function renderSvgTextLines(lines, cx, startY, fontSize = 11, fontColor = "#2B3530", fontWeight = "bold") {
-  if (!lines || lines.length === 0) return '';
-  const lineHeight = Math.round(fontSize * 1.35);
-  const totalHeight = (lines.length - 1) * lineHeight;
-  const initialY = startY - (totalHeight / 2);
-
-  return `<text x="${cx}" y="${initialY}" text-anchor="middle" font-size="${fontSize}" font-weight="${fontWeight}" fill="${fontColor}">
-    ${lines.map((line, idx) => `<tspan x="${cx}" dy="${idx === 0 ? 0 : lineHeight}">${escapeHtml(line)}</tspan>`).join('')}
-  </text>`;
-}
-
-function extractConceptualTag(bulletText, fallback) {
-  if (!bulletText) return wrapSvgText(fallback, 14);
-  let cleaned = bulletText.replace(/[\*`"']/g, '').replace(/^[•\-\d\.\s、:：]+/, '').trim();
-  if (!cleaned) return wrapSvgText(fallback, 14);
-
-  const colonParts = cleaned.split(/[:：—\-\(（]/);
-  if (colonParts.length > 1 && colonParts[0].length >= 2 && colonParts[0].length <= 14) {
-    return wrapSvgText(colonParts[0], 14);
-  }
-  return wrapSvgText(cleaned, 14);
-}
 
 function extractEmoji(str) {
   if (!str) return '💡';
@@ -2095,120 +2065,75 @@ function extractEmoji(str) {
   return '💡';
 }
 
-function renderDynamicDiagram(slide, index) {
-  const icon = extractEmoji(slide.icon);
-  const title = slide.title || '核心觀念';
-  const bullets = slide.bullets || [];
-
-  const l1 = extractConceptualTag(bullets[0], '基礎定義');
-  const l2 = extractConceptualTag(bullets[1], '核心推演');
-  const l3 = extractConceptualTag(bullets[2], '應用成果');
-
-  const titleLower = title.toLowerCase();
-  let type = 'flow';
-  if (titleLower.includes('架構') || titleLower.includes('系統') || titleLower.includes('結構') || titleLower.includes('組成') || titleLower.includes('分層') || titleLower.includes('流程')) {
-    type = 'arch';
-  } else if (titleLower.includes('對比') || titleLower.includes('比較') || titleLower.includes('差異') || titleLower.includes('vs') || titleLower.includes('優缺')) {
-    type = 'compare';
-  } else if (titleLower.includes('公式') || titleLower.includes('原理') || titleLower.includes('定義') || titleLower.includes('核心') || titleLower.includes('算式')) {
-    type = 'focus';
-  } else {
-    const types = ['flow', 'arch', 'compare', 'focus'];
-    type = types[index % types.length];
-  }
-
-  if (type === 'flow') {
-    return `
-      <svg viewBox="0 0 290 350" class="diagram-svg">
-        <rect x="15" y="15" width="260" height="85" rx="10" fill="#FFF" stroke="#DE5B37" stroke-width="2"/>
-        <rect x="15" y="15" width="260" height="28" rx="10" fill="#FFF5F2"/>
-        <text x="145" y="34" text-anchor="middle" font-size="13" font-weight="bold" fill="#DE5B37">① 觀念起點</text>
-        ${renderSvgTextLines(l1, 145, 66, 12, "#2B3530")}
-
-        <path d="M 145 100 L 145 118" stroke="#DE5B37" stroke-width="2"/>
-        <polygon points="145,118 140,110 150,110" fill="#DE5B37"/>
-
-        <rect x="15" y="122" width="260" height="85" rx="10" fill="#FFF" stroke="#4A5568" stroke-width="2"/>
-        <rect x="15" y="122" width="260" height="28" rx="10" fill="#EDF2F7"/>
-        <text x="145" y="141" text-anchor="middle" font-size="13" font-weight="bold" fill="#4A5568">② 核心推演</text>
-        ${renderSvgTextLines(l2, 145, 173, 12, "#2B3530")}
-
-        <path d="M 145 207 L 145 225" stroke="#2B6CB0" stroke-width="2"/>
-        <polygon points="145,225 140,217 150,217" fill="#2B6CB0"/>
-
-        <rect x="15" y="229" width="260" height="85" rx="10" fill="#FFF" stroke="#2B6CB0" stroke-width="2"/>
-        <rect x="15" y="229" width="260" height="28" rx="10" fill="#EBF8FF"/>
-        <text x="145" y="248" text-anchor="middle" font-size="13" font-weight="bold" fill="#2B6CB0">③ 應用成果</text>
-        ${renderSvgTextLines(l3, 145, 280, 12, "#2B3530")}
-      </svg>
-    `;
-  } else if (type === 'arch') {
-    return `
-      <svg viewBox="0 0 290 350" class="diagram-svg">
-        <rect x="15" y="15" width="260" height="55" rx="10" fill="#DE5B37"/>
-        <text x="145" y="49" text-anchor="middle" font-size="15" fill="#FFF" font-weight="bold">${escapeHtml(icon)} ${escapeHtml(title.slice(0, 14))}</text>
-
-        <path d="M 145 70 L 145 105 M 145 195 L 145 225" stroke="#CBD5E0" stroke-width="2" fill="none"/>
-
-        <rect x="15" y="105" width="260" height="90" rx="10" fill="#FFF" stroke="#CBD5E0" stroke-width="2"/>
-        <rect x="15" y="105" width="260" height="28" rx="10" fill="#F7FAFC"/>
-        <text x="145" y="124" text-anchor="middle" font-size="12" font-weight="bold" fill="#4A5568">🧩 核心結構與條件</text>
-        ${renderSvgTextLines(l1, 145, 158, 12, "#2D3748")}
-
-        <rect x="15" y="225" width="260" height="90" rx="10" fill="#FFF" stroke="#CBD5E0" stroke-width="2"/>
-        <rect x="15" y="225" width="260" height="28" rx="10" fill="#F7FAFC"/>
-        <text x="145" y="244" text-anchor="middle" font-size="12" font-weight="bold" fill="#2B6CB0">⚡ 作用邏輯與機制</text>
-        ${renderSvgTextLines(l2, 145, 278, 12, "#2D3748")}
-      </svg>
-    `;
-  } else if (type === 'compare') {
-    return `
-      <svg viewBox="0 0 290 350" class="diagram-svg">
-        <rect x="15" y="15" width="260" height="130" rx="10" fill="#FFF" stroke="#DE5B37" stroke-width="2"/>
-        <rect x="15" y="15" width="260" height="32" rx="10" fill="#FFF5F2"/>
-        <text x="145" y="36" text-anchor="middle" font-size="13" font-weight="bold" fill="#DE5B37">✦ 現行模式 / 原理</text>
-        ${renderSvgTextLines(l1, 145, 88, 12, "#2D3748")}
-
-        <path d="M 130 145 L 130 175 M 160 175 L 160 145" stroke="#DE5B37" stroke-width="2" fill="none"/>
-        <polygon points="130,175 125,167 135,167" fill="#DE5B37"/>
-        <polygon points="160,145 155,153 165,153" fill="#DE5B37"/>
-
-        <rect x="15" y="175" width="260" height="130" rx="10" fill="#FFF" stroke="#2B6CB0" stroke-width="2"/>
-        <rect x="15" y="175" width="260" height="32" rx="10" fill="#EBF8FF"/>
-        <text x="145" y="196" text-anchor="middle" font-size="13" font-weight="bold" fill="#2B6CB0">✦ 本課突破 / 特性</text>
-        ${renderSvgTextLines(l2, 145, 248, 12, "#2D3748")}
-      </svg>
-    `;
-  } else {
-    return `
-      <svg viewBox="0 0 290 350" class="diagram-svg">
-        <circle cx="145" cy="70" r="50" fill="#FFF5F2" stroke="#DE5B37" stroke-width="2.5"/>
-        <circle cx="145" cy="70" r="40" fill="#DE5B37"/>
-        <text x="145" y="81" text-anchor="middle" font-size="32" fill="#FFF">${escapeHtml(icon)}</text>
-
-        <path d="M 145 120 L 145 145 M 145 225 L 145 240" stroke="#CBD5E0" stroke-width="2"/>
-
-        <rect x="15" y="145" width="260" height="80" rx="10" fill="#FFF" stroke="#CBD5E0" stroke-width="2"/>
-        <rect x="15" y="145" width="260" height="26" rx="10" fill="#FFF5F2"/>
-        <text x="145" y="162" text-anchor="middle" font-size="12" font-weight="bold" fill="#DE5B37">📐 定義與條件</text>
-        ${renderSvgTextLines(l1, 145, 194, 12, "#2D3748")}
-
-        <rect x="15" y="240" width="260" height="80" rx="10" fill="#FFF" stroke="#CBD5E0" stroke-width="2"/>
-        <rect x="15" y="240" width="260" height="26" rx="10" fill="#EBF8FF"/>
-        <text x="145" y="257" text-anchor="middle" font-size="12" font-weight="bold" fill="#2B6CB0">🚀 應用與效益</text>
-        ${renderSvgTextLines(l2, 145, 289, 12, "#2D3748")}
-      </svg>
-    `;
-  }
-}
-
 function formatMarkdown(text) {
   if (!text) return '';
-  let safe = escapeHtml(text);
-  safe = safe.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-  safe = safe.replace(/\*(.*?)\*/g, '<em>$1</em>');
-  safe = safe.replace(/`(.*?)`/g, '<code>$1</code>');
-  return safe;
+  const mathPlaceholders = [];
+  let processed = String(text).replace(/(\$\$[\s\S]*?\$\$|\$[^$\n]+?\$|\\\[[\s\S]*?\\\]|\\\([\s\S]*?\\\))/g, (match) => {
+    const placeholder = `%%MATHBLOCK${mathPlaceholders.length}%%`;
+    mathPlaceholders.push(match);
+    return placeholder;
+  });
+  processed = escapeHtml(processed);
+  processed = processed.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  processed = processed.replace(/__([^_]+?)__/g, '<strong>$1</strong>');
+  processed = processed.replace(/(?<!\*)\*([^\*\n]+?)\*(?!\*)/g, '<em>$1</em>');
+  processed = processed.replace(/`([^`\n]+?)`/g, '<code>$1</code>');
+  mathPlaceholders.forEach((math, idx) => {
+    processed = processed.replace(`%%MATHBLOCK${idx}%%`, math);
+  });
+  return processed;
+}
+
+function renderVisualDiagramCard(slide, index) {
+  const visDiagram = slide.visual_diagram || {};
+  const diagramType = visDiagram.diagram_type || 'flowchart';
+  const typeTitles = {
+    flowchart: '🔄 機制流程推導',
+    comparison: '⚖️ 核心概念對比',
+    key_formula: '🧮 關鍵公式解析',
+    concept_map: '📐 觀念架構圖解',
+  };
+  const headerText = typeTitles[diagramType] || '📐 觀念圖解與推導';
+
+  let rawSteps = visDiagram.steps;
+  let diagramSteps = [];
+  if (Array.isArray(rawSteps) && rawSteps.length > 0) {
+    diagramSteps = rawSteps.map((s, sIdx) => {
+      if (typeof s === 'object' && s !== null) {
+        return { label: s.label || `觀念重點 ${sIdx + 1}`, text: s.text || '' };
+      }
+      return { label: `觀念重點 ${sIdx + 1}`, text: String(s) };
+    });
+  } else {
+    diagramSteps = [
+      { label: '① 核心機制', text: `聚焦【${slide.title || '本單元'}】之根本原理與邏輯架構` },
+      { label: '② 推導關鍵', text: slide.visual_description ? slide.visual_description.slice(0, 60) : '依據教材推導並掌握概念關鍵特徵' }
+    ];
+  }
+
+  const takeawayText = visDiagram.takeaway || slide.visual_description || '深入掌握本單元核心機制與概念推導。';
+
+  const stepsHtml = diagramSteps.slice(0, 3).map((step, idx) => `
+    <div class="visual-step-box step-idx-${idx}">
+      <div class="visual-step-label">${formatMarkdown(step.label)}</div>
+      <div class="visual-step-text" contenteditable="true" spellcheck="false" data-step-idx="${idx}" title="點擊可直接修改步驟說明">${formatMarkdown(step.text)}</div>
+    </div>
+  `).join('');
+
+  return `
+    <div class="visual-card">
+      <div class="visual-card-head">
+        <span>${escapeHtml(headerText)}</span>
+      </div>
+      <div class="visual-card-steps">
+        ${stepsHtml}
+      </div>
+      <div class="visual-card-takeaway">
+        <div class="visual-takeaway-head">💡 核心結論與關鍵理解：</div>
+        <div class="visual-takeaway-text" contenteditable="true" spellcheck="false" title="點擊可直接修改核心結論">${formatMarkdown(takeawayText)}</div>
+      </div>
+    </div>
+  `;
 }
 
 let patchDeckTimeout = null;
@@ -2287,21 +2212,19 @@ function showSlide(index) {
   $('#slideStage').dataset.page = String(index + 1).padStart(2, '0');
 
   const iconStr = extractEmoji(s.icon);
-  const dynamicSvg = renderDynamicDiagram(s, index);
-
   const visualCardHtml = `
     <div class="visual-diagram-container">
-      ${dynamicSvg}
+      ${renderVisualDiagramCard(s, index)}
     </div>
   `;
 
   $('#slideStage').innerHTML = `
     <div class="slide-header-wrap">
-      <h2><span class="slide-title-icon">${escapeHtml(iconStr)}</span> <span class="slide-title-editable" contenteditable="true" spellcheck="false" title="點擊可直接修改投影片標題">${escapeHtml(s.title)}</span></h2>
+      <h2><span class="slide-title-icon">${escapeHtml(iconStr)}</span> <span class="slide-title-editable" contenteditable="true" spellcheck="false" title="點擊可直接修改投影片標題">${formatMarkdown(s.title)}</span></h2>
     </div>
     <div class="slide-content-grid has-visual">
       <div class="slide-bullets-wrap">
-        <ul>${s.bullets.map((b, bIdx) => `<li contenteditable="true" spellcheck="false" data-bullet-idx="${bIdx}" title="點擊可直接修改要點">${escapeHtml(b)}</li>`).join('')}</ul>
+        <ul>${s.bullets.map((b, bIdx) => `<li contenteditable="true" spellcheck="false" data-bullet-idx="${bIdx}" title="點擊可直接修改要點">${formatMarkdown(b)}</li>`).join('')}</ul>
       </div>
       ${visualCardHtml}
     </div>
@@ -2325,6 +2248,39 @@ function showSlide(index) {
       syncDeckEdits();
     });
   });
+
+  // 監聽結構化視覺圖解步驟的即時手動修改
+  $$('#slideStage .visual-step-text[data-step-idx]').forEach(st => {
+    st.addEventListener('input', () => {
+      const sIdx = parseInt(st.dataset.stepIdx, 10);
+      if (!s.visual_diagram) s.visual_diagram = {};
+      if (!Array.isArray(s.visual_diagram.steps)) {
+        s.visual_diagram.steps = [
+          { label: '① 核心機制', text: '' },
+          { label: '② 推導關鍵', text: '' }
+        ];
+      }
+      while (s.visual_diagram.steps.length <= sIdx) {
+        s.visual_diagram.steps.push({ label: `觀念重點 ${s.visual_diagram.steps.length + 1}`, text: '' });
+      }
+      if (typeof s.visual_diagram.steps[sIdx] === 'object' && s.visual_diagram.steps[sIdx] !== null) {
+        s.visual_diagram.steps[sIdx].text = st.innerText;
+      } else {
+        s.visual_diagram.steps[sIdx] = { label: `觀念重點 ${sIdx + 1}`, text: st.innerText };
+      }
+      syncDeckEdits();
+    });
+  });
+
+  // 監聽核心結論的即時手動修改
+  const takeawayEl = $('#slideStage .visual-takeaway-text');
+  if (takeawayEl) {
+    takeawayEl.addEventListener('input', () => {
+      if (!s.visual_diagram) s.visual_diagram = {};
+      s.visual_diagram.takeaway = takeawayEl.innerText;
+      syncDeckEdits();
+    });
+  }
 
   const notesEl = $('#speakerNotes');
   if (notesEl) {

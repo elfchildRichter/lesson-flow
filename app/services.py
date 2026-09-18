@@ -1043,6 +1043,181 @@ class AIService:
 
 
 
+SUPERSCRIPTS_MAP = {
+    "0": "⁰", "1": "¹", "2": "²", "3": "³", "4": "⁴",
+    "5": "⁵", "6": "⁶", "7": "⁷", "8": "⁸", "9": "⁹",
+    "+": "⁺", "-": "⁻", "=": "⁼", "(": "⁽", ")": "⁾",
+    "n": "ⁿ", "i": "ⁱ", "t": "ᵗ"
+}
+
+SUBSCRIPTS_MAP = {
+    "0": "₀", "1": "₁", "2": "₂", "3": "₃", "4": "₄",
+    "5": "₅", "6": "₆", "7": "₇", "8": "₈", "9": "₉",
+    "+": "₊", "-": "₋", "=": "₌", "(": "₍", ")": "₎",
+    "a": "ₐ", "e": "ₑ", "h": "ₕ", "i": "ᵢ", "j": "ⱼ",
+    "k": "ₖ", "l": "ₗ", "m": "ₘ", "n": "ₙ", "o": "ₒ",
+    "p": "ₚ", "r": "ᵣ", "s": "ₛ", "t": "ₜ", "u": "ᵤ", "v": "ᵥ", "x": "ₓ", "y": "ᵧ"
+}
+
+GREEK_AND_SYMBOLS_MAP = {
+    r"\alpha": "α", r"\beta": "β", r"\gamma": "γ", r"\delta": "δ", r"\Delta": "Δ",
+    r"\epsilon": "ε", r"\zeta": "ζ", r"\eta": "η", r"\theta": "θ", r"\Theta": "Θ",
+    r"\lambda": "λ", r"\Lambda": "Λ", r"\mu": "μ", r"\nu": "ν", r"\xi": "ξ",
+    r"\pi": "π", r"\Pi": "Π", r"\rho": "ρ", r"\sigma": "σ", r"\Sigma": "Σ",
+    r"\tau": "τ", r"\phi": "φ", r"\Phi": "Φ", r"\chi": "χ", r"\psi": "ψ",
+    r"\omega": "ω", r"\Omega": "Ω",
+    r"\times": "×", r"\cdot": "·", r"\approx": "≈", r"\pm": "±",
+    r"\mp": "∓", r"\le": "≤", r"\leq": "≤", r"\ge": "≥", r"\geq": "≥",
+    r"\neq": "≠", r"\equiv": "≡", r"\infty": "∞", r"\propto": "∝", r"\partial": "∂",
+    r"\nabla": "∇", r"\rightarrow": "→", r"\to": "→", r"\leftarrow": "←",
+    r"\Rightarrow": "⇒", r"\Leftarrow": "⇐",
+    r"\degree": "°", r"\circ": "°", r"\sum": "∑", r"\int": "∫",
+    r"\,": " ", r"\;": " ", r"\quad": "  ", r"\qquad": "   ",
+}
+
+
+def _wrap_bare_latex(text: str) -> str:
+    """Auto-wrap bare LaTeX expressions in $...$ if not already wrapped."""
+    if not text or "\\" not in text:
+        return text
+    import re
+    parts = re.split(r'(\$\$[\s\S]*?\$\$|\$[^$\n]+?\$|\\\[[\s\S]*?\\\]|\\\([\s\S]*?\\\))', text)
+    result = []
+    latex_cmd_pattern = re.compile(
+        r'(\\(?:vec|frac|sqrt|alpha|beta|gamma|delta|Delta|lambda|Lambda|theta|Theta|omega|Omega|sigma|Sigma|pi|Pi|sum|int|partial|infty|times|cdot|approx|pm|le|ge|neq|equiv|rightarrow|leftarrow|mathbf|mathrm|text|left|right|quad)\b[^\n,，。！？；;]*?(?=[,，。！？；;\s]|$))'
+    )
+    for i, part in enumerate(parts):
+        if i % 2 == 1:
+            result.append(part)
+        else:
+            def _wrap(m):
+                s = m.group(0).strip()
+                if not s.startswith('$'):
+                    return f"${s}$"
+                return s
+            wrapped = latex_cmd_pattern.sub(_wrap, part)
+            result.append(wrapped)
+    return "".join(result)
+
+
+def clean_latex_to_unicode(latex_text: str) -> str:
+    """Convert LaTeX formula text into clean Unicode mathematical representation."""
+    if not latex_text:
+        return ""
+    import re
+
+    text = latex_text.strip()
+    if text.startswith("$$") and text.endswith("$$"):
+        text = text[2:-2].strip()
+    elif text.startswith("$") and text.endswith("$"):
+        text = text[1:-1].strip()
+    elif text.startswith(r"\(") and text.endswith(r"\)"):
+        text = text[2:-2].strip()
+    elif text.startswith(r"\[") and text.endswith(r"\]"):
+        text = text[2:-2].strip()
+
+    # 1. Text wrappers: \text{...}, \mathrm{...}, \mathbf{...}, \mathit{...}
+    text = re.sub(r"\\(?:text|mathrm|mathbf|mathit|textbf|textit)\{([^}]*)\}", r"\1", text)
+    text = re.sub(r"\\(?:left|right)\b", "", text)
+
+    # 2. Vector: \vec{F} -> F⃗, \vec{a} -> a⃗
+    text = re.sub(r"\\vec\{([A-Za-z])\}", r"\1⃗", text)
+    text = re.sub(r"\\vec\s*([A-Za-z])", r"\1⃗", text)
+
+    # 3. Fractions: \frac{a}{b} -> a/b
+    def _frac_sub(m):
+        num = m.group(1).strip()
+        den = m.group(2).strip()
+        return f"{num}/{den}"
+    text = re.sub(r"\\frac\{([^}]+)\}\{([^}]+)\}", _frac_sub, text)
+
+    # 4. Square roots: \sqrt{x} -> √(x), \sqrt[n]{x} -> n√(x)
+    text = re.sub(r"\\sqrt\[([^]]+)\]\{([^}]+)\}", r"\1√(\2)", text)
+    text = re.sub(r"\\sqrt\{([^}]+)\}", r"√(\1)", text)
+
+    # 5. Greek letters & symbols
+    for cmd, sym in GREEK_AND_SYMBOLS_MAP.items():
+        text = text.replace(cmd, sym)
+
+    # 6. Superscripts: x^{2} or x^2
+    def _sup_sub(m):
+        raw = m.group(1) or m.group(2)
+        return "".join(SUPERSCRIPTS_MAP.get(c, c) for c in raw)
+    text = re.sub(r"\^\{([^}]+)\}|\^([0-9a-zA-Z+\-()])", _sup_sub, text)
+
+    # 7. Subscripts: m_{1} or m_1
+    def _sub_sub(m):
+        raw = m.group(1) or m.group(2)
+        return "".join(SUBSCRIPTS_MAP.get(c, c) for c in raw)
+    text = re.sub(r"_\{([^}]+)\}|_([0-9a-zA-Z+\-()])", _sub_sub, text)
+
+    # 8. Clean residual braces or backslashes
+    text = text.replace("{", "").replace("}", "")
+    text = re.sub(r"\\[a-zA-Z]+", "", text)
+
+    return text.strip()
+
+
+def add_markdown_and_math_to_pptx_paragraph(
+    p,
+    text: str,
+    font_size=None,
+    font_color=None,
+    base_bold: bool = False,
+    font_name: str = "Noto Sans TC",
+):
+    """Parse inline markdown (**bold**, *italic*, `code`) and LaTeX math ($...$, $$...$$) and add formatted runs into python-pptx paragraph."""
+    if not text:
+        return
+    import re
+    from pptx.dml.color import RGBColor
+    from pptx.util import Pt
+
+    text_processed = _wrap_bare_latex(str(text))
+    pattern = re.compile(
+        r"(\$\$[\s\S]*?\$\$|\$[^$\n]+?\$|\\\[[\s\S]*?\\\]|\\\([\s\S]*?\\\)|(?<!\*)\*\*[^\*\n]+?\*\*(?!\*)|__[^_\n]+?__|(?<!\*)\*[^\*\n]+?\*(?!\*)|`[^`\n]+?`)"
+    )
+    tokens = pattern.split(text_processed)
+
+    for token in tokens:
+        if not token:
+            continue
+
+        run = p.add_run()
+        run.font.name = font_name
+        if font_size is not None:
+            run.font.size = font_size
+        if font_color is not None:
+            run.font.color.rgb = font_color
+
+        if (
+            (token.startswith("$$") and token.endswith("$$"))
+            or (token.startswith("$") and token.endswith("$"))
+            or (token.startswith(r"\[") and token.endswith(r"\]"))
+            or (token.startswith(r"\(") and token.endswith(r"\)"))
+        ):
+            math_clean = clean_latex_to_unicode(token)
+            run.text = math_clean
+            run.font.italic = True
+            run.font.bold = base_bold
+        elif (
+            (token.startswith("**") and token.endswith("**") and len(token) >= 4)
+            or (token.startswith("__") and token.endswith("__") and len(token) >= 4)
+        ):
+            run.text = token[2:-2]
+            run.font.bold = True
+        elif token.startswith("*") and token.endswith("*") and len(token) > 2:
+            run.text = token[1:-1]
+            run.font.italic = True
+            run.font.bold = base_bold
+        elif token.startswith("`") and token.endswith("`") and len(token) > 2:
+            run.text = token[1:-1]
+            run.font.bold = base_bold
+        else:
+            run.text = token
+            run.font.bold = base_bold
+
+
 def make_pptx(deck: Deck) -> bytes:
     from pptx import Presentation
     from pptx.dml.color import RGBColor
@@ -1065,12 +1240,10 @@ def make_pptx(deck: Deck) -> bytes:
 
         icon_str = getattr(item, "icon", "💡") or "💡"
         title_box = slide.shapes.add_textbox(Inches(0.85), Inches(0.65), Inches(10.8), Inches(1.1))
-        p = title_box.text_frame.paragraphs[0]
-        p.text = f"{icon_str}  {item.title}"
-        p.font.name = "Noto Sans TC"
-        p.font.size = Pt(28)
-        p.font.bold = True
-        p.font.color.rgb = RGBColor(27, 35, 32)
+        tf_title = title_box.text_frame
+        tf_title.word_wrap = True
+        p = tf_title.paragraphs[0]
+        add_markdown_and_math_to_pptx_paragraph(p, f"{icon_str}  {item.title}", font_size=Pt(28), font_color=RGBColor(27, 35, 32), base_bold=True)
 
         # 左側重點內容欄位
         body = slide.shapes.add_textbox(Inches(0.85), Inches(1.95), Inches(6.6), Inches(4.8))
@@ -1079,11 +1252,8 @@ def make_pptx(deck: Deck) -> bytes:
         font_size = Pt(15) if len(item.bullets) <= 4 else Pt(14)
         for bullet_index, bullet in enumerate(item.bullets):
             p = tf.paragraphs[0] if bullet_index == 0 else tf.add_paragraph()
-            p.text = f"• {bullet}"
-            p.font.name = "Noto Sans TC"
-            p.font.size = font_size
-            p.font.color.rgb = RGBColor(55, 65, 61)
             p.space_after = Pt(10)
+            add_markdown_and_math_to_pptx_paragraph(p, f"• {bullet}", font_size=font_size, font_color=RGBColor(55, 65, 61))
 
         # 右側觀念圖解視覺卡片
         card = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(7.8), Inches(1.95), Inches(4.7), Inches(4.8))
@@ -1104,58 +1274,73 @@ def make_pptx(deck: Deck) -> bytes:
 
         card_title_box = slide.shapes.add_textbox(Inches(7.95), Inches(2.05), Inches(4.4), Inches(0.45))
         p = card_title_box.text_frame.paragraphs[0]
-        p.text = card_header_text
-        p.font.name = "Noto Sans TC"
-        p.font.size = Pt(15)
-        p.font.bold = True
-        p.font.color.rgb = RGBColor(222, 91, 55)
+        add_markdown_and_math_to_pptx_paragraph(p, card_header_text, font_size=Pt(15), font_color=RGBColor(222, 91, 55), base_bold=True)
 
-        # 提煉結構化推導步驟 (前 2 階段)
+        # 提煉結構化推導步驟 (支援 1~3 個步驟，動態自適應高度與間距)
         raw_steps = vis_diagram.get("steps", [])
         if raw_steps and isinstance(raw_steps, list):
             diagram_steps = []
-            for s in raw_steps[:2]:
+            for sIdx, s in enumerate(raw_steps[:3]):
                 if isinstance(s, dict):
-                    diagram_steps.append((s.get("label", "觀念重點"), s.get("text", "")))
+                    diagram_steps.append((s.get("label", f"觀念重點 {sIdx + 1}"), s.get("text", "")))
                 else:
-                    diagram_steps.append(("觀念重點", str(s)))
+                    diagram_steps.append((f"觀念重點 {sIdx + 1}", str(s)))
         else:
             diagram_steps = [
                 ("① 核心機制", f"聚焦【{item.title}】之根本原理與邏輯架構"),
                 ("② 推導關鍵", item.visual_description[:60] if item.visual_description else "依據教材推導並掌握概念關鍵特徵"),
             ]
 
-        step_y_starts = [2.55, 3.75]
-        for idx, (lbl, txt) in enumerate(diagram_steps[:2]):
+        n_steps = len(diagram_steps)
+        if n_steps >= 3:
+            step_y_starts = [2.52, 3.45, 4.38]
+            step_h = 0.85
+            vis_y = 5.31
+            vis_h = 1.30
+            step_txt_size = Pt(11)
+            takeaway_txt_size = Pt(11)
+        elif n_steps == 2:
+            step_y_starts = [2.55, 3.75]
+            step_h = 1.05
+            vis_y = 4.95
+            vis_h = 1.60
+            step_txt_size = Pt(12)
+            takeaway_txt_size = Pt(11.5)
+        else:
+            step_y_starts = [2.55]
+            step_h = 1.50
+            vis_y = 4.25
+            vis_h = 2.30
+            step_txt_size = Pt(12.5)
+            takeaway_txt_size = Pt(12)
+
+        for idx, (lbl, txt) in enumerate(diagram_steps):
             y_pos = step_y_starts[idx]
-            step_bg = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(8.0), Inches(y_pos), Inches(4.3), Inches(1.05))
+            step_bg = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(8.0), Inches(y_pos), Inches(4.3), Inches(step_h))
             step_bg.fill.solid()
             if idx == 0:
                 step_bg.fill.fore_color.rgb = RGBColor(255, 245, 242)
                 step_bg.line.color.rgb = RGBColor(222, 91, 55)
-            else:
+            elif idx == 1:
                 step_bg.fill.fore_color.rgb = RGBColor(237, 242, 247)
                 step_bg.line.color.rgb = RGBColor(74, 85, 104)
+            else:
+                step_bg.fill.fore_color.rgb = RGBColor(247, 250, 252)
+                step_bg.line.color.rgb = RGBColor(160, 174, 192)
             step_bg.line.width = Pt(1.0)
 
             tf_step = step_bg.text_frame
             tf_step.word_wrap = True
             p_lbl = tf_step.paragraphs[0]
-            p_lbl.text = lbl
-            p_lbl.font.name = "Noto Sans TC"
-            p_lbl.font.size = Pt(11)
-            p_lbl.font.bold = True
-            p_lbl.font.color.rgb = RGBColor(222, 91, 55) if idx == 0 else RGBColor(74, 85, 104)
+            lbl_color = RGBColor(222, 91, 55) if idx == 0 else (RGBColor(74, 85, 104) if idx == 1 else RGBColor(43, 108, 176))
+            add_markdown_and_math_to_pptx_paragraph(p_lbl, lbl, font_size=Pt(11), font_color=lbl_color, base_bold=True)
 
             p_txt = tf_step.add_paragraph()
             str_item = str(txt)
-            p_txt.text = str_item[:65] + ("..." if len(str_item) > 65 else "")
-            p_txt.font.name = "Noto Sans TC"
-            p_txt.font.size = Pt(12)
-            p_txt.font.color.rgb = RGBColor(45, 55, 72)
+            add_markdown_and_math_to_pptx_paragraph(p_txt, str_item, font_size=step_txt_size, font_color=RGBColor(45, 55, 72))
 
         # 底部視覺圖解結論方塊
-        vis_bg = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(8.0), Inches(4.95), Inches(4.3), Inches(1.6))
+        vis_bg = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(8.0), Inches(vis_y), Inches(4.3), Inches(vis_h))
         vis_bg.fill.solid()
         vis_bg.fill.fore_color.rgb = RGBColor(240, 249, 255)
         vis_bg.line.color.rgb = RGBColor(43, 108, 176)
@@ -1164,24 +1349,18 @@ def make_pptx(deck: Deck) -> bytes:
         tf_vis = vis_bg.text_frame
         tf_vis.word_wrap = True
         p_vis_lbl = tf_vis.paragraphs[0]
-        p_vis_lbl.text = "💡 核心結論與關鍵理解："
-        p_vis_lbl.font.name = "Noto Sans TC"
-        p_vis_lbl.font.size = Pt(11)
-        p_vis_lbl.font.bold = True
-        p_vis_lbl.font.color.rgb = RGBColor(43, 108, 176)
+        add_markdown_and_math_to_pptx_paragraph(p_vis_lbl, "💡 核心結論與關鍵理解：", font_size=Pt(11), font_color=RGBColor(43, 108, 176), base_bold=True)
 
         p_vis_txt = tf_vis.add_paragraph()
         takeaway_text = vis_diagram.get("takeaway") or getattr(item, "visual_description", "") or "深入掌握本單元核心機制與概念推導。"
-        p_vis_txt.text = takeaway_text[:95] + ("..." if len(takeaway_text) > 95 else "")
-        p_vis_txt.font.name = "Noto Sans TC"
-        p_vis_txt.font.size = Pt(11)
-        p_vis_txt.font.color.rgb = RGBColor(45, 55, 72)
+        add_markdown_and_math_to_pptx_paragraph(p_vis_txt, takeaway_text, font_size=takeaway_txt_size, font_color=RGBColor(45, 55, 72))
 
         notes = slide.notes_slide.notes_text_frame
-        notes.text = item.speaker_notes + (f"\n\n資料來源頁碼：{', '.join(map(str, item.source_pages))}" if item.source_pages else "")
+        notes.text = clean_latex_to_unicode(item.speaker_notes) + (f"\n\n資料來源頁碼：{', '.join(map(str, item.source_pages))}" if item.source_pages else "")
     output = io.BytesIO()
     prs.save(output)
     return output.getvalue()
+
 
 
 def make_script(deck: Deck) -> str:
@@ -1283,28 +1462,6 @@ def make_handout_markdown(handout: Handout) -> str:
     return "\n".join(lines)
 
 
-def _wrap_bare_latex(text: str) -> str:
-    """Auto-wrap bare LaTeX expressions in $...$ if not already wrapped."""
-    if not text or "\\" not in text:
-        return text
-    import re
-    parts = re.split(r'(\$\$[\s\S]*?\$\$|\$[^$\n]+?\$|\\\[[\s\S]*?\\\]|\\\([\s\S]*?\\\))', text)
-    result = []
-    latex_cmd_pattern = re.compile(
-        r'(\\(?:vec|frac|sqrt|alpha|beta|gamma|delta|Delta|lambda|Lambda|theta|Theta|omega|Omega|sigma|Sigma|pi|Pi|sum|int|partial|infty|times|cdot|approx|pm|le|ge|neq|equiv|rightarrow|leftarrow|mathbf|mathrm|text|left|right|quad)\b[^\n,，。！？；;]*?(?=[,，。！？；;\s]|$))'
-    )
-    for i, part in enumerate(parts):
-        if i % 2 == 1:
-            result.append(part)
-        else:
-            def _wrap(m):
-                s = m.group(0).strip()
-                if not s.startswith('$'):
-                    return f"${s}$"
-                return s
-            wrapped = latex_cmd_pattern.sub(_wrap, part)
-            result.append(wrapped)
-    return "".join(result)
 
 
 def _format_handout_text(text: str) -> str:
@@ -1661,6 +1818,675 @@ if (window.renderMathInElement) {{
 """
 
 
+def make_deck_slides_html(deck: Deck) -> str:
+    """Generate high-fidelity standalone printable Slides HTML with customizable layout and orientation controls for PDF saving."""
+    slides_html = ""
+    for idx, s in enumerate(deck.slides, 1):
+        icon_str = getattr(s, "icon", "💡") or "💡"
+        title_html = _format_handout_text(s.title)
+        bullets_html = "".join(f"<li>{_format_handout_text(b)}</li>" for b in s.bullets)
+
+        vis_diagram = getattr(s, "visual_diagram", {}) or {}
+        diagram_type = vis_diagram.get("diagram_type", "flowchart")
+        type_titles = {
+            "flowchart": "🔄 機制流程推導",
+            "comparison": "⚖️ 核心概念對比",
+            "key_formula": "🧮 關鍵公式解析",
+            "concept_map": "📐 觀念架構圖解",
+        }
+        card_header_text = type_titles.get(diagram_type, "📐 觀念圖解與推導")
+
+        raw_steps = vis_diagram.get("steps", [])
+        if raw_steps and isinstance(raw_steps, list):
+            diagram_steps = []
+            for sIdx, st in enumerate(raw_steps[:3]):
+                if isinstance(st, dict):
+                    diagram_steps.append((st.get("label", f"觀念重點 {sIdx + 1}"), st.get("text", "")))
+                else:
+                    diagram_steps.append((f"觀念重點 {sIdx + 1}", str(st)))
+        else:
+            diagram_steps = [
+                ("① 核心機制", f"聚焦【{s.title}】之根本原理與邏輯架構"),
+                ("② 推導關鍵", s.visual_description[:60] if s.visual_description else "依據教材推導並掌握概念關鍵特徵"),
+            ]
+
+        steps_html = ""
+        for sIdx, (lbl, txt) in enumerate(diagram_steps):
+            steps_html += f"""
+            <div class="print-step-box step-idx-{sIdx}">
+                <div class="print-step-label">{_format_handout_text(lbl)}</div>
+                <div class="print-step-text">{_format_handout_text(str(txt))}</div>
+            </div>
+            """
+
+        takeaway_text = vis_diagram.get("takeaway") or getattr(s, "visual_description", "") or "深入掌握本單元核心機制與概念推導。"
+        takeaway_html = f"""
+        <div class="print-takeaway-box">
+            <div class="print-takeaway-head">💡 核心結論與關鍵理解：</div>
+            <div class="print-takeaway-text">{_format_handout_text(takeaway_text)}</div>
+        </div>
+        """
+
+        notes_html = _format_handout_text(s.speaker_notes)
+        pages_str = f"教材第 {', '.join(map(str, s.source_pages))} 頁" if s.source_pages else ""
+
+        slides_html += f"""
+        <div class="slide-page-item" data-slide-index="{idx}">
+            <div class="slide-inner-card">
+                <div class="slide-accent-bar"></div>
+                <div class="slide-page-number">{idx:02d}</div>
+                <div class="slide-header">
+                    <h2><span class="slide-icon">{icon_str}</span> <span class="slide-title">{title_html}</span></h2>
+                </div>
+                <div class="slide-body-grid">
+                    <div class="slide-bullets-col">
+                        <ul class="slide-bullets-list">{bullets_html}</ul>
+                    </div>
+                    <div class="slide-visual-col">
+                        <div class="print-visual-card">
+                            <div class="print-visual-head">{_format_handout_text(card_header_text)}</div>
+                            <div class="print-visual-steps">{steps_html}</div>
+                            {takeaway_html}
+                        </div>
+                    </div>
+                </div>
+                <div class="slide-notes-drawer hidden">
+                    <div class="slide-notes-head">
+                        <b>🎙️ 講師演講稿與備課要點</b>
+                        <small>{pages_str}</small>
+                    </div>
+                    <div class="slide-notes-content">{notes_html}</div>
+                </div>
+            </div>
+            <div class="slide-handout-lines hidden">
+                <div class="note-lines-header">課堂隨記 / 備忘筆記</div>
+                <div class="note-line"></div>
+                <div class="note-line"></div>
+                <div class="note-line"></div>
+                <div class="note-line"></div>
+            </div>
+        </div>
+        """
+
+    return f"""<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{deck.title} - 投影片列印與 PDF 匯出</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+<style>
+:root {{
+    --accent: #de5b37;
+    --accent-light: #fff5f2;
+    --ink: #1e293b;
+    --muted: #64748b;
+    --card-bg: #ffffff;
+    --stage-bg: #f8fafc;
+}}
+*, *:before, *:after {{
+    box-sizing: border-box;
+}}
+body {{
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans TC", sans-serif;
+    color: var(--ink);
+    background: #e2e8f0;
+    margin: 0;
+    padding: 0;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+}}
+
+/* 頂端列印控制列 (列印時自動隱藏) */
+.print-control-bar {{
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+    background: #1e293b;
+    color: #f8fafc;
+    padding: 10px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}}
+.ctrl-left {{
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}}
+.ctrl-title {{
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}}
+.ctrl-group {{
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+}}
+.ctrl-btn {{
+    background: #334155;
+    color: #e2e8f0;
+    border: 1px solid #475569;
+    border-radius: 6px;
+    padding: 5px 12px;
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}}
+.ctrl-btn:hover {{
+    background: #475569;
+}}
+.ctrl-btn.active {{
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+}}
+.ctrl-select {{
+    background: #334155;
+    color: #fff;
+    border: 1px solid #475569;
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-size: 12.5px;
+    cursor: pointer;
+}}
+.ctrl-checkbox {{
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    cursor: pointer;
+    user-select: none;
+}}
+.ctrl-checkbox input {{
+    cursor: pointer;
+}}
+.ctrl-right {{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}}
+.action-print-btn {{
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 7px 18px;
+    font-size: 13.5px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(222, 91, 55, 0.4);
+    transition: transform 0.1s ease;
+}}
+.action-print-btn:hover {{
+    background: #c54a28;
+    transform: translateY(-1px);
+}}
+.action-close-btn {{
+    background: transparent;
+    color: #94a3b8;
+    border: 1px solid #475569;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 12.5px;
+    cursor: pointer;
+}}
+.action-close-btn:hover {{
+    color: #fff;
+    border-color: #cbd5e1;
+}}
+
+/* 簡報整體容器 */
+.slides-doc-wrapper {{
+    max-width: 1100px;
+    margin: 25px auto 40px auto;
+    padding: 0 15px;
+}}
+.slides-container {{
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}}
+
+/* 單張投影片樣式 (16:9 卡片外觀，精確重現預覽舞台) */
+.slide-page-item {{
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    position: relative;
+    overflow: hidden;
+    break-inside: avoid;
+    page-break-inside: avoid;
+    padding: 24px 30px;
+    display: flex;
+    flex-direction: column;
+}}
+.slide-inner-card {{
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}}
+.slide-accent-bar {{
+    position: absolute;
+    left: -30px;
+    top: -24px;
+    bottom: -24px;
+    width: 8px;
+    background: var(--accent);
+}}
+.slide-page-number {{
+    position: absolute;
+    top: -6px;
+    right: 0;
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--accent);
+}}
+.slide-header {{
+    margin-bottom: 16px;
+    padding-right: 45px;
+}}
+.slide-header h2 {{
+    margin: 0;
+    font-size: 22px;
+    font-weight: 800;
+    color: #0f172a;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    line-height: 1.3;
+}}
+.slide-body-grid {{
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 20px;
+    align-items: start;
+    flex: 1;
+}}
+.slide-bullets-list {{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}}
+.slide-bullets-list li {{
+    font-size: 14.5px;
+    margin-bottom: 14px;
+    color: #334155;
+    position: relative;
+    padding-left: 22px;
+    line-height: 1.6;
+}}
+.slide-bullets-list li:before {{
+    content: "";
+    position: absolute;
+    left: 2px;
+    top: 0.55em;
+    width: 7px;
+    height: 7px;
+    background: #c9d765;
+    transform: rotate(45deg);
+}}
+
+/* 結構化視覺圖解卡片 */
+.print-visual-card {{
+    background: #ffffff;
+    border: 1.5px solid var(--accent);
+    border-radius: 10px;
+    padding: 12px 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}}
+.print-visual-head {{
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--accent);
+    border-bottom: 1px solid #fed7aa;
+    padding-bottom: 5px;
+}}
+.print-visual-steps {{
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}}
+.print-step-box {{
+    border-radius: 6px;
+    padding: 6px 10px;
+    border: 1px solid #cbd5e0;
+    background: #f8fafc;
+}}
+.print-step-box.step-idx-0 {{
+    background: #fff5f2;
+    border-color: var(--accent);
+}}
+.print-step-box.step-idx-0 .print-step-label {{
+    color: var(--accent);
+}}
+.print-step-box.step-idx-1 {{
+    background: #edf2f7;
+    border-color: #4a5568;
+}}
+.print-step-box.step-idx-1 .print-step-label {{
+    color: #4a5568;
+}}
+.print-step-box.step-idx-2 {{
+    background: #f8fafc;
+    border-color: #a0aec0;
+}}
+.print-step-box.step-idx-2 .print-step-label {{
+    color: #2b6cb0;
+}}
+.print-step-label {{
+    font-size: 11.5px;
+    font-weight: 700;
+    margin-bottom: 2px;
+}}
+.print-step-text {{
+    font-size: 12px;
+    line-height: 1.45;
+    color: #334155;
+}}
+.print-takeaway-box {{
+    background: #f0f9ff;
+    border: 1px solid #2b6cb0;
+    border-radius: 6px;
+    padding: 6px 10px;
+    margin-top: 2px;
+}}
+.print-takeaway-head {{
+    font-size: 11px;
+    font-weight: 700;
+    color: #2b6cb0;
+    margin-bottom: 2px;
+}}
+.print-takeaway-text {{
+    font-size: 11.5px;
+    color: #334155;
+    line-height: 1.4;
+}}
+
+/* 演講稿抽屜 */
+.slide-notes-drawer {{
+    margin-top: 16px;
+    background: #f8fafc;
+    border-top: 1px dashed #cbd5e1;
+    padding-top: 12px;
+}}
+.slide-notes-head {{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: #475569;
+    margin-bottom: 4px;
+}}
+.slide-notes-content {{
+    font-size: 12.5px;
+    color: #475569;
+    line-height: 1.55;
+}}
+
+/* 筆記線 (3 頁講義模式) */
+.slide-handout-lines {{
+    border-left: 1px dashed #cbd5e1;
+    padding-left: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}}
+.note-lines-header {{
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #94a3b8;
+    margin-bottom: 5px;
+}}
+.note-line {{
+    border-bottom: 1px solid #e2e8f0;
+    height: 28px;
+}}
+
+.hidden {{
+    display: none !important;
+}}
+
+/* ========== 多版面佈局自適應 ========== */
+/* 2 Slides per page */
+.layout-2 .slides-container {{
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+}}
+.layout-2 .slide-page-item {{
+    padding: 18px 22px;
+}}
+.layout-2 .slide-header h2 {{
+    font-size: 18px;
+}}
+.layout-2 .slide-bullets-list li {{
+    font-size: 13px;
+    margin-bottom: 8px;
+}}
+
+/* 3 Slides per page with note lines */
+.layout-3 .slide-page-item {{
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 15px;
+    padding: 16px 20px;
+}}
+.layout-3 .slide-handout-lines {{
+    display: flex !important;
+}}
+.layout-3 .slide-header h2 {{
+    font-size: 16px;
+}}
+.layout-3 .slide-bullets-list li {{
+    font-size: 12px;
+    margin-bottom: 6px;
+}}
+
+/* 4 Slides per page (2x2) */
+.layout-4 .slides-container {{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}}
+.layout-4 .slide-page-item {{
+    padding: 14px 16px;
+}}
+.layout-4 .slide-header h2 {{
+    font-size: 15px;
+}}
+.layout-4 .slide-bullets-list li {{
+    font-size: 11.5px;
+    margin-bottom: 6px;
+}}
+.layout-4 .slide-body-grid {{
+    grid-template-columns: 1fr;
+    gap: 10px;
+}}
+
+/* 6 Slides per page (2x3) */
+.layout-6 .slides-container {{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}}
+.layout-6 .slide-page-item {{
+    padding: 10px 14px;
+}}
+.layout-6 .slide-header h2 {{
+    font-size: 13.5px;
+}}
+.layout-6 .slide-bullets-list li {{
+    font-size: 11px;
+    margin-bottom: 4px;
+}}
+.layout-6 .slide-body-grid {{
+    grid-template-columns: 1fr;
+    gap: 8px;
+}}
+
+/* ========== 列印媒體查詢 (@media print) ========== */
+@media print {{
+    body {{
+        background: #ffffff !important;
+        padding: 0 !important;
+    }}
+    .print-control-bar {{
+        display: none !important;
+    }}
+    .slides-doc-wrapper {{
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }}
+    .slide-page-item {{
+        border: 1px solid #cbd5e1 !important;
+        box-shadow: none !important;
+        border-radius: 8px !important;
+    }}
+    
+    /* 1 Slide per page: 每一張投影片強迫獨立換頁 */
+    .layout-1 .slide-page-item {{
+        page-break-after: always !important;
+        break-after: page !important;
+        min-height: 88vh;
+    }}
+    
+    /* 2 Slides per page: 每 2 張換一頁 */
+    .layout-2 .slide-page-item:nth-child(2n) {{
+        page-break-after: always !important;
+        break-after: page !important;
+    }}
+    
+    /* 3 Slides per page: 每 3 張換一頁 */
+    .layout-3 .slide-page-item:nth-child(3n) {{
+        page-break-after: always !important;
+        break-after: page !important;
+    }}
+    
+    /* 4 Slides per page: 每 4 張換一頁 */
+    .layout-4 .slide-page-item:nth-child(4n) {{
+        page-break-after: always !important;
+        break-after: page !important;
+    }}
+    
+    /* 6 Slides per page: 每 6 張換一頁 */
+    .layout-6 .slide-page-item:nth-child(6n) {{
+        page-break-after: always !important;
+        break-after: page !important;
+    }}
+}}
+
+@page {{
+    size: auto;
+    margin: 8mm 10mm;
+}}
+</style>
+</head>
+<body class="orientation-landscape layout-1">
+
+<div class="print-control-bar">
+    <div class="ctrl-left">
+        <div class="ctrl-title">📑 簡報 PDF 與列印模式</div>
+        <div class="ctrl-group">
+            <button type="button" class="ctrl-btn active" id="btnLandscape" onclick="setOrientation('landscape')">🖥️ 橫向 (16:9)</button>
+            <button type="button" class="ctrl-btn" id="btnPortrait" onclick="setOrientation('portrait')">📄 直向 (A4)</button>
+        </div>
+        <div class="ctrl-group">
+            <label for="layoutSelect">每頁配置：</label>
+            <select id="layoutSelect" class="ctrl-select" onchange="setLayout(this.value)">
+                <option value="1" selected>1 張 / 頁 (全版投影標準)</option>
+                <option value="2">2 張 / 頁 (雙投影片講義)</option>
+                <option value="3">3 張 / 頁 (附筆記線講義)</option>
+                <option value="4">4 張 / 頁 (2×2 縮圖網格)</option>
+                <option value="6">6 張 / 頁 (2×3 密集檢索)</option>
+            </select>
+        </div>
+        <div class="ctrl-group">
+            <label class="ctrl-checkbox">
+                <input type="checkbox" id="notesCheckbox" onchange="toggleNotes(this.checked)"> 包含講師演講稿
+            </label>
+        </div>
+    </div>
+    <div class="ctrl-right">
+        <button type="button" class="action-print-btn" onclick="window.print()">🖨️ 列印 / 另存為 PDF</button>
+        <button type="button" class="action-close-btn" onclick="window.close()">✕ 關閉</button>
+    </div>
+</div>
+
+<div class="slides-doc-wrapper">
+    <div class="slides-container">
+        {slides_html}
+    </div>
+</div>
+
+<script>
+function setOrientation(mode) {{
+    document.body.classList.remove('orientation-landscape', 'orientation-portrait');
+    document.body.classList.add('orientation-' + mode);
+    document.getElementById('btnLandscape').classList.toggle('active', mode === 'landscape');
+    document.getElementById('btnPortrait').classList.toggle('active', mode === 'portrait');
+    
+    let styleEl = document.getElementById('dynamicPageStyle');
+    if (!styleEl) {{
+        styleEl = document.createElement('style');
+        styleEl.id = 'dynamicPageStyle';
+        document.head.appendChild(styleEl);
+    }}
+    styleEl.innerHTML = '@page {{ size: ' + mode + '; margin: 8mm 10mm; }}';
+}}
+
+function setLayout(count) {{
+    document.body.classList.remove('layout-1', 'layout-2', 'layout-3', 'layout-4', 'layout-6');
+    document.body.classList.add('layout-' + count);
+    if (count === '3' || count === '2') {{
+        setOrientation('portrait');
+    }}
+}}
+
+function toggleNotes(show) {{
+    document.querySelectorAll('.slide-notes-drawer').forEach(el => {{
+        el.classList.toggle('hidden', !show);
+    }});
+}}
+
+document.addEventListener('DOMContentLoaded', () => {{
+    if (window.renderMathInElement) {{
+        renderMathInElement(document.body, {{
+            delimiters: [
+                {{ left: '$$', right: '$$', display: true }},
+                {{ left: '$', right: '$', display: false }},
+                {{ left: '\\\\(', right: '\\\\)', display: false }},
+                {{ left: '\\\\[', right: '\\\\]', display: true }}
+            ],
+            throwOnError: false
+        }});
+    }}
+}});
+</script>
+</body>
+</html>
+"""
+
+
 def make_deck_handout_html(deck: Deck) -> str:
     slides_html = ""
     for idx, s in enumerate(deck.slides, 1):
@@ -1938,95 +2764,6 @@ if (window.renderMathInElement) {{
 """
 
 
-SUPERSCRIPTS_MAP = {
-    "0": "⁰", "1": "¹", "2": "²", "3": "³", "4": "⁴",
-    "5": "⁵", "6": "⁶", "7": "⁷", "8": "⁸", "9": "⁹",
-    "+": "⁺", "-": "⁻", "=": "⁼", "(": "⁽", ")": "⁾",
-    "n": "ⁿ", "i": "ⁱ", "t": "ᵗ"
-}
-
-SUBSCRIPTS_MAP = {
-    "0": "₀", "1": "₁", "2": "₂", "3": "₃", "4": "₄",
-    "5": "₅", "6": "₆", "7": "₇", "8": "₈", "9": "₉",
-    "+": "₊", "-": "₋", "=": "₌", "(": "₍", ")": "₎",
-    "a": "ₐ", "e": "ₑ", "h": "ₕ", "i": "ᵢ", "j": "ⱼ",
-    "k": "ₖ", "l": "ₗ", "m": "ₘ", "n": "ₙ", "o": "ₒ",
-    "p": "ₚ", "r": "ᵣ", "s": "ₛ", "t": "ₜ", "u": "ᵤ", "v": "ᵥ", "x": "ₓ", "y": "ᵧ"
-}
-
-GREEK_AND_SYMBOLS_MAP = {
-    r"\alpha": "α", r"\beta": "β", r"\gamma": "γ", r"\delta": "δ", r"\Delta": "Δ",
-    r"\epsilon": "ε", r"\zeta": "ζ", r"\eta": "η", r"\theta": "θ", r"\Theta": "Θ",
-    r"\lambda": "λ", r"\Lambda": "Λ", r"\mu": "μ", r"\nu": "ν", r"\xi": "ξ",
-    r"\pi": "π", r"\Pi": "Π", r"\rho": "ρ", r"\sigma": "σ", r"\Sigma": "Σ",
-    r"\tau": "τ", r"\phi": "φ", r"\Phi": "Φ", r"\chi": "χ", r"\psi": "ψ",
-    r"\omega": "ω", r"\Omega": "Ω",
-    r"\times": "×", r"\cdot": "·", r"\approx": "≈", r"\pm": "±",
-    r"\mp": "∓", r"\le": "≤", r"\leq": "≤", r"\ge": "≥", r"\geq": "≥",
-    r"\neq": "≠", r"\equiv": "≡", r"\infty": "∞", r"\propto": "∝", r"\partial": "∂",
-    r"\nabla": "∇", r"\rightarrow": "→", r"\to": "→", r"\leftarrow": "←",
-    r"\Rightarrow": "⇒", r"\Leftarrow": "⇐",
-    r"\degree": "°", r"\circ": "°", r"\sum": "∑", r"\int": "∫",
-    r"\,": " ", r"\;": " ", r"\quad": "  ", r"\qquad": "   ",
-}
-
-
-def clean_latex_to_unicode(latex_text: str) -> str:
-    """Convert LaTeX formula text into clean Unicode mathematical representation."""
-    if not latex_text:
-        return ""
-    import re
-
-    text = latex_text.strip()
-    if text.startswith("$$") and text.endswith("$$"):
-        text = text[2:-2].strip()
-    elif text.startswith("$") and text.endswith("$"):
-        text = text[1:-1].strip()
-    elif text.startswith(r"\(") and text.endswith(r"\)"):
-        text = text[2:-2].strip()
-    elif text.startswith(r"\[") and text.endswith(r"\]"):
-        text = text[2:-2].strip()
-
-    # 1. Text wrappers: \text{...}, \mathrm{...}, \mathbf{...}, \mathit{...}
-    text = re.sub(r"\\(?:text|mathrm|mathbf|mathit|textbf|textit)\{([^}]*)\}", r"\1", text)
-    text = re.sub(r"\\(?:left|right)\b", "", text)
-
-    # 2. Vector: \vec{F} -> F⃗, \vec{a} -> a⃗
-    text = re.sub(r"\\vec\{([A-Za-z])\}", r"\1⃗", text)
-    text = re.sub(r"\\vec\s*([A-Za-z])", r"\1⃗", text)
-
-    # 3. Fractions: \frac{a}{b} -> a/b
-    def _frac_sub(m):
-        num = m.group(1).strip()
-        den = m.group(2).strip()
-        return f"{num}/{den}"
-    text = re.sub(r"\\frac\{([^}]+)\}\{([^}]+)\}", _frac_sub, text)
-
-    # 4. Square roots: \sqrt{x} -> √(x), \sqrt[n]{x} -> n√(x)
-    text = re.sub(r"\\sqrt\[([^]]+)\]\{([^}]+)\}", r"\1√(\2)", text)
-    text = re.sub(r"\\sqrt\{([^}]+)\}", r"√(\1)", text)
-
-    # 5. Greek letters & symbols
-    for cmd, sym in GREEK_AND_SYMBOLS_MAP.items():
-        text = text.replace(cmd, sym)
-
-    # 6. Superscripts: x^{2} or x^2
-    def _sup_sub(m):
-        raw = m.group(1) or m.group(2)
-        return "".join(SUPERSCRIPTS_MAP.get(c, c) for c in raw)
-    text = re.sub(r"\^\{([^}]+)\}|\^([0-9a-zA-Z+\-()])", _sup_sub, text)
-
-    # 7. Subscripts: m_{1} or m_1
-    def _sub_sub(m):
-        raw = m.group(1) or m.group(2)
-        return "".join(SUBSCRIPTS_MAP.get(c, c) for c in raw)
-    text = re.sub(r"_\{([^}]+)\}|_([0-9a-zA-Z+\-()])", _sub_sub, text)
-
-    # 8. Clean residual braces or backslashes
-    text = text.replace("{", "").replace("}", "")
-    text = re.sub(r"\\[a-zA-Z]+", "", text)
-
-    return text.strip()
 
 
 def add_markdown_and_math_to_paragraph(p, text: str, font_size=None, font_color=None, base_bold=False):

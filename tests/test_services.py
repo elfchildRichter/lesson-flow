@@ -333,21 +333,28 @@ def test_parse_pdf_smart_routing(monkeypatch):
 def test_make_pptx_with_visual_diagram():
     from app.models import Deck, Slide
     from app.services import make_pptx
+    import io
+    from pptx import Presentation
 
     slide = Slide(
-        title="光電效應機制",
-        bullets=["光子入射金屬表面", "克服功函數 W 逸出電子", "剩餘能量轉為動能 $K_{max}$"],
-        speaker_notes="各位好，我們來看光電效應的核心推導流程。",
+        title="**光電效應機制**與 $E=mc^2$",
+        bullets=[
+            "**光子入射**：單一光子入射金屬表面",
+            "**功函數**：克服功函數 $W$ 逸出電子",
+            "**動能守恆**：剩餘能量轉為最大動能 $K_{max} = hf - W$"
+        ],
+        speaker_notes="各位好，我們來看光電效應的核心推導流程：$K_{max} = hf - W$。",
         source_pages=[1, 2],
         icon="⚡",
         visual_description="光子能量轉換示意圖",
         visual_diagram={
             "diagram_type": "flowchart",
             "steps": [
-                {"label": "① 光子入射", "text": "單一光子將能量 $hf$ 傳遞給金屬電子"},
-                {"label": "② 逸出與動能", "text": "電子克服功函數後獲得最大動能 $K_{max}$"},
+                {"label": "① 光子入射", "text": "**能量傳遞**：單一光子將能量 $hf$ 傳遞給金屬電子"},
+                {"label": "② 克服功函數", "text": "**電子逸出**：克服表面束縛功函數 $W$"},
+                {"label": "③ 剩餘動能", "text": "**最大動能**：獲得動能 $K_{max}$"},
             ],
-            "takeaway": "核心結論：光電子動能僅取決於入射光頻率，與強度無關。",
+            "takeaway": "核心結論：**光電子動能**僅取決於入射光頻率 $f$，與光強度無關。",
         },
     )
     deck = Deck(
@@ -362,6 +369,13 @@ def test_make_pptx_with_visual_diagram():
     pptx_bytes = make_pptx(deck)
     assert isinstance(pptx_bytes, bytes)
     assert len(pptx_bytes) > 1000
+
+    # Verify Presentation structure
+    prs = Presentation(io.BytesIO(pptx_bytes))
+    assert len(prs.slides) == 1
+    s0 = prs.slides[0]
+    # Shapes should include background, accent, slide number, title, bullets body, card container, card title, 3 step boxes, 1 takeaway box = 11 shapes
+    assert len(s0.shapes) >= 10
 
 
 def test_generate_quiz_service_and_markdown():
@@ -608,6 +622,55 @@ def test_clean_latex_to_unicode_and_deck_docx():
     docx_bytes = make_deck_docx(test_deck)
     assert isinstance(docx_bytes, bytes)
     assert len(docx_bytes) > 1000
+
+
+def test_make_deck_slides_html():
+    from app.services import make_deck_slides_html
+    from app.models import Deck, Slide
+
+    test_deck = Deck(
+        id="deck_print_test",
+        document_id="doc_1",
+        title="國中數學：乘法分配律",
+        subtitle="七年級上學期",
+        duration=45,
+        mode="gemini",
+        slides=[
+            Slide(
+                title="乘法分配律核心",
+                bullets=["**運算規則**：$a(b+c) = ab+ac$", "幾何意義：長方形面積分割"],
+                speaker_notes="引導學生觀察長方形面積的拆解方式。",
+                icon="🧮",
+                source_pages=[12],
+                visual_diagram={
+                    "diagram_type": "key_formula",
+                    "steps": [
+                        {"label": "① 展開型態", "text": "$a(b+c) = ab + ac$"},
+                        {"label": "② 幾何分割", "text": "總面積等於兩個小長方形面積之和"},
+                        {"label": "③ 逆向因式分解", "text": "提取公因數 $ab + ac = a(b+c)$"},
+                    ],
+                    "takeaway": "乘法分配律是多項式運算與因式分解的核心基石。",
+                },
+            )
+        ],
+    )
+
+    html = make_deck_slides_html(test_deck)
+    assert "<!DOCTYPE html>" in html
+    assert "國中數學：乘法分配律" in html
+    assert "print-control-bar" in html
+    assert "setOrientation('landscape')" in html
+    assert "setOrientation('portrait')" in html
+    assert "setLayout(this.value)" in html
+    assert "toggleNotes(this.checked)" in html
+    assert "window.print()" in html
+    assert "katex.min.js" in html
+    assert "renderMathInElement" in html
+    assert "乘法分配律核心" in html
+    assert "print-step-box" in html
+    assert "① 展開型態" in html
+    assert "核心結論與關鍵理解" in html
+    assert "乘法分配律是多項式運算與因式分解的核心基石。" in html
 
 
 

@@ -37,6 +37,7 @@ from .services import (
     DocumentStore,
     make_deck_docx,
     make_deck_handout_html,
+    make_deck_slides_html,
     make_handout_docx,
     make_handout_html,
     make_handout_markdown,
@@ -929,6 +930,16 @@ def print_deck_handout(deck_id: str) -> Response:
     if not deck:
         raise HTTPException(404, "找不到簡報資料")
     html_content = make_deck_handout_html(deck)
+    return Response(html_content, media_type="text/html; charset=utf-8")
+
+
+@app.get("/api/decks/{deck_id}/pdf")
+@app.get("/api/decks/{deck_id}/slides/print")
+def print_deck_slides(deck_id: str) -> Response:
+    deck = store.decks.get(deck_id)
+    if not deck:
+        raise HTTPException(404, "找不到簡報資料")
+    html_content = make_deck_slides_html(deck)
     return Response(html_content, media_type="text/html; charset=utf-8")
 
 
