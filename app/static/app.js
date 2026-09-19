@@ -31,6 +31,16 @@ const translations = {
     'nav.crumb_admin': '管理員控制台',
     'nav.crumb_agent': 'AI 備課助手',
     'nav.crumb_profile': '個人帳號設定',
+    'nav.sub_home': '把教材變成一堂好懂的課',
+    'nav.sub_workspace': '上傳教材、解析內容與一鍵生成教學資產',
+    'nav.sub_deck': '檢視、編輯與匯出簡報、講義與測驗題庫',
+    'nav.sub_chat': '依據教材精準溯源與概念解說',
+    'nav.sub_agent': '教案設計、試題與教學宣傳多功能助手',
+    'nav.sub_profile': '檢視帳號身份、等級與每日配額',
+    'nav.sub_admin': '審核帳號、調整權限與用戶管理',
+    'chat.btn_clear': '開啟新對話',
+    'chat.memory_active': '多輪對話記憶中',
+    'agent.btn_clear': '清空對話',
     'preview.eyebrow': '課程產出與預覽',
     'preview.title': '教學產出預覽',
     'preview.subtitle': '在此檢視並匯出已生成的教學簡報、隨堂講義與單元試卷。',
@@ -233,7 +243,7 @@ const translations = {
     'opt.slides.12': '12 頁',
     'opt.slides.15': '15 頁',
 
-    'opt.lang.zh_tw': '🇹🇼 繁體中文 (Traditional Chinese)',
+    'opt.lang.zh_tw': '🇹🇼 中文 (Traditional Chinese)',
     'opt.lang.en': '🇺🇸 English',
     'opt.lang.auto': '🤖 與教材同語系 (Auto)',
 
@@ -337,10 +347,21 @@ const translations = {
     'loading.deck_copy': '運用 LLM 設計教學流程與產生簡報，約需時數分鐘…',
     'loading.ask_title': '正在對照教材內容並生成最佳解答…',
     'loading.ask_copy': '從章節段落精準索引並附上頁碼說明…',
-    'toast.logout': '已成功登出',
-    'toast.pass_changed': '密碼已成功修改',
-    'toast.pdf_invalid': '請選擇 PDF 檔案',
-    'toast.pdf_uploaded': '教材已完成解析，可以開始設計課程',
+    'stepper.step1_title': '上傳 / 構思教材',
+    'stepper.step1_sub': 'PDF / AI 助手',
+    'stepper.step2_title': '設定對象與語氣',
+    'stepper.step2_sub': '共通教學參數',
+    'stepper.step3_title': '生成隨堂講義',
+    'stepper.step3_sub': '確立核心知識母本',
+    'stepper.step4_title': '衍生簡報與試卷',
+    'stepper.step4_sub': '簡報與試卷',
+    'workspace.generate_all': '🚀 循序生成全套（講義 ➔ 簡報 & 試卷）',
+    'handout.badge': '📝 模組 1',
+    'deck.badge': '🎯 模組 2',
+    'quiz.badge': '📑 模組 3',
+    'profile.top_badge': '帳號管理中心',
+    'profile.btn_refresh': '重新整理',
+    'toast.profile_refreshed': '帳號資訊已更新',
 
     'footer.copyright': '© 2026 ArchCet. All rights reserved.',
     'footer.terms': '服務條款 (Terms)',
@@ -352,7 +373,7 @@ const translations = {
     'nav.brand_root': 'LessonFlow',
     'nav.home': 'Product Overview',
     'nav.workspace': 'Workspace',
-    'nav.deck': 'Outputs & Preview',
+    'nav.deck': 'Outputs & Review',
     'nav.chat': 'Material Q&A',
     'nav.profile': 'Account Settings',
     'nav.admin': 'Admin Console',
@@ -360,11 +381,21 @@ const translations = {
     'nav.crumb_home': 'Product Overview',
     'nav.crumb_create': 'Instructional Workspace',
     'nav.crumb_workspace': 'Instructional Workspace',
-    'nav.crumb_deck': 'Outputs & Preview',
+    'nav.crumb_deck': 'Outputs & Review',
     'nav.crumb_chat': 'Material Q&A',
     'nav.crumb_admin': 'Admin Console',
     'nav.crumb_agent': 'AI Lesson Assistant',
     'nav.crumb_profile': 'Account Settings',
+    'nav.sub_home': 'Turn Teaching Materials into Engaging Lessons',
+    'nav.sub_workspace': 'Upload Materials & Generate Teaching Assets',
+    'nav.sub_deck': 'Preview & Export Slides, Handouts and Quizzes',
+    'nav.sub_chat': 'Grounded Q&A & Concept Explanations',
+    'nav.sub_agent': 'Multi-department Lesson Prep & Teaching Assistant',
+    'nav.sub_profile': 'Manage Account, Tier & Quotas',
+    'nav.sub_admin': 'User Management & Permissions',
+    'chat.btn_clear': 'New Session',
+    'chat.memory_active': 'Multi-turn Memory Active',
+    'agent.btn_clear': 'Reset Chat',
     'preview.eyebrow': 'Course Outputs & Preview',
     'preview.title': 'Outputs & Preview Center',
     'preview.subtitle': 'Inspect and export generated presentation decks, A4 handouts, and unit quiz sheets.',
@@ -676,6 +707,22 @@ const translations = {
     'toast.pass_changed': 'Password changed successfully',
     'toast.pdf_invalid': 'Please select a valid PDF file',
     'toast.pdf_uploaded': 'Material parsed successfully! Ready for deck & Q&A.',
+
+    'stepper.step1_title': 'Upload / Brainstorm',
+    'stepper.step1_sub': 'PDF / AI Assistant',
+    'stepper.step2_title': 'Set Audience & Tone',
+    'stepper.step2_sub': 'Global Parameters',
+    'stepper.step3_title': 'Generate Handout',
+    'stepper.step3_sub': 'Core Knowledge Base',
+    'stepper.step4_title': 'Derive Deck & Quiz',
+    'stepper.step4_sub': 'Slides & Quizzes',
+    'workspace.generate_all': '🚀 Generate Full Suite (Handout ➔ Deck & Quiz)',
+    'handout.badge': '📝 Module 1',
+    'deck.badge': '🎯 Module 2',
+    'quiz.badge': '📑 Module 3',
+    'profile.top_badge': 'Account Center',
+    'profile.btn_refresh': 'Refresh Info',
+    'toast.profile_refreshed': 'Account info updated',
 
     'footer.copyright': '© 2026 ArchCet. All rights reserved.',
     'footer.terms': 'Terms of Service',
@@ -1255,40 +1302,24 @@ function updateAuthUI(user) {
 }
 
 function renderDeptActiveIndicators() {
-  const isEn = state.lang === 'en';
   const activeKey = state.activeDept; // null = unsegmented omni mode
 
   const depts = [
-    { key: 'academic', card: '#deptCardAcademic', defaultLabel: isEn ? '💬 Chat with LessonFlow Tutor' : '💬 與教務小老師對話', activeLabel: isEn ? '✓ Active Chatting' : '✓ 對話中 (教務小老師)' },
-    { key: 'marketing', card: '#deptCardMarketing', defaultLabel: isEn ? '💬 Chat with Marketing Specialist' : '💬 與營銷推廣專員對話', activeLabel: isEn ? '✓ Active Chatting' : '✓ 對話中 (營銷推廣專員)' },
-    { key: 'operations', card: '#deptCardOperations', defaultLabel: isEn ? '💬 Chat with Operations Assistant' : '💬 與教務行政特助對話', activeLabel: isEn ? '✓ Active Chatting' : '✓ 對話中 (教務行政特助)' },
-    { key: 'devops', card: '#deptCardDevops', defaultLabel: isEn ? '💬 Chat with DevOps Engineer' : '💬 與技術維護工程師對話', activeLabel: isEn ? '✓ Active Chatting' : '✓ 對話中 (技術維護工程師)' }
+    { key: 'academic', card: '#deptCardAcademic' },
+    { key: 'marketing', card: '#deptCardMarketing' },
+    { key: 'operations', card: '#deptCardOperations' },
+    { key: 'devops', card: '#deptCardDevops' }
   ];
 
   depts.forEach(item => {
     const card = $(item.card);
     if (!card) return;
-    const btn = card.querySelector('.dept-chat-btn');
     const isThisActive = (activeKey === item.key);
 
     if (isThisActive) {
       card.classList.add('dept-card-active');
-      card.style.borderColor = '#6366f1';
-      card.style.boxShadow = '0 0 0 2px rgba(99, 102, 241, 0.25)';
-      if (btn) {
-        btn.textContent = item.activeLabel;
-        btn.style.background = '#4f46e5';
-        btn.style.color = '#ffffff';
-      }
     } else {
       card.classList.remove('dept-card-active');
-      card.style.borderColor = '';
-      card.style.boxShadow = '';
-      if (btn) {
-        btn.textContent = item.defaultLabel;
-        btn.style.background = '';
-        btn.style.color = '';
-      }
     }
   });
   if (typeof updateAgentDeptBar === 'function') {
@@ -1302,15 +1333,10 @@ function updateAgentDepartmentBadges(user) {
   const tierKey = user?.tier || (role === 'admin' ? 'admin' : 'teacher_trial');
   const isAdmin = role === 'admin' || tierKey === 'admin';
 
-  function setCardButtonStatus(cardSelector, isActive) {
+  function setCardStatus(cardSelector, isActive) {
     const card = $(cardSelector);
     if (!card) return;
-    const btn = card.querySelector('.dept-chat-btn');
-    if (btn) {
-      btn.disabled = !isActive;
-      btn.style.cursor = isActive ? 'pointer' : 'not-allowed';
-      btn.style.opacity = isActive ? '1' : '0.5';
-    }
+    card.setAttribute('data-disabled', (!isActive).toString());
   }
 
   // 1. 教務教學部 (Academic)
@@ -1319,7 +1345,7 @@ function updateAgentDepartmentBadges(user) {
     academicBadge.className = 'dept-badge badge-active';
     academicBadge.textContent = isEn ? '🟢 Active' : '🟢 已啟用';
   }
-  setCardButtonStatus('#deptCardAcademic', true);
+  setCardStatus('#deptCardAcademic', true);
 
   // 2. 市場與營銷部 (Marketing)
   const mktCard = $('#deptCardMarketing');
@@ -1329,7 +1355,7 @@ function updateAgentDepartmentBadges(user) {
     mktBadge.textContent = isEn ? '🟢 Active' : '🟢 已啟用';
     if (mktCard) mktCard.style.opacity = '1';
   }
-  setCardButtonStatus('#deptCardMarketing', true);
+  setCardStatus('#deptCardMarketing', true);
 
   // 3. 營運與行政部 (Operations)
   const opsCard = $('#deptCardOperations');
@@ -1339,7 +1365,7 @@ function updateAgentDepartmentBadges(user) {
     opsBadge.textContent = isEn ? '🟢 Active' : '🟢 已啟用';
     if (opsCard) opsCard.style.opacity = '1';
   }
-  setCardButtonStatus('#deptCardOperations', true);
+  setCardStatus('#deptCardOperations', true);
 
   // 4. 技術維護部 (DevOps) - Admin Only (Far right)
   const devopsCard = $('#deptCardDevops');
@@ -1347,7 +1373,7 @@ function updateAgentDepartmentBadges(user) {
   if (devopsBadge) {
     if (isAdmin) {
       devopsBadge.className = 'dept-badge badge-active';
-      devopsBadge.textContent = isEn ? '🟢 Active (Admin)' : '🟢 管理員已啟用';
+      devopsBadge.textContent = isEn ? '🟢 Active' : '🟢 已啟用';
       if (devopsCard) devopsCard.style.opacity = '1';
     } else {
       devopsBadge.className = 'dept-badge badge-locked';
@@ -1355,7 +1381,7 @@ function updateAgentDepartmentBadges(user) {
       if (devopsCard) devopsCard.style.opacity = '0.7';
     }
   }
-  setCardButtonStatus('#deptCardDevops', isAdmin);
+  setCardStatus('#deptCardDevops', isAdmin);
   renderDeptActiveIndicators();
 }
 
@@ -1787,7 +1813,17 @@ function switchView(name) {
     'agent': t('nav.crumb_agent'),
     'admin': t('nav.crumb_admin')
   };
+  const subtitles = {
+    'home': t('nav.sub_home'),
+    'workspace': t('nav.sub_workspace'),
+    'deck': t('nav.sub_deck'),
+    'chat': t('nav.sub_chat'),
+    'profile': t('nav.sub_profile'),
+    'agent': t('nav.sub_agent'),
+    'admin': t('nav.sub_admin')
+  };
   if ($('#crumb')) $('#crumb').textContent = crumbs[name] || t('nav.crumb_home');
+  if ($('#crumbSubtitle')) $('#crumbSubtitle').textContent = subtitles[name] ? ` · ${subtitles[name]}` : '';
   if (innerWidth < 950) toggleSidebar(false);
 
 
@@ -1808,18 +1844,32 @@ function renderProfileView() {
     $('#profileRoleBadge').textContent = state.user.role === 'admin' ? t('quota.admin') : t('profile.role_user');
     $('#profileRoleBadge').className = `role-chip ${state.user.role}`;
   }
-  if ($('#profileQuotaText')) {
+  if ($('#profileToolbarUserBadge')) {
+    $('#profileToolbarUserBadge').textContent = `👤 ${state.user.username || t('profile.top_badge')}`;
+  }
+  if ($('#profileToolbarRoleText')) {
+    $('#profileToolbarRoleText').textContent = state.user.role === 'admin' ? t('quota.admin') : t('profile.role_user');
+  }
+  if ($('#profileQuotaText') || $('#profileToolbarQuota')) {
     const credits = state.user.credits || {};
     const isUnlimited = state.user.role === 'admin' || credits.is_unlimited;
     if (isUnlimited) {
-      $('#profileQuotaText').textContent = state.lang === 'en' ? '👑 Admin: Unlimited Credits' : '👑 管理員：無限點數';
+      if ($('#profileQuotaText')) $('#profileQuotaText').textContent = state.lang === 'en' ? '👑 Admin: Unlimited Credits' : '👑 管理員：無限點數';
+      if ($('#profileToolbarQuota')) $('#profileToolbarQuota').textContent = state.lang === 'en' ? '⚡ Admin: Unlimited' : '⚡ 額度：無限配額';
     } else {
       const rem = credits.remaining !== undefined ? credits.remaining : 100;
       const lim = credits.daily_limit || 100;
       const used = credits.used || 0;
-      $('#profileQuotaText').textContent = state.lang === 'en'
-        ? `Remaining: ${rem} / ${lim} pts (Used: ${used} pts)`
-        : `今日剩餘點數：${rem} / ${lim} 點 (已用：${used} 點)`;
+      if ($('#profileQuotaText')) {
+        $('#profileQuotaText').textContent = state.lang === 'en'
+          ? `Remaining: ${rem} / ${lim} pts (Used: ${used} pts)`
+          : `今日剩餘點數：${rem} / ${lim} 點 (已用：${used} 點)`;
+      }
+      if ($('#profileToolbarQuota')) {
+        $('#profileToolbarQuota').textContent = state.lang === 'en'
+          ? `⚡ Quota: ${rem} / ${lim}`
+          : `⚡ 今日額度：${rem} / ${lim} 點`;
+      }
     }
   }
 }
@@ -1834,6 +1884,9 @@ document.addEventListener('click', (e) => {
         e.preventDefault();
       }
       switchView(viewName);
+      if (target.dataset.previewTab && typeof switchPreviewTab === 'function') {
+        switchPreviewTab(target.dataset.previewTab);
+      }
     }
   }
 });
@@ -2134,15 +2187,26 @@ function renderVisualDiagramCard(slide, index) {
   `;
 }
 
+function updateGlobalSyncStatus(status) {
+  const el = $('#globalEditSyncIndicator');
+  if (!el) return;
+  if (status === 'saving') {
+    el.textContent = '⏳ 儲存中...';
+    el.className = 'edit-sync-indicator saving';
+  } else if (status === 'saved') {
+    el.textContent = '✓ 已同步儲存';
+    el.className = 'edit-sync-indicator saved';
+  } else {
+    el.textContent = '✓ 隨時自動同步';
+    el.className = 'edit-sync-indicator';
+  }
+}
+
 let patchDeckTimeout = null;
 function syncDeckEdits(showToast = false) {
   if (!state.deck) return;
   saveWorkspaceStateToStorage();
-  const statusEl = $('#notesSyncStatus');
-  if (statusEl) {
-    statusEl.textContent = '💾 儲存中...';
-    statusEl.className = 'edit-sync-indicator saving';
-  }
+  updateGlobalSyncStatus('saving');
   clearTimeout(patchDeckTimeout);
   patchDeckTimeout = setTimeout(async () => {
     try {
@@ -2155,16 +2219,10 @@ function syncDeckEdits(showToast = false) {
           slides: state.deck.slides
         })
       });
-      if (statusEl) {
-        statusEl.textContent = '✓ 已同步儲存';
-        statusEl.className = 'edit-sync-indicator saved';
-      }
+      updateGlobalSyncStatus('saved');
       if (showToast) toast('簡報修改內容已同步');
     } catch (err) {
-      if (statusEl) {
-        statusEl.textContent = '✓ 本機已暫存';
-        statusEl.className = 'edit-sync-indicator saved';
-      }
+      updateGlobalSyncStatus('saved');
     }
   }, 500);
 }
@@ -2174,11 +2232,7 @@ async function flushDeckEdits() {
   clearTimeout(patchDeckTimeout);
   patchDeckTimeout = null;
   saveWorkspaceStateToStorage();
-  const statusEl = $('#notesSyncStatus');
-  if (statusEl) {
-    statusEl.textContent = '💾 儲存中...';
-    statusEl.className = 'edit-sync-indicator saving';
-  }
+  updateGlobalSyncStatus('saving');
   try {
     await api(`/api/decks/${state.deck.id}`, {
       method: 'PATCH',
@@ -2189,16 +2243,10 @@ async function flushDeckEdits() {
         slides: state.deck.slides
       })
     });
-    if (statusEl) {
-      statusEl.textContent = '✓ 已同步儲存';
-      statusEl.className = 'edit-sync-indicator saved';
-    }
+    updateGlobalSyncStatus('saved');
   } catch (err) {
     console.warn('Flush deck edits warning:', err);
-    if (statusEl) {
-      statusEl.textContent = '✓ 本機已暫存';
-      statusEl.className = 'edit-sync-indicator saved';
-    }
+    updateGlobalSyncStatus('saved');
   }
 }
 
@@ -2353,7 +2401,7 @@ function addUserMessage(text) {
   scrollMessages();
 }
 
-function addAssistantMessage(data) {
+function addAssistantMessage(data, userQuestion = '') {
   const el = document.createElement('div');
   el.className = 'message assistant';
   const isEn = state.lang === 'en';
@@ -2362,6 +2410,28 @@ function addAssistantMessage(data) {
     : '';
   const providerLabel = data.mode === 'gemini' ? 'Gemini' : (data.mode === 'openai' ? 'OpenAI' : (data.mode === 'claude' ? 'Claude' : 'AI'));
   const deptLabel = isEn ? '📖 Material Q&A' : '📖 教材助教';
+
+  // 動態生成智能追問建議標籤
+  const followUpChips = isEn ? [
+    { label: '🔍 Explain in depth', query: 'Can you explain the key details and underlying principles in greater depth?' },
+    { label: '💡 Real-world examples', query: 'Could you provide a concrete real-life example to illustrate this concept?' },
+    { label: '📝 Bulleted summary', query: 'Please summarize this explanation into clear bullet points for student revision.' },
+    { label: '📑 Create 3 quiz questions', query: 'Based on this topic, generate 3 multiple-choice quiz questions with answer keys.' }
+  ] : [
+    { label: '🔍 深入說明核心細節', query: '能針對剛才說明的關鍵概念，進一步深入解析其底層原理與細節嗎？' },
+    { label: '💡 舉個生活實例', query: '請舉一個生動的生活情境實例，幫助學生更容易理解這個概念。' },
+    { label: '📝 整理為條列重點', query: '請將剛才的解答內容，整理為清楚好記的條列式教學重點筆記。' },
+    { label: '📑 出 3 題隨堂測驗', query: '請依據這段教學內容，設計 3 題單選測驗題並附上正確答案與解析。' }
+  ];
+
+  const followUpHtml = `
+    <div class="follow-up-suggestions">
+      <div class="follow-up-label">
+        <span>⚡</span> <span>${isEn ? 'Suggested Follow-up Questions (Context-Aware):' : '推薦延續追問（結合上下文記憶）：'}</span>
+      </div>
+      ${followUpChips.map(c => `<button type="button" class="follow-up-chip chat-sug-btn" data-query="${escapeHtml(c.query)}">${escapeHtml(c.label)}</button>`).join('')}
+    </div>
+  `;
 
   el.innerHTML = `
     <span class="bot-avatar">✦</span>
@@ -2372,8 +2442,10 @@ function addAssistantMessage(data) {
       </div>
       <div class="agent-output-content">${renderMarkdownToHtml(data.answer)}</div>
       ${sources ? `<div class="source-list"><span>${isEn ? 'Cited Sources · Page References' : '回答依據 · 教材來源頁碼'}</span>${sources}</div>` : ''}
+      ${followUpHtml}
       <div class="agent-action-bar" style="margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap;">
         <button type="button" class="agent-action-btn agent-copy-btn" data-copy="${escapeHtml(data.answer)}">${isEn ? '📋 Copy Answer' : '📋 複製回答'}</button>
+        <button type="button" class="agent-action-btn agent-pptx-btn" data-query="${escapeHtml(userQuestion || '')}" data-copy="${escapeHtml(data.answer)}">${isEn ? '📄 Import to Workspace' : '📄 導入教案工作台'}</button>
       </div>
     </div>
   `;
@@ -2382,10 +2454,78 @@ function addAssistantMessage(data) {
   renderMath(el);
 }
 
-function scrollMessages() { const m = $('#messages'); m.scrollTop = m.scrollHeight }
-function escapeHtml(value) { const d = document.createElement('div'); d.textContent = value; return d.innerHTML }
+function scrollMessages() { const m = $('#messages'); if (m) m.scrollTop = m.scrollHeight; }
+function escapeHtml(value) { const d = document.createElement('div'); d.textContent = value; return d.innerHTML; }
 
-$('#chatForm').addEventListener('submit', async e => {
+// 開啟新對話 / 清除問答歷史按鈕
+$('#clearChatBtn')?.addEventListener('click', () => {
+  state.chatHistory = [];
+  const messages = $('#messages');
+  if (messages) {
+    const isEn = state.lang === 'en';
+    messages.innerHTML = `
+      <div class="message assistant welcome"><span class="bot-avatar">✦</span>
+        <div><b data-i18n="chat.welcome_b">${isEn ? '💡 Hi, I am your Teaching Material Assistant' : '💡 嗨，我是你的教材助教'}</b>
+          <p data-i18n="chat.welcome_p">${isEn ? 'Upload documents to ask questions, compare concepts, or summarize key takeaways. I answer strictly based on your materials and maintain our conversation context.' : '上傳文件後，你可以請我解釋概念、比較差異，或從教材中整理重點。我只會根據文件內容回答，並記住我們的對話脈絡。'}</p>
+          <div class="suggestions">
+            <button type="button" class="chat-sug-btn" data-query="${isEn ? 'What are the 3 core takeaways of this material?' : '這份教材的三個核心重點是什麼？'}">${isEn ? '🎓 3 Core Key Takeaways' : '🎓 這份教材的三個核心重點是什麼？'}</button>
+            <button type="button" class="chat-sug-btn" data-query="${isEn ? 'Explain the key concepts with real-world examples' : '用簡單的例子解釋最重要的概念'}">${isEn ? '📝 Explain with Simple Examples' : '📝 用簡單的例子解釋最重要的概念'}</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+  toast(state.lang === 'en' ? 'Chat history reset. Started a new session.' : '已清空對話紀錄，開啟全新問答！');
+});
+
+// === 動態多階段進度流水線 (Dynamic Multi-Stage Pipeline for Self-RAG & Agent) ===
+function createStagePipeline(container, stages) {
+  if (!container) return { finish: () => {}, destroy: () => {} };
+  let currentIndex = 0;
+  let intervalId = null;
+
+  function render() {
+    container.innerHTML = stages.map((st, idx) => {
+      let statusClass = 'pending';
+      let indicatorContent = String(idx + 1);
+      if (idx < currentIndex) {
+        statusClass = 'done';
+        indicatorContent = '✓';
+      } else if (idx === currentIndex) {
+        statusClass = 'active';
+        indicatorContent = '●';
+      }
+      return `
+        <div class="stage-step ${statusClass}">
+          <span class="stage-indicator">${indicatorContent}</span>
+          <span class="stage-text">${escapeHtml(st.text)}</span>
+        </div>
+      `;
+    }).join('');
+  }
+
+  render();
+
+  intervalId = setInterval(() => {
+    if (currentIndex < stages.length - 1) {
+      currentIndex++;
+      render();
+    }
+  }, 1100);
+
+  return {
+    finish() {
+      if (intervalId) clearInterval(intervalId);
+      currentIndex = stages.length;
+      render();
+    },
+    destroy() {
+      if (intervalId) clearInterval(intervalId);
+    }
+  };
+}
+
+$('#chatForm')?.addEventListener('submit', async e => {
   e.preventDefault();
   if (!state.user) {
     toast('請先登入帳號以開始問答', true);
@@ -2395,12 +2535,27 @@ $('#chatForm').addEventListener('submit', async e => {
   const input = $('#questionInput');
   const question = input.value.trim();
   if (!question || !state.document) return;
+
+  if (!state.chatHistory) state.chatHistory = [];
+  state.chatHistory.push({ role: 'user', content: question });
+
   addUserMessage(question);
   input.value = '';
   $('#sendBtn').disabled = true;
 
   const enable_web_search = $('#qaWebSearch') ? $('#qaWebSearch').checked : false;
   const isEn = state.lang === 'en';
+
+  const qaStages = isEn ? [
+    { text: 'Retrieving document chunks & vector context...' },
+    { text: 'AI synthesizing key concepts & structuring explanation...' },
+    { text: 'Executing Self-RAG audit · Verifying material grounding & facts...' }
+  ] : [
+    { text: '正在檢索教材關鍵段落與向量特徵...' },
+    { text: 'AI 正在組織教學重點與觀念解析...' },
+    { text: '執行 Self-RAG 溯源防幻覺審查 · 核對事實依據...' }
+  ];
+
   const typing = document.createElement('div');
   typing.className = 'message assistant loading-turn';
   typing.innerHTML = `
@@ -2409,21 +2564,37 @@ $('#chatForm').addEventListener('submit', async e => {
       <div class="agent-msg-meta">
         <span class="agent-dept-chip">${isEn ? '📖 Material Q&A' : '📖 教材助教'}</span>
       </div>
-      <div class="agent-loading-dots">
-        <span></span><span></span><span></span>
-      </div>
-      <p style="font-size: 12px; color: var(--muted); margin: 4px 0 0 0;">${isEn ? 'Searching document chunks & citations...' : '正在檢索教材與精準溯源分析中…'}</p>
+      <div class="stage-pipeline" id="qaStagePipeline"></div>
     </div>
   `;
   $('#messages').append(typing);
   scrollMessages();
 
+  const pipelineContainer = typing.querySelector('#qaStagePipeline');
+  const pipeline = createStagePipeline(pipelineContainer, qaStages);
+
   try {
-    const data = await api('/api/ask', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ document_id: state.document.id, question, enable_web_search }) });
+    const data = await api('/api/ask', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        document_id: state.document.id,
+        question,
+        enable_web_search,
+        history: state.chatHistory.slice(-8)
+      })
+    });
+    pipeline.finish();
+    await new Promise(r => setTimeout(r, 200));
     typing.remove();
-    addAssistantMessage(data);
+
+    // 紀錄 Assistant Turn
+    state.chatHistory.push({ role: 'assistant', content: data.answer });
+
+    addAssistantMessage(data, question);
     await fetchCurrentUser();
   } catch (err) {
+    pipeline.destroy();
     typing.remove();
     toast(err.message, true);
   } finally {
@@ -2434,7 +2605,7 @@ $('#chatForm').addEventListener('submit', async e => {
 $('#questionInput')?.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); $('#chatForm')?.requestSubmit(); } });
 $$('#chatView .suggestions button, .chat-sug-btn').forEach(btn => btn.addEventListener('click', () => {
   if (!state.document) return toast(state.lang === 'en' ? 'Please upload material first' : '請先上傳教材', true);
-  const q = btn.dataset.query || btn.textContent.replace(/^[🎓📝🚀📋💡]\s*/, '').trim();
+  const q = btn.dataset.query || btn.textContent.replace(/^[🎓📝🚀📋💡🔍]\s*/, '').trim();
   if ($('#questionInput')) $('#questionInput').value = q;
   $('#chatForm')?.requestSubmit();
 }));
@@ -3076,21 +3247,21 @@ function updateAgentDeptBar(deptKey) {
 
 function toggleAgentDeptDrawer(collapse) {
   const drawer = $('#agentDeptDrawer');
-  const bar = $('#agentDeptBar');
+  const agentView = $('#agentView');
   const toggleBtn = $('#agentDeptToggleBtn');
   const toggleText = $('#agentDeptToggleText');
   const toggleIcon = toggleBtn?.querySelector('.toggle-icon');
-  if (!drawer || !bar) return;
+  if (!drawer) return;
 
   const willCollapse = collapse !== undefined ? collapse : !drawer.classList.contains('collapsed');
   if (willCollapse) {
     drawer.classList.add('collapsed');
-    bar.classList.remove('hidden');
+    agentView?.classList.add('drawer-collapsed');
     if (toggleText) toggleText.textContent = t('agent.toggle_expand');
     if (toggleIcon) toggleIcon.textContent = '▼';
   } else {
     drawer.classList.remove('collapsed');
-    bar.classList.add('hidden');
+    agentView?.classList.remove('drawer-collapsed');
     if (toggleText) toggleText.textContent = t('agent.toggle_collapse');
     if (toggleIcon) toggleIcon.textContent = '▲';
   }
@@ -3170,10 +3341,14 @@ function switchAgentDeptWelcome(deptKey) {
 }
 
 document.addEventListener('click', (e) => {
-  const deptBtn = e.target.closest('.dept-chat-btn');
-  if (deptBtn && deptBtn.dataset.dept) {
-    if (deptBtn.disabled) return;
-    switchAgentDeptWelcome(deptBtn.dataset.dept);
+  const deptCard = e.target.closest('.agent-dept-card');
+  if (deptCard && deptCard.dataset.dept) {
+    if (deptCard.getAttribute('data-disabled') === 'true') {
+      const isEn = state.lang === 'en';
+      toast(isEn ? 'This department requires admin permissions.' : '此部門為管理員專用，請先取得授權');
+      return;
+    }
+    switchAgentDeptWelcome(deptCard.dataset.dept);
     toggleAgentDeptDrawer(true);
   }
 
@@ -3215,6 +3390,30 @@ document.addEventListener('click', (e) => {
       toast(state.lang === 'en' ? 'Copied to clipboard!' : '已複製內容至剪貼簿！');
     });
   }
+
+  const profileRefresh = e.target.closest('#profileRefreshBtn');
+  if (profileRefresh) {
+    if (typeof fetchUserProfile === 'function') {
+      fetchUserProfile().then(() => {
+        renderProfileView();
+        toast(t('toast.profile_refreshed') || (state.lang === 'en' ? 'Account info updated' : '帳號資訊已更新'));
+      });
+    }
+  }
+
+  const previewTabBtn = e.target.closest('.preview-tab-btn');
+  if (previewTabBtn && previewTabBtn.dataset.previewTab) {
+    if (typeof switchPreviewTab === 'function') {
+      switchPreviewTab(previewTabBtn.dataset.previewTab);
+    }
+  }
+
+  const disabledDownloadBtn = e.target.closest('#deckView .download-actions a.disabled, #deckView .download-actions button.disabled');
+  if (disabledDownloadBtn) {
+    e.preventDefault();
+    const isEn = state.lang === 'en';
+    toast(isEn ? 'Please generate materials in Workspace first!' : '尚未生成相關內容，請先在工作台生成！', true);
+  }
 });
 
 $('#agentForm')?.addEventListener('submit', (e) => {
@@ -3237,14 +3436,49 @@ $('#agentQueryInput')?.addEventListener('keydown', (e) => {
   }
 });
 
+function autoResizeTextarea(el) {
+  if (!el) return;
+  el.style.height = 'auto';
+  const maxHeight = Math.floor(window.innerHeight * 0.48);
+  const newHeight = Math.min(Math.max(el.scrollHeight, 44), maxHeight);
+  el.style.height = newHeight + 'px';
+}
+
 ['agentQueryInput', 'questionInput'].forEach(id => {
   const el = $(`#${id}`);
   if (el) {
-    el.addEventListener('input', () => {
-      el.style.height = 'auto';
-      el.style.height = Math.min(el.scrollHeight, 140) + 'px';
-    });
+    el.addEventListener('input', () => autoResizeTextarea(el));
+    el.addEventListener('focus', () => autoResizeTextarea(el));
+    el.addEventListener('change', () => autoResizeTextarea(el));
   }
+});
+
+// 清空 AI 備課助手對話紀錄按鈕
+$('#clearAgentChatBtn')?.addEventListener('click', () => {
+  const dept = state.activeDept || 'academic';
+  if (!state.agentHistoryByDept) state.agentHistoryByDept = {};
+  state.agentHistoryByDept[dept] = [];
+  state.agentHistory = [];
+  const container = $('#agentMessages');
+  if (container) {
+    const isEn = state.lang === 'en';
+    container.innerHTML = `
+      <div class="message assistant welcome">
+        <span class="bot-avatar">✦</span>
+        <div>
+          <b data-i18n="agent.welcome_title">${isEn ? '💡 Welcome to AI Lesson Assistant' : '💡 歡迎使用 AI 備課助手'}</b>
+          <p data-i18n="agent.welcome_desc">${isEn ? 'Enter any lesson plan or teaching task (e.g. "Design a 45-min Physics lesson plan", "Generate 5 Biology quiz questions", or "Write a teaching post").' : '請下達備課或教學任務（例如：「設計牛頓運動定律 45 分鐘教案」、「出 5 題高中生物題」或「寫一篇教學心得」）。'}</p>
+          <div class="suggestions">
+            <button type="button" class="agent-sug-btn" data-query="請幫我設計一份 45 分鐘國中物理「牛頓第二運動定律」的備課教案與觀念大綱">🎓 45 分鐘教案設計</button>
+            <button type="button" class="agent-sug-btn" data-query="請幫我出 5 題關於「光合作用與呼吸作用」的高中生物選擇題，包含解答與觀念解析">📝 5 題生物選擇題與解析</button>
+            <button type="button" class="agent-sug-btn" data-query="請幫我產出一篇介紹 Self-RAG 防幻覺功能的 FB 社群推廣文案">🚀 FB/Threads 社群推廣文案</button>
+            <button type="button" class="agent-sug-btn" data-query="查詢我目前的會員等級與每日使用配額">📋 查詢會員等級與每日配額</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+  toast(state.lang === 'en' ? 'Department conversation reset.' : '已重置當前助手對話紀錄！');
 });
 
 async function dispatchAgentTask(query) {
@@ -3255,10 +3489,9 @@ async function dispatchAgentTask(query) {
     return;
   }
 
-  // 進入對話自動收合卡片，釋放最大的垂直視窗空間
-  toggleAgentDeptDrawer(true);
-
-  if (!state.agentHistory) state.agentHistory = [];
+  if (!state.agentHistoryByDept) state.agentHistoryByDept = { academic: [], marketing: [], operations: [], devops: [] };
+  const activeDept = state.activeDept || 'academic';
+  if (!state.agentHistoryByDept[activeDept]) state.agentHistoryByDept[activeDept] = [];
 
   const container = $('#agentMessages');
   const sendBtn = $('#agentSendBtn');
@@ -3269,7 +3502,8 @@ async function dispatchAgentTask(query) {
   if (!container) return;
 
   // 紀錄對話歷程 (User Turn)
-  state.agentHistory.push({ role: 'user', content: query });
+  state.agentHistoryByDept[activeDept].push({ role: 'user', content: query });
+  state.agentHistory = state.agentHistoryByDept[activeDept];
 
   // 1. Append User Message Bubble
   const userMsgEl = document.createElement('div');
@@ -3277,21 +3511,34 @@ async function dispatchAgentTask(query) {
   userMsgEl.innerHTML = `<div><b>${escapeHtml(query)}</b></div>`;
   container.appendChild(userMsgEl);
 
-  // 2. Append Assistant Loading Bubble
+  // 2. Append Assistant Loading Bubble with Multi-stage Pipeline
+  const agentStages = isEn ? [
+    { text: 'Analyzing task intent & routing to specialized department...' },
+    { text: 'AI Specialist generating lesson design & pedagogical structure...' },
+    { text: 'Reviewing educational quality & logical consistency...' }
+  ] : [
+    { text: '分析任務意圖與調度專屬部門...' },
+    { text: 'AI 專家正在構思教學設計與方案內容...' },
+    { text: '執行教學品質與邏輯一致性審查...' }
+  ];
+
   const assistantMsgEl = document.createElement('div');
-  assistantMsgEl.className = 'message assistant';
+  assistantMsgEl.className = 'message assistant loading-turn';
   assistantMsgEl.innerHTML = `
     <span class="bot-avatar">✦</span>
     <div>
       <div class="agent-msg-meta">
         <span class="agent-dept-chip">${isEn ? '⏳ Dispatching...' : '⏳ 正在分發...'}</span>
       </div>
-      <p style="color: var(--muted); margin: 0;">${isEn ? 'Orchestrator is routing task to the target department and executing Skill...' : 'Orchestrator 正在將指令導航至對應部門並調用 Skill 處理，請稍候...'}</p>
+      <div class="stage-pipeline" id="agentStagePipeline"></div>
     </div>
   `;
   container.appendChild(assistantMsgEl);
   container.scrollTop = container.scrollHeight;
   if (sendBtn) sendBtn.disabled = true;
+
+  const agentPipelineContainer = assistantMsgEl.querySelector('#agentStagePipeline');
+  const agentPipeline = createStagePipeline(agentPipelineContainer, agentStages);
 
   try {
     const res = await api('/api/agent/dispatch', {
@@ -3301,9 +3548,12 @@ async function dispatchAgentTask(query) {
         query,
         platform,
         target_department: state.activeDept || null,
-        history: state.agentHistory.slice(-10)
+        history: state.agentHistoryByDept[activeDept].slice(-10)
       })
     });
+    agentPipeline.finish();
+    await new Promise(r => setTimeout(r, 200));
+    assistantMsgEl.classList.remove('loading-turn');
 
     const dept = res.department ? res.department.toUpperCase() : 'GENERAL';
     const skill = res.matched_skill || 'general';
@@ -3311,7 +3561,7 @@ async function dispatchAgentTask(query) {
     const text = (typeof data === 'object' ? (data.output_text || data.copywriting || JSON.stringify(data, null, 2)) : String(data)) || res.message || (isEn ? 'Task completed.' : '任務完成。');
 
     // 紀錄對話歷程 (Assistant Turn)
-    state.agentHistory.push({ role: 'assistant', content: text });
+    state.agentHistoryByDept[activeDept].push({ role: 'assistant', content: text });
 
     const deptLabels = {
       'ACADEMIC': isEn ? '🎓 Academic & Teaching' : '🎓 教務教學部',
@@ -3320,6 +3570,37 @@ async function dispatchAgentTask(query) {
       'MARKETING': isEn ? '🚀 Marketing & Sales' : '🚀 市場與營銷部'
     };
     const deptLabel = deptLabels[dept] || (isEn ? `🎯 Dept: ${dept}` : `🎯 部門: ${dept}`);
+
+    // 動態生成備課助手的後續延伸建議膠囊
+    let agentFollowUps = [];
+    if (dept === 'ACADEMIC' || dept === 'GENERAL') {
+      agentFollowUps = isEn ? [
+        { label: '📑 Add 5 Quiz Questions', query: 'Based on this lesson outline, generate 5 multiple-choice quiz questions with detailed explanations.' },
+        { label: '🎯 Add Classroom Activities', query: 'Suggest 2 engaging interactive classroom activities and discussion questions for students.' },
+        { label: '🗣️ Oral Lecture Script', query: 'Please rewrite this into a step-by-step oral lecture teaching script with smooth transitions.' }
+      ] : [
+        { label: '📑 延伸設計 5 題評量測驗', query: '請依據剛才設計的教案大綱，進一步出 5 題單選測驗題並附上詳細解析。' },
+        { label: '🎯 補充課堂互動與提問', query: '請為這個單元設計 2 個引導學生思考的課堂提問與分組互動環節。' },
+        { label: '🗣️ 轉換為逐頁口語講稿', query: '請將這份教案大綱轉換為教師授課時可直接口述的口語化教學講稿。' }
+      ];
+    } else if (dept === 'MARKETING') {
+      agentFollowUps = isEn ? [
+        { label: '🚀 Short Video Script', query: 'Convert this marketing copy into a 60-second engaging short video script (Reels/TikTok).' },
+        { label: '📢 High-converting Headlines', query: 'Generate 5 alternative high-converting click-worthy post titles.' }
+      ] : [
+        { label: '🚀 產出 60 秒短影音腳本', query: '請將這篇招生文案轉化為 60 秒吸引人的 Reels/Shorts 短影音分鏡腳本。' },
+        { label: '📢 提供 5 組吸睛吸粉標題', query: '請提供 5 組不同風格、高點閱率的社群貼文吸睛主標題。' }
+      ];
+    }
+
+    const followUpHtml = agentFollowUps.length ? `
+      <div class="follow-up-suggestions">
+        <div class="follow-up-label">
+          <span>⚡</span> <span>${isEn ? 'Suggested Next Steps (Context-Aware):' : '推薦接續任務（延續備課脈絡）：'}</span>
+        </div>
+        ${agentFollowUps.map(c => `<button type="button" class="follow-up-chip agent-sug-btn" data-query="${escapeHtml(c.query)}">${escapeHtml(c.label)}</button>`).join('')}
+      </div>
+    ` : '';
 
     // 3. Replace Loading with Final Assistant Response Bubble (Rendered with Markdown & Math)
     const showPptxBtn = (dept === 'ACADEMIC' || dept === 'GENERAL');
@@ -3331,9 +3612,10 @@ async function dispatchAgentTask(query) {
           <span class="agent-skill-chip">⚡ Skill: ${skill}</span>
         </div>
         <div class="agent-output-content">${renderMarkdownToHtml(text)}</div>
+        ${followUpHtml}
         <div class="agent-action-bar" style="margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap;">
           <button type="button" class="agent-action-btn agent-copy-btn" data-copy="${escapeHtml(text)}">${isEn ? '📋 Copy Content' : '📋 複製內容'}</button>
-          ${showPptxBtn ? `<button type="button" class="agent-action-btn agent-pptx-btn" data-query="${escapeHtml(query)}" data-copy="${escapeHtml(text)}">${isEn ? '📄 Import to Material Parsing' : '📄 導入教材解析'}</button>` : ''}
+          ${showPptxBtn ? `<button type="button" class="agent-action-btn agent-pptx-btn" data-query="${escapeHtml(query)}" data-copy="${escapeHtml(text)}">${isEn ? '📄 Import to Workspace' : '📄 導入教案工作台'}</button>` : ''}
         </div>
       </div>
     `;
@@ -3343,6 +3625,8 @@ async function dispatchAgentTask(query) {
     toast(isEn ? `Task completed by ${deptLabel}` : `Agent 任務已由 ${deptLabel} 順利完成`);
     await fetchCurrentUser();
   } catch (err) {
+    agentPipeline.destroy();
+    assistantMsgEl.classList.remove('loading-turn');
     assistantMsgEl.innerHTML = `
       <span class="bot-avatar" style="background: #f87171; color: #fff;">!</span>
       <div>
@@ -3885,13 +4169,17 @@ $('#handoutToWorkbenchBtn')?.addEventListener('click', () => {
 });
 
 // === 產出預覽中心 Sub-tabs 切換與渲染 ===
+let currentPreviewTab = 'handout';
+
 function switchPreviewTab(tabName = 'handout') {
+  currentPreviewTab = tabName;
   const tabs = ['handout', 'deck', 'quiz'];
+  $$('.preview-tab-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.previewTab === tabName);
+  });
   tabs.forEach(t => {
-    const btn = $(`[data-preview-tab="${t}"]`);
     const panel = $(`#preview${t.charAt(0).toUpperCase() + t.slice(1)}Panel`);
     const actions = $(`#${t}DownloadActions`);
-    if (btn) btn.classList.toggle('active', t === tabName);
     if (panel) panel.classList.toggle('hidden', t !== tabName);
     if (actions) actions.classList.toggle('hidden', t !== tabName);
   });
@@ -3919,9 +4207,7 @@ function updatePreviewCountBadge() {
 }
 
 function renderPreviewPanels() {
-  renderDeck();
-  renderHandoutPreview();
-  renderQuizPreview();
+  switchPreviewTab(currentPreviewTab || 'handout');
   updatePreviewCountBadge();
 }
 
@@ -3929,6 +4215,7 @@ let patchHandoutTimeout = null;
 function syncHandoutEdits() {
   if (!state.handout) return;
   saveWorkspaceStateToStorage();
+  updateGlobalSyncStatus('saving');
   clearTimeout(patchHandoutTimeout);
   patchHandoutTimeout = setTimeout(async () => {
     try {
@@ -3943,8 +4230,10 @@ function syncHandoutEdits() {
           key_takeaways: state.handout.key_takeaways
         })
       });
+      updateGlobalSyncStatus('saved');
     } catch (err) {
       console.warn('Handout sync failed:', err);
+      updateGlobalSyncStatus('saved');
     }
   }, 500);
 }
@@ -3954,6 +4243,7 @@ async function flushHandoutEdits() {
   clearTimeout(patchHandoutTimeout);
   patchHandoutTimeout = null;
   saveWorkspaceStateToStorage();
+  updateGlobalSyncStatus('saving');
   try {
     await api(`/api/handouts/${state.handout.id}`, {
       method: 'PATCH',
@@ -3966,8 +4256,10 @@ async function flushHandoutEdits() {
         key_takeaways: state.handout.key_takeaways
       })
     });
+    updateGlobalSyncStatus('saved');
   } catch (err) {
     console.warn('Flush handout edits warning:', err);
+    updateGlobalSyncStatus('saved');
   }
 }
 
@@ -3975,6 +4267,7 @@ let patchQuizTimeout = null;
 function syncQuizEdits() {
   if (!state.quiz) return;
   saveWorkspaceStateToStorage();
+  updateGlobalSyncStatus('saving');
   clearTimeout(patchQuizTimeout);
   patchQuizTimeout = setTimeout(async () => {
     try {
@@ -3987,8 +4280,10 @@ function syncQuizEdits() {
           questions: state.quiz.questions
         })
       });
+      updateGlobalSyncStatus('saved');
     } catch (err) {
       console.warn('Quiz sync failed:', err);
+      updateGlobalSyncStatus('saved');
     }
   }, 500);
 }
@@ -3998,6 +4293,7 @@ async function flushQuizEdits() {
   clearTimeout(patchQuizTimeout);
   patchQuizTimeout = null;
   saveWorkspaceStateToStorage();
+  updateGlobalSyncStatus('saving');
   try {
     await api(`/api/quiz/${state.quiz.id}`, {
       method: 'PATCH',
@@ -4008,8 +4304,10 @@ async function flushQuizEdits() {
         questions: state.quiz.questions
       })
     });
+    updateGlobalSyncStatus('saved');
   } catch (err) {
     console.warn('Flush quiz edits warning:', err);
+    updateGlobalSyncStatus('saved');
   }
 }
 

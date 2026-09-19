@@ -17,7 +17,7 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="alternate icon" href="/favicon.ico">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-  <link rel="stylesheet" href="/styles.css?v=5.4.5">
+  <link rel="stylesheet" href="/styles.css?v=5.7.6">
 </head>
 
 <body>
@@ -32,8 +32,7 @@
           data-i18n="nav.home">產品介紹</span></button>
       <button class="nav-item" data-view="workspace"><span class="icon">📄</span><span
           data-i18n="nav.workspace">工作台</span></button>
-      <button class="nav-item" data-view="deck"><span class="icon">▤</span><span data-i18n="nav.deck">產出預覽</span><span
-          class="nav-count" id="deckCount">0</span></button>
+      <button class="nav-item" data-view="deck"><span class="icon">▤</span><span data-i18n="nav.deck">產出預覽</span></button>
       <button class="nav-item" data-view="chat"><span class="icon">📖</span><span
           data-i18n="nav.chat">教材問答</span></button>
       <button class="nav-item" data-view="agent" id="agentNavBtn"><span class="icon">💡</span><span
@@ -41,11 +40,9 @@
       <button class="nav-item user-only hidden" data-view="profile" id="profileNavBtn"><span class="icon">⚙️</span><span
           data-i18n="nav.profile">個人帳號設定</span></button>
       <button class="nav-item admin-only hidden" data-view="admin"><span class="icon">👑</span><span
-          data-i18n="nav.admin">管理員控制台</span><span class="nav-count badge-pending" id="pendingBadge">0</span></button>
+          data-i18n="nav.admin">管理員控制台</span></button>
     </nav>
-    <div>
-      <br />
-    </div>
+    <div class="sidebar-spacer"></div>
     <div class="provider-card">
       <div class="provider-head">
         <span data-i18n="provider.title">⚡ AI 模型提供者</span>
@@ -75,7 +72,6 @@
         </label>
       </div>
     </div>
-    <div class="sidebar-spacer"></div>
     <div class="plan-card">
       <div class="plan-head"><span data-i18n="quota.title">每日備課點數</span><b id="quotaBadge">未登入</b></div>
       <div class="credit-summary" style="margin-top: 8px;">
@@ -100,13 +96,13 @@
     <header class="topbar" id="mainTopbar">
       <button class="menu-toggle" aria-label="切換選單">☰</button>
       <div class="breadcrumb"><span data-view="home" style="cursor:pointer;"
-          data-i18n="nav.brand_root">課伴</span><i>/</i><strong id="crumb" data-i18n="nav.crumb_home">產品介紹</strong>
+          data-i18n="nav.brand_root">課伴</span><i>/</i><strong id="crumb" data-i18n="nav.crumb_home">產品介紹</strong><span class="crumb-subtitle" id="crumbSubtitle" data-i18n="nav.subtitle_home">· 把教材變成一堂好懂的課</span>
       </div>
       <div class="top-actions">
         <span class="status-dot"><i></i><span id="modeText" data-i18n="topbar.status_ready">系統就緒</span></span>
 
         <div class="lang-switcher" id="langSwitcher">
-          <button class="lang-btn active" data-lang="zh-TW" type="button">繁體中文</button>
+          <button class="lang-btn active" data-lang="zh-TW" type="button">中文</button>
           <button class="lang-btn" data-lang="en" type="button">English</button>
         </div>
 
@@ -128,7 +124,6 @@
     <section class="view active" id="homeView">
       <div class="hero">
         <div>
-          <p class="eyebrow"><span></span> <span data-i18n="hero.eyebrow">AI 教學設計工作台</span></p>
           <h1 data-i18n="hero.title">把教材，變成一堂<br><em>真正好懂的課。</em></h1>
           <p class="hero-copy" data-i18n="hero.subtitle">可直接上傳教材或與 AI 備課助手討論構思，完整產出好教好懂的講義、簡報與試卷；支援知識補充檢索、隨時手動修訂，讓備課與上課更順暢。</p>
           <div class="home-hero-actions">
@@ -182,7 +177,7 @@
       <!-- 核心能力展示區 (5 大功能特色) -->
       <div class="home-features-section">
         <div class="home-features-grid">
-          <div class="home-feature-card">
+          <div class="home-feature-card" data-view="workspace" style="cursor: pointer;">
             <div class="feat-icon">📄</div>
             <div style="flex: 1;">
               <h3 data-i18n="home.feat1_title">多模態與標準教材解析</h3>
@@ -190,7 +185,7 @@
             </div>
           </div>
 
-          <div class="home-feature-card">
+          <div class="home-feature-card" data-view="chat" style="cursor: pointer;">
             <div class="feat-icon">📖</div>
             <div style="flex: 1;">
               <h3 data-i18n="home.feat4_title">教材問答與精準溯源</h3>
@@ -198,7 +193,7 @@
             </div>
           </div>
 
-          <div class="home-feature-card">
+          <div class="home-feature-card" data-view="deck" data-preview-tab="handout" style="cursor: pointer;">
             <div class="feat-icon">📝</div>
             <div style="flex: 1;">
               <h3 data-i18n="home.feat3_title">隨堂講義與試卷評量</h3>
@@ -206,7 +201,7 @@
             </div>
           </div>
 
-          <div class="home-feature-card">
+          <div class="home-feature-card" data-view="deck" data-preview-tab="deck" style="cursor: pointer;">
             <div class="feat-icon">🎯</div>
             <div style="flex: 1;">
               <h3 data-i18n="home.feat2_title">教學簡報與逐頁講稿</h3>
@@ -214,7 +209,7 @@
             </div>
           </div>
 
-          <div class="home-feature-card" style="grid-column: 1 / -1;">
+          <div class="home-feature-card" data-view="agent" style="grid-column: 1 / -1; cursor: pointer;">
             <div class="feat-icon">💡</div>
             <div style="flex: 1;">
               <h3 data-i18n="home.feat5_title">AI 專家備課助手 (4 大部門與智慧導航)</h3>
@@ -242,11 +237,30 @@
     </section>
 
     <section class="view" id="workspaceView">
-      <div class="section-head">
-        <div>
-          <p class="eyebrow"><span></span> <span data-i18n="hero.eyebrow">AI 教學設計工作台</span></p>
-          <h1 data-i18n="workspace.title">AI 教學設計工作台</h1>
-          <p data-i18n="workspace.subtitle">可直接上傳教材或與 AI 備課助手討論構思，完整產出好教好懂的講義、簡報與試卷；支援知識補充檢索、隨時手動修訂，讓備課與上課更順暢。</p>
+      <!-- 工作台漸進式備課導引條 (3-Step Stepper with Home-style Arrow Lines) -->
+      <div class="steps workspace-steps">
+        <div class="step done">
+          <span>01</span>
+          <div>
+            <b data-i18n="steps.step1_title">輸入或構思</b>
+            <small data-i18n="steps.step1_sub">PDF 解析 · AI 討論</small>
+          </div>
+        </div>
+        <i></i>
+        <div class="step done">
+          <span>02</span>
+          <div>
+            <b data-i18n="steps.step2_title">設定目標</b>
+            <small data-i18n="steps.step2_sub">對象、語氣與節奏</small>
+          </div>
+        </div>
+        <i></i>
+        <div class="step active">
+          <span>03</span>
+          <div>
+            <b data-i18n="steps.step3_title">完整產出</b>
+            <small data-i18n="steps.step3_sub">講義 · 簡報 · 試卷</small>
+          </div>
         </div>
       </div>
 
@@ -301,7 +315,7 @@
               <span class="common-settings-title" data-i18n="workspace.common_title">✦ 共通教學設定 (通用於下方三大產出模組)</span>
               <button type="button" class="btn-generate-all" id="generateAllBtn" disabled>
                 <span class="btn-inline-spinner hidden"></span>
-                <span class="btn-lbl" data-i18n="workspace.generate_all">🚀 一鍵生成全套教案 (講義+簡報+試卷)</span>
+                <span class="btn-lbl" data-i18n="workspace.generate_all">🚀 循序生成全套（講義 ➔ 簡報 & 試卷）</span>
               </button>
             </div>
             <div class="common-settings-form-grid">
@@ -321,7 +335,7 @@
                 </select></label>
               <label><span data-i18n="settings.language">輸出語言</span><select id="targetLanguage">
                   <option value="auto" selected>與教材同語系 (Auto)</option>
-                  <option value="zh-TW">繁體中文 (Traditional Chinese)</option>
+                  <option value="zh-TW">中文 (Traditional Chinese)</option>
                   <option value="en">English</option>
                 </select></label>
             </div>
@@ -330,7 +344,7 @@
           <!-- 3合1 同頁面平行生成卡片群 (3-in-1 Workspace Matrix - Handout First) -->
           <div class="workspace-modules-grid">
             
-            <!-- 模組 1：隨堂講義卡片 (知識核心母本) -->
+            <!-- 模組 1：隨堂講義卡片 -->
             <div class="module-card handout-module-card">
               <div class="module-card-header">
                 <div class="module-title-wrap">
@@ -458,14 +472,6 @@
     </section>
 
     <section class="view" id="deckView">
-      <div class="section-head">
-        <div>
-          <p class="eyebrow"><span></span> <span data-i18n="preview.eyebrow">課程產出與預覽</span></p>
-          <h1 id="deckTitle" data-i18n="preview.title">教學產出預覽</h1>
-          <p id="deckSubtitle" data-i18n="preview.subtitle">在此檢視並匯出已生成的隨堂講義、教學簡報與單元試卷。</p>
-        </div>
-      </div>
-
       <div class="preview-subtabs-bar">
         <div class="preview-tabs">
           <button type="button" class="preview-tab-btn active" data-preview-tab="handout">
@@ -496,7 +502,7 @@
 
         <!-- 試卷專屬操作列 -->
         <div class="download-actions hidden" id="quizDownloadActions">
-          <label style="display:inline-flex; align-items:center; gap:6px; font-size:12.5px; margin-right:8px; cursor:pointer; color:var(--ink); font-weight:600;">
+          <label style="display:inline-flex; align-items:center; gap:5px; font-size:11.5px; margin-right:4px; cursor:pointer; color:var(--ink); font-weight:600;">
             <input type="checkbox" id="previewQuizTeacherToggle" style="width:auto; margin:0;" />
             <span data-i18n="quiz.teacher_mode_toggle">✔ 顯示解答與詳細解析 (教師版)</span>
           </label>
@@ -541,13 +547,12 @@
                   data-i18n="deck.stage_empty_s">回到工作台上傳教材並設定課程</small></div>
             </div>
             <div class="speaker-notes">
-              <div class="notes-header-flex" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                <div class="notes-label" style="margin-bottom: 0;">
+              <div class="notes-header-flex">
+                <div class="notes-label">
                   <span>講</span><b data-i18n="deck.notes_label">這頁怎麼說</b>
                   <small id="pageRef" data-i18n="deck.page_ref">講者備註</small>
                 </div>
-                <div class="notes-actions" style="display: flex; align-items: center; gap: 8px;">
-                  <span class="edit-sync-indicator" id="notesSyncStatus">✎ 支援直接點擊手動編修</span>
+                <div class="notes-actions">
                   <button type="button" class="btn-micro-refine" id="refineNotesBtn" title="消耗 3 點備課點數進行 AI 講稿潤飾">
                     <span class="btn-inline-spinner hidden"></span>
                     <span class="btn-lbl">✨ AI 講稿潤飾 (3 點)</span>
@@ -576,14 +581,17 @@
     </section>
 
     <section class="view" id="chatView">
-      <div class="chat-header">
-        <div>
-          <p class="eyebrow"><span></span> <span data-i18n="chat.eyebrow">文件知識庫</span></p>
-          <h1 data-i18n="chat.title">問教材，不問網路。</h1>
-          <p data-i18n="chat.subtitle">每個回答都以你的文件為依據，並附上可核對的來源頁碼。</p>
+      <div class="chat-top-toolbar">
+        <div class="chat-toolbar-left">
+          <div class="document-chip compact" id="chatDoc">
+            <span>PDF</span>
+            <div><b data-i18n="chat.doc_empty_b">尚未選擇教材</b><small data-i18n="chat.doc_empty_s">請先回到工作台上傳</small></div>
+          </div>
         </div>
-        <div class="document-chip" id="chatDoc"><span>PDF</span>
-          <div><b data-i18n="chat.doc_empty_b">尚未選擇教材</b><small data-i18n="chat.doc_empty_s">請先回到工作台上傳</small></div>
+        <div class="chat-toolbar-right">
+          <button type="button" class="toolbar-btn" id="clearChatBtn" title="清空對話紀錄並開啟新對話">
+            <span class="icon">🗑️</span><span data-i18n="chat.btn_clear">開啟新對話</span>
+          </button>
         </div>
       </div>
       <div class="chat-shell">
@@ -600,56 +608,51 @@
         </div>
         <form class="chat-input" id="chatForm">
           <div
-            style="display: flex; align-items: center; justify-content: flex-start; margin-bottom: 8px; font-size: 11.5px; color: #59635f;">
+            style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; font-size: 11.5px; color: #59635f;">
             <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
               <input type="checkbox" id="qaWebSearch" style="width: auto; margin: 0;">
               <span data-i18n="chat.web_search">開啟網路補充搜尋（教材中查無解答時聯網檢索）</span>
             </label>
+            <span class="chat-history-status" id="chatHistoryStatus" style="font-size: 11px; color: #10b981; display: inline-flex; align-items: center; gap: 4px;">
+              <i style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #10b981;"></i>
+              <span data-i18n="chat.memory_active">多輪對話記憶中</span>
+            </span>
           </div>
           <div class="chat-input-box">
             <textarea id="questionInput" rows="1" placeholder="向教材提問…" data-i18n="chat.placeholder" disabled></textarea>
             <button type="submit" disabled id="sendBtn">↑</button>
           </div>
-          <small data-i18n="chat.shortcut"><span>↵</span> Enter 傳送 · Shift + Enter 換行</small>
         </form>
       </div>
     </section>
 
     <section class="view" id="adminView">
-      <div class="section-head"
-        style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px;">
-        <div>
-          <p class="eyebrow"><span></span> <span data-i18n="admin.eyebrow">系統權限與用戶審核</span></p>
-          <h1 data-i18n="admin.title">👑 管理員控制台</h1>
-          <p data-i18n="admin.subtitle">審核新註冊帳號、調整權限、重置密碼與維護全系統使用者。</p>
-        </div>
-        <button type="button" class="primary-button" id="openCreateUserModalBtn"
-          style="padding: 8px 16px; font-size: 13px; font-weight: 600;" data-i18n="admin.btn_create_user">
-          ➕ 新增用戶 / 管理員
-        </button>
-      </div>
-
-      <div class="admin-metrics-grid">
-        <div class="admin-metric-card">
-          <span class="metric-icon">👥</span>
-          <div>
-            <b id="metricTotalUsers">0</b>
-            <small data-i18n="admin.metric_total">系統總帳號數</small>
+      <div class="admin-top-toolbar">
+        <div class="admin-toolbar-left">
+          <span class="admin-toolbar-badge" data-i18n="admin.eyebrow">👑 系統權限與用戶審核</span>
+          <div class="admin-metric-chips">
+            <span class="admin-metric-chip">
+              <span class="chip-icon">👥</span>
+              <span class="chip-label" data-i18n="admin.metric_total">總帳號</span>
+              <b class="chip-val" id="metricTotalUsers">0</b>
+            </span>
+            <span class="admin-metric-chip warning">
+              <span class="chip-icon">⏳</span>
+              <span class="chip-label" data-i18n="admin.metric_pending">待審核</span>
+              <b class="chip-val" id="metricPendingUsers">0</b>
+            </span>
+            <span class="admin-metric-chip primary">
+              <span class="chip-icon">👑</span>
+              <span class="chip-label" data-i18n="admin.metric_admin">管理員</span>
+              <b class="chip-val" id="metricAdminUsers">0</b>
+            </span>
           </div>
         </div>
-        <div class="admin-metric-card warning">
-          <span class="metric-icon">⏳</span>
-          <div>
-            <b id="metricPendingUsers">0</b>
-            <small data-i18n="admin.metric_pending">待開通審核</small>
-          </div>
-        </div>
-        <div class="admin-metric-card primary">
-          <span class="metric-icon">👑</span>
-          <div>
-            <b id="metricAdminUsers">0</b>
-            <small data-i18n="admin.metric_admin">系統管理員</small>
-          </div>
+        <div class="admin-toolbar-right">
+          <button type="button" class="primary-button" id="openCreateUserModalBtn"
+            style="padding: 6px 14px; font-size: 12.5px; font-weight: 600;" data-i18n="admin.btn_create_user">
+            ➕ 新增用戶 / 管理員
+          </button>
         </div>
       </div>
 
@@ -682,91 +685,90 @@
     </section>
 
     <section class="view" id="agentView">
-      <div class="section-head agent-section-head">
-        <div>
-          <p class="eyebrow"><span></span> <span data-i18n="agent.eyebrow">💡 AI 教師備課與任務助手</span></p>
-          <h1 data-i18n="agent.title">💡 AI 備課助手</h1>
-          <p data-i18n="agent.subtitle">自動為您設計單元教案大綱、生成測驗題庫、撰寫講稿大綱與 FB/Threads 社群教學宣傳貼文。</p>
+      <!-- Agent Compact Department Bar & Toolbar (Top Row) -->
+      <div class="agent-top-toolbar" id="agentDeptBar">
+        <div class="agent-dept-bar-actions">
+          <button type="button" class="dept-switch-chip active" data-dept="academic" title="切換至教務教學部">🎓 教務教學</button>
+          <button type="button" class="dept-switch-chip" data-dept="marketing" title="切換至市場營銷部">🚀 市場營銷</button>
+          <button type="button" class="dept-switch-chip" data-dept="operations" title="切換至營運行政部">🏫 營運行政</button>
+          <button type="button" class="dept-switch-chip" data-dept="devops" title="切換至技術維護部">🛠️ 技術維護</button>
         </div>
-        <button type="button" class="btn-agent-dept-toggle" id="agentDeptToggleBtn">
-          <span class="toggle-icon">▲</span>
-          <span class="toggle-text" id="agentDeptToggleText" data-i18n="agent.toggle_collapse">收合部門卡片</span>
-        </button>
+        <div class="agent-toolbar-right">
+          <button type="button" class="toolbar-btn" id="agentDeptToggleBtn" title="收合或展開專家卡片">
+            <span class="toggle-icon">▲</span><span id="agentDeptToggleText" data-i18n="agent.toggle_collapse">收合卡片</span>
+          </button>
+          <button type="button" class="toolbar-btn" id="clearAgentChatBtn" title="清空當前部門對話紀錄">
+            <span class="icon">🗑️</span><span data-i18n="agent.btn_clear">清空對話</span>
+          </button>
+        </div>
       </div>
 
-      <!-- Collapsible Department Drawer -->
+      <!-- Collapsible Department Drawer (Visible initially, can be collapsed) -->
       <div class="agent-dept-drawer" id="agentDeptDrawer">
-        <!-- Department Cards Grid -->
         <div class="agent-dept-grid">
           <div class="agent-dept-card" id="deptCardAcademic" data-dept="academic">
-            <div class="dept-card-head">
+            <div class="dept-card-top">
               <span class="dept-icon">🎓</span>
-              <div>
-                <h3 data-i18n="agent.dept_academic_title">教務教學部</h3>
-                <small data-i18n="agent.dept_academic_role">教務小老師</small>
+              <div class="dept-card-info">
+                <div class="dept-title-row">
+                  <h3 class="dept-title" data-i18n="agent.dept_academic_title">教務教學部</h3>
+                </div>
+                <div class="dept-meta-row">
+                  <span class="dept-role" data-i18n="agent.dept_academic_role">教務小老師</span>
+                  <span class="dept-badge badge-active" id="deptBadgeAcademic">🟢 已啟用</span>
+                </div>
               </div>
-              <span class="dept-badge badge-active" id="deptBadgeAcademic">🟢 已啟用</span>
             </div>
             <p class="dept-desc" data-i18n="agent.dept_academic_desc">負責教材解析、問答流調優、單元教案大綱、試題與簡報逐頁演講稿生成。</p>
-            <button type="button" class="primary-button dept-chat-btn" data-dept="academic"
-              style="width:100%; margin-top:12px; font-size:12px; padding:6px 12px;">💬 與教務小老師對話</button>
           </div>
 
           <div class="agent-dept-card" id="deptCardMarketing" data-dept="marketing">
-            <div class="dept-card-head">
+            <div class="dept-card-top">
               <span class="dept-icon">🚀</span>
-              <div>
-                <h3 data-i18n="agent.dept_mkt_title">市場與營銷部</h3>
-                <small data-i18n="agent.dept_mkt_role">營銷推廣專員</small>
+              <div class="dept-card-info">
+                <div class="dept-title-row">
+                  <h3 class="dept-title" data-i18n="agent.dept_mkt_title">市場與營銷部</h3>
+                </div>
+                <div class="dept-meta-row">
+                  <span class="dept-role" data-i18n="agent.dept_mkt_role">營銷推廣專員</span>
+                  <span class="dept-badge badge-active" id="deptBadgeMarketing">🟢 已啟用</span>
+                </div>
               </div>
-              <span class="dept-badge badge-active" id="deptBadgeMarketing">🟢 已啟用</span>
             </div>
             <p class="dept-desc" data-i18n="agent.dept_mkt_desc">負責課程宣傳推廣、教學賣點包裝、招生文案與 FB/Threads/LinkedIn 社群貼文生成。</p>
-            <button type="button" class="primary-button dept-chat-btn" data-dept="marketing"
-              style="width:100%; margin-top:12px; font-size:12px; padding:6px 12px;">💬 與營銷推廣專員對話</button>
           </div>
 
           <div class="agent-dept-card" id="deptCardOperations" data-dept="operations">
-            <div class="dept-card-head">
+            <div class="dept-card-top">
               <span class="dept-icon">🏫</span>
-              <div>
-                <h3 data-i18n="agent.dept_ops_title">營運與行政部</h3>
-                <small data-i18n="agent.dept_ops_role">教務行政特助</small>
+              <div class="dept-card-info">
+                <div class="dept-title-row">
+                  <h3 class="dept-title" data-i18n="agent.dept_ops_title">營運與行政部</h3>
+                </div>
+                <div class="dept-meta-row">
+                  <span class="dept-role" data-i18n="agent.dept_ops_role">教務行政特助</span>
+                  <span class="dept-badge badge-active" id="deptBadgeOperations">🟢 已啟用</span>
+                </div>
               </div>
-              <span class="dept-badge badge-active" id="deptBadgeOperations">🟢 已啟用</span>
             </div>
             <p class="dept-desc" data-i18n="agent.dept_ops_desc">負責學校/機構團體合約、席位授權撥發、帳號開通與團隊權限維護。</p>
-            <button type="button" class="primary-button dept-chat-btn" data-dept="operations"
-              style="width:100%; margin-top:12px; font-size:12px; padding:6px 12px;">💬 與教務行政特助對話</button>
           </div>
 
           <div class="agent-dept-card" id="deptCardDevops" data-dept="devops">
-            <div class="dept-card-head">
+            <div class="dept-card-top">
               <span class="dept-icon">🛠️</span>
-              <div>
-                <h3 data-i18n="agent.dept_devops_title">技術維護部</h3>
-                <small data-i18n="agent.dept_devops_role">技術維護工程師</small>
+              <div class="dept-card-info">
+                <div class="dept-title-row">
+                  <h3 class="dept-title" data-i18n="agent.dept_devops_title">技術維護部</h3>
+                </div>
+                <div class="dept-meta-row">
+                  <span class="dept-role" data-i18n="agent.dept_devops_role">技術維護工程師</span>
+                  <span class="dept-badge badge-locked" id="deptBadgeDevops">🔒 👑 管理員專用</span>
+                </div>
               </div>
-              <span class="dept-badge badge-locked" id="deptBadgeDevops">🔒 👑 管理員專用</span>
             </div>
             <p class="dept-desc" data-i18n="agent.dept_devops_desc">負責 JWT 身份驗證排查、系統 Quota 限額控管、Railway 部署與 OOM 診斷。</p>
-            <button type="button" class="primary-button dept-chat-btn" data-dept="devops"
-              style="width:100%; margin-top:12px; font-size:12px; padding:6px 12px;">💬 與技術維護工程師對話</button>
           </div>
-        </div>
-      </div>
-
-      <!-- Collapsed Active Department Bar (Shown when drawer is collapsed) -->
-      <div class="agent-dept-bar hidden" id="agentDeptBar">
-        <div class="agent-dept-bar-left">
-          <span class="agent-dept-bar-tag" data-i18n="agent.current_dept_tag">🏢 當前諮詢</span>
-          <span class="agent-dept-bar-title" id="agentDeptBarTitle">🎓 教務教學部（教務小老師）</span>
-        </div>
-        <div class="agent-dept-bar-actions">
-          <button type="button" class="dept-switch-chip active" data-dept="academic">🎓 教務教學</button>
-          <button type="button" class="dept-switch-chip" data-dept="marketing">🚀 市場營銷</button>
-          <button type="button" class="dept-switch-chip" data-dept="operations">🏫 營運行政</button>
-          <button type="button" class="dept-switch-chip" data-dept="devops">🛠️ 技術維護</button>
         </div>
       </div>
 
@@ -798,20 +800,22 @@
               placeholder="下達備課或教學任務 (例: '幫我設計一份 45 分鐘物理教案大綱' 或 '出 5 題選擇題')..."></textarea>
             <button type="submit" id="agentSendBtn">↑</button>
           </div>
-          <small data-i18n="agent.shortcut"><span>↵</span> Enter 傳送 · Shift + Enter 換行</small>
         </form>
       </div>
     </section>
 
-
-
-
     <section class="view" id="profileView">
-      <div class="section-head">
-        <div>
-          <p class="eyebrow"><span></span> <span data-i18n="profile.eyebrow">個人帳號與安全性設定</span></p>
-          <h1 data-i18n="profile.title">⚙️ 個人帳號設定</h1>
-          <p data-i18n="profile.subtitle">檢視您的帳號身分、每日配額使用狀況並進行密碼修改。</p>
+      <!-- 帳號設定頂部資訊與快捷操作列 (Profile Top Info Bar) -->
+      <div class="profile-top-toolbar">
+        <div class="profile-toolbar-left">
+          <span class="profile-toolbar-badge" id="profileToolbarUserBadge" data-i18n="profile.top_badge">👤 帳號管理中心</span>
+          <span class="profile-toolbar-role" id="profileToolbarRoleText">一般用戶</span>
+        </div>
+        <div class="profile-toolbar-right">
+          <span class="profile-toolbar-quota" id="profileToolbarQuota">⚡ 每日額度：-</span>
+          <button type="button" class="toolbar-btn" id="profileRefreshBtn" title="重新整理帳號資訊">
+            <span class="icon">🔄</span><span data-i18n="profile.btn_refresh">重新整理</span>
+          </button>
         </div>
       </div>
 
@@ -1127,7 +1131,7 @@
     <p id="loadingCopy" data-i18n="loading.read_copy">整理章節與核心概念…</p>
     <div class="loading-track"><span></span></div>
   </div>
-  <script src="/app.js?v=5.4.7"></script>
+  <script src="/app.js?v=5.7.0"></script>
 </body>
 
 </html>

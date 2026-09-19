@@ -40,6 +40,7 @@ class AskRequest(BaseModel):
     document_id: str
     question: str = Field(min_length=2, max_length=1000)
     enable_web_search: bool = Field(default=False)
+    history: Optional[list[dict]] = Field(default_factory=list)
 
 
 class AskResponse(BaseModel):

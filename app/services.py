@@ -772,12 +772,17 @@ class AIService:
                 ) from exc_json
 
     def ask(
-        self, document: Document, question: str, enable_web_search: bool = False
+        self,
+        document: Document,
+        question: str,
+        enable_web_search: bool = False,
+        history: Optional[list[dict]] = None,
     ) -> tuple[str, list[Source], str]:
         initial_state = {
             "question": question,
             "document": document,
             "enable_web_search": enable_web_search,
+            "history": history or [],
             "ai_service": self,
         }
         result = self.qa_graph.invoke(initial_state)

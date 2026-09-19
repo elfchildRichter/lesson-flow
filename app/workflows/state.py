@@ -17,6 +17,7 @@ class QAState(TypedDict, total=False):
     is_hallucinated: bool
     hallucination_retry: int
     hallucination_feedback: str
+    history: list[dict]
 
 
 class DeckState(TypedDict, total=False):

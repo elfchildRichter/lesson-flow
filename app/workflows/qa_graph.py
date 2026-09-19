@@ -7,6 +7,7 @@ from duckduckgo_search import DDGS
 from langgraph.graph import END, StateGraph
 
 from app.models import Source
+from app.workflows.handlers.common import _format_history
 from .state import QAState
 
 logger = logging.getLogger(__name__)
@@ -16,7 +17,17 @@ def retrieve_node(state: QAState) -> QAState:
     ai_service = state["ai_service"]
     document = state["document"]
     question = state["question"]
-    matches = ai_service.retrieve(document, question)
+    history = state.get("history", [])
+
+    # 若為代名詞或短追問，結合上一輪提問主題擴展檢索關鍵字
+    query_for_retrieval = question
+    if history and len(question.strip()) < 15:
+        last_user_turns = [h.get("content", "") for h in history if h.get("role") == "user"]
+        if last_user_turns:
+            prev_q = last_user_turns[-1][:30]
+            query_for_retrieval = f"{prev_q} {question}"
+
+    matches = ai_service.retrieve(document, query_for_retrieval)
     return {"retrieved_chunks": matches}
 
 
@@ -61,9 +72,11 @@ def route_after_grading(state: QAState) -> Literal["generate_answer", "web_searc
 def generate_answer_node(state: QAState) -> QAState:
     ai_service = state["ai_service"]
     question = state["question"]
+    history = state.get("history", [])
     retrieved = state.get("retrieved_chunks", [])
     web_results = state.get("web_results", "")
     hallucination_feedback = state.get("hallucination_feedback", "")
+    history_text = _format_history(history)
 
     sources = [
         Source(
@@ -83,15 +96,19 @@ def generate_answer_node(state: QAState) -> QAState:
     system_prompt = (
         "你是嚴謹的繁體中文教學助理。"
         "只能根據提供的教材片段與網路參考資料回答。"
+        "若有歷史對話紀錄，請結合上下文脈絡進行精準、連貫的解答或追問補充。"
         "回答必須清楚、精簡，並以（第 X 頁）標示依據。"
         "所有數學公式、理化符號與數學變數，請一律使用標準 LaTeX 語法格式（單行公式使用 $...$，獨立段落公式使用 $$...$$）。"
     )
-    user_prompt = f"教材片段：\n{context_str}\n\n"
+    user_prompt = ""
+    if history_text:
+        user_prompt += f"{history_text}\n"
+    user_prompt += f"教材片段：\n{context_str}\n\n"
     if web_results:
         user_prompt += f"網路補充資料：\n{web_results}\n\n"
     if hallucination_feedback:
         user_prompt += f"【修正提示】：前次回答經自我審查發現未完全對齊資料（{hallucination_feedback}）。請務必依據參考資料精準回答。\n\n"
-    user_prompt += f"學生問題：{question}"
+    user_prompt += f"學生當前提問：{question}"
 
     answer = ai_service._text_response(system_prompt, user_prompt)
     return {"answer": answer, "sources": sources}

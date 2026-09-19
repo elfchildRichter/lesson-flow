@@ -294,6 +294,7 @@ def dispatch_agent_task(
         "query": query,
         "platform": platform,
         "target_department": payload.get("target_department"),
+        "history": payload.get("history", []),
         "ai_service": ai,
         "user_info": user_info,
     }
@@ -455,7 +456,17 @@ def ask(
         enable_web_search = False
 
     try:
-        answer, sources, mode = ai.ask(document, request.question, enable_web_search)
+        import inspect
+        sig = inspect.signature(ai.ask)
+        if "history" in sig.parameters or any(p.kind == inspect.Parameter.VAR_KEYWORD for p in sig.parameters.values()):
+            answer, sources, mode = ai.ask(
+                document,
+                request.question,
+                enable_web_search,
+                history=request.history,
+            )
+        else:
+            answer, sources, mode = ai.ask(document, request.question, enable_web_search)
     except Exception as exc:
         rollback_user_quota(user_id, "ask")
         raise HTTPException(502, f"AI 暫時無法回答：{exc}") from exc
