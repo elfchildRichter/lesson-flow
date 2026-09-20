@@ -17,7 +17,7 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="alternate icon" href="/favicon.ico">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-  <link rel="stylesheet" href="/styles.css?v=5.7.6">
+  <link rel="stylesheet" href="/styles.css?v=5.9.0">
 </head>
 
 <body>
@@ -25,14 +25,15 @@
   <aside class="sidebar">
     <a class="brand" href="#" aria-label="課伴首頁" data-view="home">
       <span class="brand-mark"><span></span><span></span><span></span></span>
-      <span data-i18n="nav.brand">課伴<small>LESSONFLOW (Alpha)</small></span>
+      <span data-i18n="nav.brand">課伴<small>LESSONFLOW</small></span>
     </a>
     <nav>
       <button class="nav-item active" data-view="home"><span class="icon">✨</span><span
           data-i18n="nav.home">產品介紹</span></button>
       <button class="nav-item" data-view="workspace"><span class="icon">📄</span><span
           data-i18n="nav.workspace">工作台</span></button>
-      <button class="nav-item" data-view="deck"><span class="icon">▤</span><span data-i18n="nav.deck">產出預覽</span></button>
+      <button class="nav-item" data-view="deck"><span class="icon">▤</span><span
+          data-i18n="nav.deck">產出預覽</span></button>
       <button class="nav-item" data-view="chat"><span class="icon">📖</span><span
           data-i18n="nav.chat">教材問答</span></button>
       <button class="nav-item" data-view="agent" id="agentNavBtn"><span class="icon">💡</span><span
@@ -64,7 +65,7 @@
       <div class="toggle-row">
         <div class="toggle-text">
           <span class="toggle-title" data-i18n="multimodal.toggle_label">圖表與理化公式辨識</span>
-          <small class="toggle-hint" data-i18n="multimodal.hint">適合含圖表或數學符號的講義（開啟時解析時間較長）</small>
+          <small class="toggle-hint" data-i18n="multimodal.hint">適合含圖表或數學符號的講義 · 開啟時深入解析</small>
         </div>
         <label class="switch" for="multimodalToggle" title="切換圖表與公式辨識">
           <input type="checkbox" id="multimodalToggle" />
@@ -75,14 +76,13 @@
     <div class="plan-card">
       <div class="plan-head"><span data-i18n="quota.title">每日備課點數</span><b id="quotaBadge">未登入</b></div>
       <div class="credit-summary" style="margin-top: 8px;">
-        <div class="credit-label" style="display: flex; justify-content: space-between; font-size: 12px; color: #d1fae5; margin-bottom: 5px;">
+        <div class="credit-label"
+          style="display: flex; justify-content: space-between; font-size: 12px; color: #d1fae5; margin-bottom: 5px;">
           <span data-i18n="quota.daily_remaining">今日剩餘點數</span>
           <strong id="creditBalanceText" style="color: #34d399; font-weight: 700;">- / 100 點</strong>
         </div>
-        <div class="usage-bar"><i id="creditUsageBar" style="width: 0%; background: linear-gradient(90deg, #34d399, #10b981);"></i></div>
-        <div class="credit-hints" style="margin-top: 8px; font-size: 11px; color: #cbd5e1; line-height: 1.45;">
-          <span data-i18n="quota.hint_main">簡報 50 · 講義 30 · 試卷 20 · 微調 3 點</span>
-        </div>
+        <div class="usage-bar"><i id="creditUsageBar"
+            style="width: 0%; background: linear-gradient(90deg, #34d399, #10b981);"></i></div>
       </div>
     </div>
     <button class="profile" id="sidebarProfileBtn">
@@ -96,7 +96,8 @@
     <header class="topbar" id="mainTopbar">
       <button class="menu-toggle" aria-label="切換選單">☰</button>
       <div class="breadcrumb"><span data-view="home" style="cursor:pointer;"
-          data-i18n="nav.brand_root">課伴</span><i>/</i><strong id="crumb" data-i18n="nav.crumb_home">產品介紹</strong><span class="crumb-subtitle" id="crumbSubtitle" data-i18n="nav.subtitle_home">· 把教材變成一堂好懂的課</span>
+          data-i18n="nav.brand_root">課伴</span><i>/</i><strong id="crumb" data-i18n="nav.crumb_home">產品介紹</strong><span
+          class="crumb-subtitle" id="crumbSubtitle" data-i18n="nav.subtitle_home">· 把教材變成一堂好懂的課</span>
       </div>
       <div class="top-actions">
         <span class="status-dot"><i></i><span id="modeText" data-i18n="topbar.status_ready">系統就緒</span></span>
@@ -125,12 +126,15 @@
       <div class="hero">
         <div>
           <h1 data-i18n="hero.title">把教材，變成一堂<br><em>真正好懂的課。</em></h1>
-          <p class="hero-copy" data-i18n="hero.subtitle">可直接上傳教材或與 AI 備課助手討論構思，完整產出好教好懂的講義、簡報與試卷；支援知識補充檢索、隨時手動修訂，讓備課與上課更順暢。</p>
+          <p class="hero-copy" data-i18n="hero.subtitle">可直接上傳教材或與 AI
+            備課助手討論構思，完整產出好教好懂的講義、簡報與試卷；支援知識補充檢索、隨時手動修訂，讓備課與上課更順暢。</p>
           <div class="home-hero-actions">
-            <button type="button" class="primary-button" data-view="workspace" style="padding: 10px 22px; font-size: 14px;">
+            <button type="button" class="primary-button" data-view="workspace"
+              style="padding: 10px 22px; font-size: 14px;">
               <span data-i18n="home.btn_start">🚀 進入工作台開始備課</span>
             </button>
-            <button type="button" class="secondary-button" data-view="agent" style="padding: 10px 20px; font-size: 14px;">
+            <button type="button" class="secondary-button" data-view="agent"
+              style="padding: 10px 20px; font-size: 14px;">
               <span data-i18n="home.btn_agent">💡 諮詢 AI 備課助手</span>
             </button>
           </div>
@@ -189,7 +193,8 @@
             <div class="feat-icon">📖</div>
             <div style="flex: 1;">
               <h3 data-i18n="home.feat4_title">教材問答與精準溯源</h3>
-              <p data-i18n="home.feat4_desc">專屬教材助教，預設嚴格根據上傳教材之原文段落回答並附上精準頁碼，確保教學依據真實可考、絕不憑空捏造；亦可按需啟用聯網搜尋，補充外部延伸知識與時事案例。</p>
+              <p data-i18n="home.feat4_desc">專屬教材助教，預設嚴格根據上傳教材之原文段落回答並附上精準頁碼，確保教學依據真實可考、絕不憑空捏造；亦可按需啟用聯網搜尋，補充外部延伸知識與時事案例。
+              </p>
             </div>
           </div>
 
@@ -212,8 +217,9 @@
           <div class="home-feature-card" data-view="agent" style="grid-column: 1 / -1; cursor: pointer;">
             <div class="feat-icon">💡</div>
             <div style="flex: 1;">
-              <h3 data-i18n="home.feat5_title">AI 專家備課助手 (4 大部門與智慧導航)</h3>
-              <p data-i18n="home.feat5_desc">手邊無現成教材也能備課！內建「教務教學部、營運行政部、市場營銷部、技術維護部」4 大專家部門，可針對特定任務深度諮詢；亦可直接使用「全域智慧導航模式」，系統自動精準分派至對應專業助手，構思教案後可一鍵銜接全套產出。</p>
+              <h3 data-i18n="home.feat5_title">AI 專家備課助手 · 4 大部門與智慧導航</h3>
+              <p data-i18n="home.feat5_desc">手邊無現成教材也能備課！內建「教務教學部、營運行政部、市場營銷部、技術維護部」4
+                大專家部門，可針對特定任務深度諮詢；亦可直接使用「全域智慧導航模式」，系統自動精準分派至對應專業助手，構思教案後可一鍵銜接全套產出。</p>
             </div>
           </div>
         </div>
@@ -231,7 +237,8 @@
         </div>
         <div>
           <span>03</span>
-          <p><b data-i18n="value.03_title">即刻匯出</b><small data-i18n="value.03_desc">一鍵匯出 PPTX 簡報、Word 講義與測驗試卷</small></p>
+          <p><b data-i18n="value.03_title">即刻匯出</b><small data-i18n="value.03_desc">一鍵匯出 PPTX 簡報、Word 講義與測驗試卷</small>
+          </p>
         </div>
       </div>
     </section>
@@ -282,7 +289,8 @@
           <div class="demo-sample-wrapper">
             <span class="demo-sample-text" data-i18n="upload.sample_hint">💡 手邊暫無教材？可與 AI 備課助手討論主題，直接生成完整教案：</span>
             <div class="demo-sample-actions">
-              <button type="button" class="btn-demo-sample btn-goto-agent" onclick="switchView('agent')" title="前往 AI 備課助手討論並生成教案">
+              <button type="button" class="btn-demo-sample btn-goto-agent" onclick="switchView('agent')"
+                title="前往 AI 備課助手討論並生成教案">
                 <span data-i18n="upload.agent_btn">💡 前往 AI 備課助手討論</span>
               </button>
             </div>
@@ -312,10 +320,10 @@
           <!-- 全域課程通用設定 -->
           <div class="common-settings-card">
             <div class="common-settings-head">
-              <span class="common-settings-title" data-i18n="workspace.common_title">✦ 共通教學設定 (通用於下方三大產出模組)</span>
+              <span class="common-settings-title" data-i18n="workspace.common_title">✦ 共通教學設定 · 通用於下方三大產出模組</span>
               <button type="button" class="btn-generate-all" id="generateAllBtn" disabled>
                 <span class="btn-inline-spinner hidden"></span>
-                <span class="btn-lbl" data-i18n="workspace.generate_all">🚀 循序生成全套（講義 ➔ 簡報 & 試卷）</span>
+                <span class="btn-lbl" data-i18n="workspace.generate_all">🚀 循序生成全套 · 講義 ➔ 簡報 & 試卷</span>
               </button>
             </div>
             <div class="common-settings-form-grid">
@@ -334,8 +342,8 @@
                   <option>故事引導</option>
                 </select></label>
               <label><span data-i18n="settings.language">輸出語言</span><select id="targetLanguage">
-                  <option value="auto" selected>與教材同語系 (Auto)</option>
-                  <option value="zh-TW">中文 (Traditional Chinese)</option>
+                  <option value="auto" selected>與教材同語系</option>
+                  <option value="zh-TW">繁體中文</option>
                   <option value="en">English</option>
                 </select></label>
             </div>
@@ -343,7 +351,7 @@
 
           <!-- 3合1 同頁面平行生成卡片群 (3-in-1 Workspace Matrix - Handout First) -->
           <div class="workspace-modules-grid">
-            
+
             <!-- 模組 1：隨堂講義卡片 -->
             <div class="module-card handout-module-card">
               <div class="module-card-header">
@@ -361,13 +369,13 @@
                     <option>自學者筆記</option>
                   </select></label>
                 <label><span data-i18n="handout.detail">詳細程度</span><select id="handoutDetail">
-                    <option value="concise">重點摘要型 (精簡)</option>
-                    <option value="standard" selected>標準導讀型 (平衡)</option>
-                    <option value="detailed">深入剖析型 (詳盡)</option>
+                    <option value="concise">重點摘要型 · 精簡</option>
+                    <option value="standard" selected>標準導讀型 · 平衡</option>
+                    <option value="detailed">深入剖析型 · 詳盡</option>
                   </select></label>
                 <label class="checkbox-label">
                   <input type="checkbox" id="handoutWebSearch">
-                  <span data-i18n="handout.web_search">開啟網路知識補充（整合時事案例）</span>
+                  <span data-i18n="handout.web_search">開啟網路知識補充 · 整合時事案例</span>
                 </label>
               </div>
               <div class="module-card-footer">
@@ -428,20 +436,20 @@
               </div>
               <div class="module-form-body">
                 <label><span data-i18n="quiz.count">出題題數</span><select id="quizCount">
-                    <option value="3">3 題 (課堂速測)</option>
-                    <option value="5" selected>5 題 (標準小考)</option>
-                    <option value="8">8 題 (單元測驗)</option>
-                    <option value="10">10 題 (總結評量)</option>
+                    <option value="3">3 題 · 課堂速測</option>
+                    <option value="5" selected>5 題 · 標準小考</option>
+                    <option value="8">8 題 · 單元測驗</option>
+                    <option value="10">10 題 · 總結評量</option>
                   </select></label>
                 <label><span data-i18n="quiz.difficulty">試題難度</span><select id="quizDifficulty">
-                    <option value="all" selected>混合難度 (循序漸進)</option>
+                    <option value="all" selected>混合難度 · 循序漸進</option>
                     <option value="easy">基礎概念題</option>
                     <option value="medium">中等理解題</option>
                     <option value="hard">進階論述與計算題</option>
                   </select></label>
                 <label class="checkbox-label">
                   <input type="checkbox" id="quizWebSearch">
-                  <span data-i18n="quiz.web_search">開啟外部題庫檢索（搜尋真實考題）</span>
+                  <span data-i18n="quiz.web_search">開啟外部題庫檢索 · 搜尋真實考題</span>
                 </label>
               </div>
               <div class="module-card-footer">
@@ -487,27 +495,34 @@
 
         <!-- 講義專屬操作列 (預設顯示) -->
         <div class="download-actions" id="handoutDownloadActions">
-          <button class="secondary-button disabled" id="handoutToWorkbenchBtn" type="button" data-i18n="handout.btn_to_workbench">🎯 參考講義調整教學設計</button>
-          <a class="secondary-button disabled" id="previewHandoutPrintBtn" target="_blank" data-i18n="handout.btn_print">🖨️ A4 預覽列印 (另存 PDF)</a>
-          <a class="primary-button disabled" id="previewHandoutDocxBtn" data-i18n="handout.btn_download_docx">📄 下載 Word (.docx)</a>
+          <button class="secondary-button disabled" id="handoutToWorkbenchBtn" type="button"
+            data-i18n="handout.btn_to_workbench">🎯 參考講義調整教學設計</button>
+          <a class="secondary-button disabled" id="previewHandoutPrintBtn" target="_blank"
+            data-i18n="handout.btn_print">🖨️ A4 預覽列印 · 另存 PDF</a>
+          <a class="primary-button disabled" id="previewHandoutDocxBtn" data-i18n="handout.btn_download_docx">📄 下載 Word
+            文件</a>
         </div>
 
         <!-- 簡報專屬操作列 -->
         <div class="download-actions hidden" id="deckDownloadActions">
-          <a class="secondary-button disabled" id="deckPrintHandoutBtn" target="_blank" data-i18n="deck.btn_print_handout">🖨️ 講稿列印 (另存 PDF)</a>
-          <a class="secondary-button disabled" id="deckDownloadDocxBtn" data-i18n="deck.btn_docx">📄 下載講稿 (.docx)</a>
-          <a class="secondary-button disabled" id="deckPrintSlidesBtn" target="_blank" data-i18n="deck.btn_pdf">📑 下載簡報 (PDF)</a>
-          <a class="primary-button disabled" id="pptDownload" data-i18n="deck.btn_pptx">📊 下載簡報 (.pptx)</a>
+          <a class="secondary-button disabled" id="deckPrintHandoutBtn" target="_blank"
+            data-i18n="deck.btn_print_handout">🖨️ 講稿列印 · 另存 PDF</a>
+          <a class="secondary-button disabled" id="deckDownloadDocxBtn" data-i18n="deck.btn_docx">📄 下載講稿 Word</a>
+          <a class="secondary-button disabled" id="deckPrintSlidesBtn" target="_blank" data-i18n="deck.btn_pdf">📑 下載簡報
+            PDF</a>
+          <a class="primary-button disabled" id="pptDownload" data-i18n="deck.btn_pptx">📊 下載簡報 PPTX</a>
         </div>
 
         <!-- 試卷專屬操作列 -->
         <div class="download-actions hidden" id="quizDownloadActions">
-          <label style="display:inline-flex; align-items:center; gap:5px; font-size:11.5px; margin-right:4px; cursor:pointer; color:var(--ink); font-weight:600;">
+          <label
+            style="display:inline-flex; align-items:center; gap:5px; font-size:11.5px; margin-right:4px; cursor:pointer; color:var(--ink); font-weight:600;">
             <input type="checkbox" id="previewQuizTeacherToggle" style="width:auto; margin:0;" />
-            <span data-i18n="quiz.teacher_mode_toggle">✔ 顯示解答與詳細解析 (教師版)</span>
+            <span data-i18n="quiz.teacher_mode_toggle">✔ 顯示解答與詳細解析 · 教師版</span>
           </label>
-          <a class="secondary-button disabled" id="previewQuizPrintBtn" target="_blank" data-i18n="quiz.btn_print">🖨️ 列印考卷 (另存 PDF)</a>
-          <a class="primary-button disabled" id="previewQuizDocxBtn" data-i18n="quiz.btn_download_docx">📄 下載考卷 (.docx)</a>
+          <a class="secondary-button disabled" id="previewQuizPrintBtn" target="_blank" data-i18n="quiz.btn_print">🖨️
+            列印考卷 · 另存 PDF</a>
+          <a class="primary-button disabled" id="previewQuizDocxBtn" data-i18n="quiz.btn_download_docx">📄 下載考卷 Word</a>
         </div>
       </div>
 
@@ -535,7 +550,8 @@
           <span>🎯</span>
           <b data-i18n="deck.preview_empty_b">尚未生成教學簡報</b>
           <small data-i18n="deck.preview_empty_s">請在工作台點擊「✦ 生成教學簡報」或「🚀 一鍵生成全套教案」</small>
-          <button class="secondary-button" type="button" onclick="switchView('workspace')" data-i18n="deck.preview_empty_btn">← 前往工作台生成</button>
+          <button class="secondary-button" type="button" onclick="switchView('workspace')"
+            data-i18n="deck.preview_empty_btn">← 前往工作台生成</button>
         </div>
         <div class="deck-layout hidden" id="deckLayout">
           <aside class="slide-list" id="slideList">
@@ -553,14 +569,15 @@
                   <small id="pageRef" data-i18n="deck.page_ref">講者備註</small>
                 </div>
                 <div class="notes-actions">
-                  <button type="button" class="btn-micro-refine" id="refineNotesBtn" title="消耗 3 點備課點數進行 AI 講稿潤飾">
+                  <button type="button" class="btn-micro-refine" id="refineNotesBtn" title="點擊進行 AI 講稿潤飾">
                     <span class="btn-inline-spinner hidden"></span>
-                    <span class="btn-lbl">✨ AI 講稿潤飾 (3 點)</span>
+                    <span class="btn-lbl">✨ AI 講稿潤飾</span>
                   </button>
                 </div>
               </div>
               <div class="notes-editor-container">
-                <p id="speakerNotes" contenteditable="true" data-i18n="deck.speaker_notes_placeholder" spellcheck="false">生成後，逐頁講稿會顯示在這裡，您可直接點擊手動編修。</p>
+                <p id="speakerNotes" contenteditable="true" data-i18n="deck.speaker_notes_placeholder"
+                  spellcheck="false">生成後，逐頁講稿會顯示在這裡，您可直接點擊手動編修。</p>
               </div>
             </div>
           </div>
@@ -600,8 +617,10 @@
             <div><b data-i18n="chat.welcome_b">💡 嗨，我是你的教材助教</b>
               <p data-i18n="chat.welcome_p">上傳文件後，你可以請我解釋概念、比較差異，或從教材中整理重點。我只會根據文件內容回答。</p>
               <div class="suggestions">
-                <button type="button" class="chat-sug-btn" data-query="這份教材的三個核心重點是什麼？" data-i18n="chat.sug_1">🎓 這份教材的三個核心重點是什麼？</button>
-                <button type="button" class="chat-sug-btn" data-query="用簡單的例子解釋最重要的概念" data-i18n="chat.sug_2">📝 用簡單的例子解釋最重要的概念</button>
+                <button type="button" class="chat-sug-btn" data-query="這份教材的三個核心重點是什麼？" data-i18n="chat.sug_1">🎓
+                  這份教材的三個核心重點是什麼？</button>
+                <button type="button" class="chat-sug-btn" data-query="用簡單的例子解釋最重要的概念" data-i18n="chat.sug_2">📝
+                  用簡單的例子解釋最重要的概念</button>
               </div>
             </div>
           </div>
@@ -613,7 +632,8 @@
               <input type="checkbox" id="qaWebSearch" style="width: auto; margin: 0;">
               <span data-i18n="chat.web_search">開啟網路補充搜尋（教材中查無解答時聯網檢索）</span>
             </label>
-            <span class="chat-history-status" id="chatHistoryStatus" style="font-size: 11px; color: #10b981; display: inline-flex; align-items: center; gap: 4px;">
+            <span class="chat-history-status" id="chatHistoryStatus"
+              style="font-size: 11px; color: #10b981; display: inline-flex; align-items: center; gap: 4px;">
               <i style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #10b981;"></i>
               <span data-i18n="chat.memory_active">多輪對話記憶中</span>
             </span>
@@ -695,7 +715,8 @@
         </div>
         <div class="agent-toolbar-right">
           <button type="button" class="toolbar-btn" id="agentDeptToggleBtn" title="收合或展開專家卡片">
-            <span class="toggle-icon">▲</span><span id="agentDeptToggleText" data-i18n="agent.toggle_collapse">收合卡片</span>
+            <span class="toggle-icon">▲</span><span id="agentDeptToggleText"
+              data-i18n="agent.toggle_collapse">收合卡片</span>
           </button>
           <button type="button" class="toolbar-btn" id="clearAgentChatBtn" title="清空當前部門對話紀錄">
             <span class="icon">🗑️</span><span data-i18n="agent.btn_clear">清空對話</span>
@@ -797,7 +818,7 @@
         <form class="chat-input" id="agentForm">
           <div class="chat-input-box">
             <textarea id="agentQueryInput" rows="1" data-i18n="agent.placeholder"
-              placeholder="下達備課或教學任務 (例: '幫我設計一份 45 分鐘物理教案大綱' 或 '出 5 題選擇題')..."></textarea>
+              placeholder="下達備課或教學任務，例如「幫我設計一份 45 分鐘物理教案大綱」或「出 5 題選擇題」..."></textarea>
             <button type="submit" id="agentSendBtn">↑</button>
           </div>
         </form>
@@ -808,7 +829,8 @@
       <!-- 帳號設定頂部資訊與快捷操作列 (Profile Top Info Bar) -->
       <div class="profile-top-toolbar">
         <div class="profile-toolbar-left">
-          <span class="profile-toolbar-badge" id="profileToolbarUserBadge" data-i18n="profile.top_badge">👤 帳號管理中心</span>
+          <span class="profile-toolbar-badge" id="profileToolbarUserBadge" data-i18n="profile.top_badge">👤
+            帳號管理中心</span>
           <span class="profile-toolbar-role" id="profileToolbarRoleText">一般用戶</span>
         </div>
         <div class="profile-toolbar-right">
@@ -862,7 +884,7 @@
             </div>
             <div class="auth-field">
               <label for="newPasswordInput" data-i18n="profile.lbl_new_pass">新密碼</label>
-              <input type="password" id="newPasswordInput" placeholder="輸入新密碼 (至少4字元)" data-i18n="profile.ph_new_pass"
+              <input type="password" id="newPasswordInput" placeholder="輸入新密碼 · 至少 4 字元" data-i18n="profile.ph_new_pass"
                 required autocomplete="new-password">
             </div>
             <div class="auth-error-msg hidden" id="changePassError"></div>
@@ -874,6 +896,21 @@
       </div>
     </section>
 
+    <!-- 服務條款 In-App View (Terms of Service) -->
+    <!-- 服務條款 In-App View (Terms of Service) -->
+    <section class="view" id="termsView">
+      <div class="legal-view-container" id="termsViewContainer">
+        <!-- Dynamic legal content rendered via renderLegalViews() -->
+      </div>
+    </section>
+
+    <!-- 隱私權政策 In-App View (Privacy Policy) -->
+    <section class="view" id="privacyView">
+      <div class="legal-view-container" id="privacyViewContainer">
+        <!-- Dynamic legal content rendered via renderLegalViews() -->
+      </div>
+    </section>
+
     <!-- 頁尾宣告與法律資訊 (Footer & Legal) -->
     <footer class="app-footer">
       <div class="footer-inner">
@@ -882,9 +919,11 @@
           <p class="footer-copy" data-i18n="footer.copyright">© 2026 ArchCet. All rights reserved.</p>
         </div>
         <div class="footer-links">
-          <button type="button" class="footer-link-btn" id="openTermsBtn" data-i18n="footer.terms">服務條款 (Terms)</button>
+          <button type="button" class="footer-link-btn" data-view="terms" id="openTermsBtn"
+            data-i18n="footer.terms">服務條款</button>
           <span class="footer-sep">·</span>
-          <button type="button" class="footer-link-btn" id="openPrivacyBtn" data-i18n="footer.privacy">隱私權政策 (Privacy)</button>
+          <button type="button" class="footer-link-btn" data-view="privacy" id="openPrivacyBtn"
+            data-i18n="footer.privacy">隱私權政策</button>
           <span class="footer-sep">·</span>
           <a href="mailto:contact@archcet.com" class="footer-link-btn" data-i18n="footer.contact">聯絡我們</a>
         </div>
@@ -901,9 +940,11 @@
       <!-- Left: Brand Showcase & Value Proposition -->
       <div class="auth-brand-pane">
         <div class="auth-brand-header">
-          <p class="eyebrow" style="margin-bottom: 8px;"><span></span> <span data-i18n="auth_brand.eyebrow">✦ 課伴 LessonFlow</span></p>
+          <p class="eyebrow" style="margin-bottom: 8px;"><span></span> <span data-i18n="auth_brand.eyebrow">✦ 課伴
+              LessonFlow</span></p>
           <h2 class="auth-brand-title" data-i18n="auth_brand.title">把教材，變成一堂<br><em>真正好懂的課。</em></h2>
-          <p class="auth-brand-copy" data-i18n="auth_brand.copy">可直接上傳教材或與 AI 備課助手討論構思，完整產出好教好懂的講義、簡報與試卷；支援知識補充檢索、隨時手動修訂，讓備課與上課更順暢。</p>
+          <p class="auth-brand-copy" data-i18n="auth_brand.copy">可直接上傳教材或與 AI
+            備課助手討論構思，完整產出好教好懂的講義、簡報與試卷；支援知識補充檢索、隨時手動修訂，讓備課與上課更順暢。</p>
         </div>
 
         <div class="auth-brand-art" aria-hidden="true">
@@ -912,71 +953,63 @@
           <div class="book"><span></span><i></i></div>
           <div class="spark s1">✦</div>
           <div class="spark s2">✦</div>
-          <div class="spark s3">✦</div>
         </div>
 
-        <div class="auth-brand-steps">
-          <div class="auth-step-item">
-            <span class="auth-step-num">01</span>
-            <div><b data-i18n="steps.step1_title">輸入或構思</b><small data-i18n="steps.step1_sub">PDF 解析 · AI 討論</small></div>
-          </div>
-          <div class="auth-step-arrow">→</div>
-          <div class="auth-step-item">
-            <span class="auth-step-num">02</span>
-            <div><b data-i18n="steps.step2_title">設定目標</b><small data-i18n="steps.step2_sub">對象、語氣與節奏</small></div>
-          </div>
-          <div class="auth-step-arrow">→</div>
-          <div class="auth-step-item">
-            <span class="auth-step-num">03</span>
-            <div><b data-i18n="steps.step3_title">完整產出</b><small data-i18n="steps.step3_sub">講義 · 簡報 · 試卷</small></div>
-          </div>
+        <div class="auth-brand-badges">
+          <div class="auth-badge-item"><span>🚀</span> 一鍵講義·簡報·試卷</div>
+          <div class="auth-badge-item"><span>🔒</span> 私有教材零公開訓練</div>
+          <div class="auth-badge-item"><span>⚡</span> 多模態圖表與公式解析</div>
         </div>
       </div>
 
       <!-- Right: Form Pane (Login / Register) -->
       <div class="auth-form-pane">
-        <div class="auth-tabs">
-          <button class="auth-tab-btn active" id="tabLoginBtn" type="button" data-tab="login"
-            data-i18n="auth.tab_login">用戶登入</button>
-          <button class="auth-tab-btn" id="tabRegisterBtn" type="button" data-tab="register"
-            data-i18n="auth.tab_register">註冊新帳號</button>
+        <div class="auth-pane-tabs">
+          <button type="button" class="auth-pane-tab active" id="tabLoginBtn" data-i18n="auth.tab_login">用戶登入</button>
+          <button type="button" class="auth-pane-tab" id="tabRegisterBtn" data-i18n="auth.tab_register">註冊新帳號</button>
         </div>
 
-        <!-- 登入 Form -->
+        <!-- 登入表單 -->
         <form class="auth-form" id="loginForm">
-          <h3 data-i18n="auth.login_title">歡迎回來</h3>
-          <p class="auth-sub" data-i18n="auth.login_sub">請輸入您的帳號與密碼以取得 API 使用權限與配額</p>
+          <div class="auth-form-header">
+            <h3 data-i18n="auth.login_title">歡迎回來</h3>
+            <p data-i18n="auth.login_sub">請輸入您的帳號與密碼以取得 API 使用權限與配額</p>
+          </div>
           <div class="auth-field">
-            <label for="loginUsername" data-i18n="auth.lbl_username">帳號</label>
-            <input type="text" id="loginUsername" placeholder="輸入帳號" data-i18n="auth.ph_username" required
+            <label for="loginUsernameInput" data-i18n="auth.lbl_username">帳號</label>
+            <input type="text" id="loginUsernameInput" placeholder="輸入帳號" data-i18n="auth.ph_username" required
               autocomplete="username">
           </div>
           <div class="auth-field">
-            <label for="loginPassword" data-i18n="auth.lbl_password">密碼</label>
-            <input type="password" id="loginPassword" placeholder="輸入密碼" data-i18n="auth.ph_password" required
+            <label for="loginPasswordInput" data-i18n="auth.lbl_password">密碼</label>
+            <input type="password" id="loginPasswordInput" placeholder="輸入密碼" data-i18n="auth.ph_password" required
               autocomplete="current-password">
           </div>
           <div class="auth-error-msg hidden" id="loginError"></div>
-          <button type="submit" class="primary-button auth-submit-btn" data-i18n="auth.btn_login">登入系統</button>
+          <button type="submit" class="primary-button auth-submit-btn" id="loginSubmitBtn"
+            data-i18n="auth.btn_login">登入系統</button>
         </form>
 
-        <!-- 註冊 Form -->
+        <!-- 註冊表單 -->
         <form class="auth-form hidden" id="registerForm">
-          <h3 data-i18n="auth.reg_title">建立新帳號</h3>
-          <p class="auth-sub" data-i18n="auth.reg_sub">註冊後需經管理員開通，方可登入並開始使用每日 20 次提問額度</p>
+          <div class="auth-form-header">
+            <h3 data-i18n="auth.reg_title">建立新帳號</h3>
+            <p data-i18n="auth.reg_sub">註冊後由管理員開通，即可開始使用每日備課點數</p>
+          </div>
           <div class="auth-field">
-            <label for="regUsername" data-i18n="auth.lbl_username">帳號</label>
-            <input type="text" id="regUsername" placeholder="長度至少 3 個字元" data-i18n="auth.ph_reg_user" required
+            <label for="regUsernameInput" data-i18n="auth.lbl_username">帳號</label>
+            <input type="text" id="regUsernameInput" placeholder="長度至少 3 個字元" data-i18n="auth.ph_reg_user" required
               autocomplete="username">
           </div>
           <div class="auth-field">
-            <label for="regPassword" data-i18n="auth.lbl_password">密碼</label>
-            <input type="password" id="regPassword" placeholder="長度至少 4 個字元" data-i18n="auth.ph_reg_pass" required
+            <label for="regPasswordInput" data-i18n="auth.lbl_password">密碼</label>
+            <input type="password" id="regPasswordInput" placeholder="長度至少 4 個字元" data-i18n="auth.ph_reg_pass" required
               autocomplete="new-password">
           </div>
           <div class="auth-error-msg hidden" id="regError"></div>
           <div class="auth-success-msg hidden" id="regSuccess"></div>
-          <button type="submit" class="primary-button auth-submit-btn" data-i18n="auth.btn_register">送出註冊</button>
+          <button type="submit" class="primary-button auth-submit-btn" id="regSubmitBtn"
+            data-i18n="auth.btn_register">送出註冊</button>
         </form>
       </div>
     </div>
@@ -987,36 +1020,36 @@
     <div class="auth-modal-card" style="max-width: 420px;">
       <button class="auth-modal-close" id="closeCreateUserModalBtn" type="button" aria-label="關閉">&times;</button>
       <div style="margin-bottom: 20px; text-align: center;">
-        <h2 style="font-size: 20px; font-weight: 700; margin: 0 0 6px 0;" data-i18n="admin.create_modal_title">➕ 新增帳號
-          (管理員開通)</h2>
+        <h2 style="font-size: 20px; font-weight: 700; margin: 0 0 6px 0;" data-i18n="admin.create_modal_title">➕ 新增帳號 ·
+          管理員開通</h2>
         <p style="font-size: 13px; color: var(--muted); margin: 0;" data-i18n="admin.create_modal_sub">
           直接為系統建立已開通權限之一般用戶或管理員帳號</p>
       </div>
       <form class="auth-form" id="createUserAdminForm">
         <div class="auth-field">
-          <label for="createUsernameInput" data-i18n="admin.create_lbl_username">帳號名稱 (Username)</label>
-          <input type="text" id="createUsernameInput" placeholder="輸入使用者帳號 (至少3字元)" required autocomplete="off">
+          <label for="createUsernameInput" data-i18n="admin.create_lbl_username">帳號名稱</label>
+          <input type="text" id="createUsernameInput" placeholder="輸入使用者帳號 · 至少 3 字元" required autocomplete="off">
         </div>
         <div class="auth-field">
-          <label for="createPasswordInput" data-i18n="admin.create_lbl_password">初始密碼 (Password)</label>
-          <input type="password" id="createPasswordInput" placeholder="輸入初始密碼 (至少4字元)" required
+          <label for="createPasswordInput" data-i18n="admin.create_lbl_password">初始密碼</label>
+          <input type="password" id="createPasswordInput" placeholder="輸入初始密碼 · 至少 4 字元" required
             autocomplete="new-password">
         </div>
         <div class="auth-field">
-          <label for="createRoleSelect" data-i18n="admin.create_lbl_role">身分角色 (Role)</label>
+          <label for="createRoleSelect" data-i18n="admin.create_lbl_role">身分角色</label>
           <select id="createRoleSelect"
             style="width: 100%; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--line); font-size: 13px; background: var(--paper);">
-            <option value="user" data-i18n="admin.opt_role_user">👤 一般用戶 (user)</option>
-            <option value="admin" data-i18n="admin.opt_role_admin">👑 系統管理員 (admin)</option>
+            <option value="user" data-i18n="admin.opt_role_user">👤 一般用戶</option>
+            <option value="admin" data-i18n="admin.opt_role_admin">👑 系統管理員</option>
           </select>
         </div>
         <div class="auth-field" id="createTierWrapper">
-          <label for="createTierSelect" data-i18n="admin.create_lbl_tier">會員層級 (Tier)</label>
+          <label for="createTierSelect" data-i18n="admin.create_lbl_tier">會員層級</label>
           <select id="createTierSelect"
             style="width: 100%; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--line); font-size: 13px; background: var(--paper);">
-            <option value="teacher_trial" data-i18n="admin.opt_tier_trial">🎓 教師試用版 (1簡報/5提問)</option>
-            <option value="teacher_pro" selected data-i18n="admin.opt_tier_pro">⭐ 教師專業版 (10簡報/50提問+VLM)</option>
-            <option value="institution" data-i18n="admin.opt_tier_inst">🏫 機構/學校版 (100簡報/500提問)</option>
+            <option value="teacher_trial" data-i18n="admin.opt_tier_trial">🎓 教師試用版 · 100 點/日</option>
+            <option value="teacher_pro" selected data-i18n="admin.opt_tier_pro">⭐ 教師專業版 · 1,000 點/日</option>
+            <option value="institution" data-i18n="admin.opt_tier_inst">🏫 機構學校版 · 10,000 點/日</option>
           </select>
         </div>
         <div class="auth-error-msg hidden" id="createUserError"></div>
@@ -1024,18 +1057,23 @@
           data-i18n="admin.create_btn_submit">確認建立帳號</button>
       </form>
     </div>
+  </div>
+
   <!-- 隨堂講義預覽與匯出 Modal -->
   <div class="auth-modal-overlay hidden" id="handoutModal">
     <div class="auth-modal-card" style="max-width: 720px; max-height: 85vh; overflow-y: auto;">
       <button class="auth-modal-close" id="closeHandoutModalBtn" type="button" aria-label="關閉">&times;</button>
       <div style="border-bottom: 2px solid var(--green); padding-bottom: 12px; margin-bottom: 16px;">
-        <h2 style="font-size: 20px; font-weight: 700; color: var(--green); margin: 0 0 4px 0;" id="handoutModalTitle">隨堂講義</h2>
+        <h2 style="font-size: 20px; font-weight: 700; color: var(--green); margin: 0 0 4px 0;" id="handoutModalTitle">
+          隨堂講義</h2>
         <p style="font-size: 13px; color: var(--muted); margin: 0;" id="handoutModalSubtitle">備課導讀手冊</p>
       </div>
-      <div class="handout-modal-body" id="handoutModalBody" style="font-size: 14px; line-height: 1.6; color: var(--text);">
+      <div class="handout-modal-body" id="handoutModalBody"
+        style="font-size: 14px; line-height: 1.6; color: var(--text);">
         <!-- 動態渲染講義內容 -->
       </div>
-      <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--line);">
+      <div
+        style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--line);">
         <a class="secondary-button" id="handoutPrintBtn" target="_blank">🖨️ A4 格式列印 / PDF</a>
         <a class="primary-button" id="handoutDownloadMdBtn">↓ 下載 Markdown</a>
       </div>
@@ -1046,79 +1084,26 @@
   <div class="auth-modal-overlay hidden" id="quizModal">
     <div class="auth-modal-card" style="max-width: 720px; max-height: 85vh; overflow-y: auto;">
       <button class="auth-modal-close" id="closeQuizModalBtn" type="button" aria-label="關閉">&times;</button>
-      <div style="border-bottom: 2px solid var(--green); padding-bottom: 12px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: flex-end;">
+      <div
+        style="border-bottom: 2px solid var(--green); padding-bottom: 12px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: flex-end;">
         <div>
-          <h2 style="font-size: 20px; font-weight: 700; color: var(--green); margin: 0 0 4px 0;" id="quizModalTitle">單元試卷</h2>
+          <h2 style="font-size: 20px; font-weight: 700; color: var(--green); margin: 0 0 4px 0;" id="quizModalTitle">
+            單元試卷</h2>
           <p style="font-size: 13px; color: var(--muted); margin: 0;" id="quizModalSubtitle">隨堂測驗評量</p>
         </div>
-        <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer; color: var(--green);">
+        <label
+          style="display: flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer; color: var(--green);">
           <input type="checkbox" id="quizTeacherModeToggle" style="width: auto; margin: 0;">
-          <span>顯示答案與解析 (教師模式)</span>
+          <span>顯示答案與解析 · 教師模式</span>
         </label>
       </div>
       <div class="quiz-modal-body" id="quizModalBody" style="font-size: 14px; line-height: 1.6; color: var(--text);">
         <!-- 動態渲染試卷題目 -->
       </div>
-      <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--line);">
-        <a class="secondary-button" id="quizDownloadStudentBtn">↓ 學生測驗卷 (MD)</a>
-        <a class="primary-button" id="quizDownloadTeacherBtn">↓ 教師詳解卷 (MD)</a>
-      </div>
-    </div>
-  </div>
-
-  <!-- 服務條款 Modal (Terms of Service) -->
-  <div class="auth-modal-overlay hidden" id="termsModal">
-    <div class="auth-modal-card" style="max-width: 680px; max-height: 85vh; overflow-y: auto;">
-      <button class="auth-modal-close" id="closeTermsModalBtn" type="button" aria-label="關閉">&times;</button>
-      <div style="border-bottom: 2px solid var(--green); padding-bottom: 12px; margin-bottom: 16px;">
-        <h2 style="font-size: 20px; font-weight: 700; color: var(--green); margin: 0 0 4px 0;">課伴 (LessonFlow) 服務條款</h2>
-        <p style="font-size: 12.5px; color: var(--muted); margin: 0;">最後修訂日期：2026 年 9 月 · ArchCet</p>
-      </div>
-      <div style="font-size: 13.5px; line-height: 1.7; color: var(--ink);">
-        <h4 style="color: var(--green); margin: 14px 0 6px;">1. 服務簡介與授權範圍</h4>
-        <p>課伴（LessonFlow，以下簡稱「本服務」）由 ArchCet 開發營運，專為教育工作者提供 AI 輔助之教材解析、課程簡報大綱、逐頁講稿、隨堂講義與試卷評量生成服務。</p>
-        
-        <h4 style="color: var(--green); margin: 14px 0 6px;">2. 使用者責任與內容規範</h4>
-        <p>使用者上傳之 PDF 教材及產出之教學文件，須確保具備合法使用權或屬於教學合理使用範疇。嚴禁利用本服務產出任何違法、侵權或具危害性之內容。</p>
-
-        <h4 style="color: var(--green); margin: 14px 0 6px;">3. AI 生成內容與智慧財產權</h4>
-        <p>本服務運用先進人工智慧語言模型協助教學設計。AI 產出之簡報、講稿、講義與試卷僅供教學輔助參考，教師應於教學前進行專業審查與必要調校。使用者享有其帳號所生成內容之教學使用與衍生權利。</p>
-
-        <h4 style="color: var(--green); margin: 14px 0 6px;">4. 服務點數與額度政策</h4>
-        <p>本服務採每日備課點數制（Unified Credits），依使用者之會員層級每日自動配發對應點數。未用完之每日額度不予遞延至次日。</p>
-
-        <h4 style="color: var(--green); margin: 14px 0 6px;">5. 聯絡窗口</h4>
-        <p>若對本服務條款有任何疑問，請隨時寄信至 <a href="mailto:contact@archcet.com" style="color: var(--green); font-weight: 600;">contact@archcet.com</a> 與我們聯繫。</p>
-      </div>
-      <div style="display: flex; justify-content: flex-end; margin-top: 20px; padding-top: 14px; border-top: 1px solid var(--line);">
-        <button class="primary-button" id="confirmTermsBtn" type="button">我已瞭解</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 隱私權政策 Modal (Privacy Policy) -->
-  <div class="auth-modal-overlay hidden" id="privacyModal">
-    <div class="auth-modal-card" style="max-width: 680px; max-height: 85vh; overflow-y: auto;">
-      <button class="auth-modal-close" id="closePrivacyModalBtn" type="button" aria-label="關閉">&times;</button>
-      <div style="border-bottom: 2px solid var(--green); padding-bottom: 12px; margin-bottom: 16px;">
-        <h2 style="font-size: 20px; font-weight: 700; color: var(--green); margin: 0 0 4px 0;">課伴 (LessonFlow) 隱私權政策</h2>
-        <p style="font-size: 12.5px; color: var(--muted); margin: 0;">最後修訂日期：2026 年 9 月 · ArchCet</p>
-      </div>
-      <div style="font-size: 13.5px; line-height: 1.7; color: var(--ink);">
-        <h4 style="color: var(--green); margin: 14px 0 6px;">1. 資料收集項目</h4>
-        <p>當您註冊或使用本服務時，我們僅收集必要之資訊（如帳號名稱、經雜湊加密之密碼、登入時間與每日使用額度統計）。</p>
-        
-        <h4 style="color: var(--green); margin: 14px 0 6px;">2. 教材文件與資料保護承諾</h4>
-        <p>您上傳之 PDF 教材僅於您發起生成與問答工作時於記憶體中進行向量索引與分析處理。<b>我們絕不會將您的私有教材與教學資產用於公開大語言模型的訓練或對外共享。</b></p>
-
-        <h4 style="color: var(--green); margin: 14px 0 6px;">3. 資料傳輸與儲存安全</h4>
-        <p>全站傳輸採用標準 HTTPS 加密協議，使用者密碼採用業界標準 Salt 雜湊技術存儲，確保您的帳號資產與教學隱私獲得高規格防護。</p>
-
-        <h4 style="color: var(--green); margin: 14px 0 6px;">4. 隱私權諮詢</h4>
-        <p>若您對個人資料處理或隱私權政策有任何疑問，歡迎聯絡 ArchCet 隱私權小組：<a href="mailto:contact@archcet.com" style="color: var(--green); font-weight: 600;">contact@archcet.com</a>。</p>
-      </div>
-      <div style="display: flex; justify-content: flex-end; margin-top: 20px; padding-top: 14px; border-top: 1px solid var(--line);">
-        <button class="primary-button" id="confirmPrivacyBtn" type="button">我已瞭解</button>
+      <div
+        style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--line);">
+        <a class="secondary-button" id="quizDownloadStudentBtn">↓ 學生測驗卷 Markdown</a>
+        <a class="primary-button" id="quizDownloadTeacherBtn">↓ 教師詳解卷 Markdown</a>
       </div>
     </div>
   </div>
@@ -1131,7 +1116,8 @@
     <p id="loadingCopy" data-i18n="loading.read_copy">整理章節與核心概念…</p>
     <div class="loading-track"><span></span></div>
   </div>
-  <script src="/app.js?v=5.7.0"></script>
+
+  <script src="/app.js?v=5.9.1"></script>
 </body>
 
 </html>

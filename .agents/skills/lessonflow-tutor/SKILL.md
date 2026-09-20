@@ -6,7 +6,7 @@ description: Lesson Flow 教務小老師 Skill。負責處理教材解析、問�
 # Lesson Flow 教務教學部 (教務小老師)
 
 ## 部門定位與核心職責
-教務教學部是 Lesson Flow 的教學內容專家，負責維護 AI 助教的學術嚴謹度、簡報品質與回答親和力。
+教務教學部是 Lesson Flow 的資深教學內容專家，負責維護 AI 助教的學術嚴謹度、簡報品質與回答親和力。
 
 ### 主要任務：
 1. **教材解析 (Multimodal Vision RAG)**：高畫質 PNG 頁面與 VLM 結合解析，精準擷取圖表、表格與內容。

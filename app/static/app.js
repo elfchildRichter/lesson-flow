@@ -14,7 +14,7 @@ const $$ = (selector) => [...document.querySelectorAll(selector)];
 
 const translations = {
   'zh-TW': {
-    'nav.brand': '課伴<small>LESSONFLOW (Alpha)</small>',
+    'nav.brand': '課伴<small>LESSONFLOW</small>',
     'nav.brand_root': '課伴',
     'nav.home': '產品介紹',
     'nav.workspace': '工作台',
@@ -31,6 +31,8 @@ const translations = {
     'nav.crumb_admin': '管理員控制台',
     'nav.crumb_agent': 'AI 備課助手',
     'nav.crumb_profile': '個人帳號設定',
+    'nav.crumb_terms': '服務條款',
+    'nav.crumb_privacy': '隱私權政策',
     'nav.sub_home': '把教材變成一堂好懂的課',
     'nav.sub_workspace': '上傳教材、解析內容與一鍵生成教學資產',
     'nav.sub_deck': '檢視、編輯與匯出簡報、講義與測驗題庫',
@@ -38,6 +40,8 @@ const translations = {
     'nav.sub_agent': '教案設計、試題與教學宣傳多功能助手',
     'nav.sub_profile': '檢視帳號身份、等級與每日配額',
     'nav.sub_admin': '審核帳號、調整權限與用戶管理',
+    'nav.sub_terms': '服務規範與點數機制說明',
+    'nav.sub_privacy': '教材私隱與資料保護規範',
     'chat.btn_clear': '開啟新對話',
     'chat.memory_active': '多輪對話記憶中',
     'agent.btn_clear': '清空對話',
@@ -56,7 +60,7 @@ const translations = {
     'agent.metric_depts': '4 大專家助手',
     'agent.metric_depts_sub': '教務備課 · 題庫生成 · 行銷推廣 · 限額查詢',
     'agent.metric_skills': '5 個 Skills',
-    'agent.metric_skills_sub': '外掛式動態註冊表 (Registry)',
+    'agent.metric_skills_sub': '外掛式動態註冊表',
     'agent.metric_router': 'CompanyRouter',
     'agent.metric_router_sub': '意圖自適應分流與容錯',
     'agent.dept_status_active': '🟢 服務中',
@@ -74,17 +78,17 @@ const translations = {
     'agent.dept_devops_desc': '負責 JWT 身份驗證排查、系統 Quota 限額控管、Railway 部署與 OOM 診斷。',
     'agent.dept_mkt_platform_label': '文案推廣平台：',
     'agent.welcome_title': '💡 歡迎使用 AI 備課助手',
-    'agent.welcome_desc': '請下達備課或教學任務（例如：「設計牛頓運動定律 45 分鐘教案」、「出 5 題高中生物題」或「寫一篇教學心得」）。',
+    'agent.welcome_desc': '請下達備課或教學任務，例如「設計牛頓運動定律 45 分鐘教案」、「出 5 題高中生物題」或「寫一篇教學心得」。',
     'agent.sug_1': '🎓 45 分鐘教案設計',
     'agent.sug_2': '📝 5 題生物選擇題與解析',
     'agent.sug_3': '🚀 FB/Threads 社群推廣文案',
     'agent.sug_4': '📋 查詢會員等級與每日配額',
-    'agent.placeholder': '下達備課或教學任務 (例: \'幫我設計一份 45 分鐘物理教案大綱\' 或 \'出 5 題選擇題\')...',
+    'agent.placeholder': '下達備課或教學任務，例如「幫我設計一份 45 分鐘物理教案大綱」或「出 5 題選擇題」...',
     'agent.shortcut': '<span>↵</span> Enter 傳送 · Shift + Enter 換行',
     'provider.title': '⚡ AI 模型提供者',
     'multimodal.title': '📷 教材解析設定',
     'multimodal.toggle_label': '圖表與理化公式辨識',
-    'multimodal.hint': '開啟使用圖表與公式解析（消耗 30 點，標準解析為 5 點）',
+    'multimodal.hint': '開啟多模態圖表與公式解析 · 深度視覺模型辨識',
     'quota.title': '每日備課點數',
     'quota.daily_remaining': '今日剩餘點數',
     'quota.hint_main': '簡報 50 · 講義 30 · 試卷 20 · 微調 3 點',
@@ -134,7 +138,7 @@ const translations = {
     'home.feat3_desc': '一鍵生成 A4 導讀手冊與具備誘答解析的單元測驗卷，支援學生測驗卷與教師詳解模式，提供 Word / PDF 高清匯出。',
     'home.feat2_title': '教學簡報與逐頁講稿',
     'home.feat2_desc': '循序漸進投影片架構，每頁配備核心圖解提示與教師專屬逐頁演講稿，支援線上就地手動微調並同步匯出 PPTX / Word。',
-    'home.feat5_title': 'AI 專家備課助手 (4 大部門與智慧導航)',
+    'home.feat5_title': 'AI 專家備課助手 · 4 大部門與智慧導航',
     'home.feat5_desc': '手邊無現成教材也能備課！內建「教務教學部、營運行政部、市場營銷部、技術維護部」4 大專家部門，可針對特定任務深度諮詢；亦可直接使用「全域智慧導航模式」，系統自動精準分派至對應專業助手，構思教案後可一鍵銜接全套產出。',
     'upload.title': '選擇你的教材',
     'upload.secure': '✓ 安全加密',
@@ -143,7 +147,7 @@ const translations = {
     'upload.limit': '最大 30 MB · 支援可選取文字的 PDF',
     'upload.sample_hint': '💡 手邊暫無教材？可與 AI 備課助手討論主題，直接生成完整教案：',
     'upload.agent_btn': '💡 前往 AI 備課助手討論',
-    'upload.sample_btn': '🚀 載入示範教材 (高中物理)',
+    'upload.sample_btn': '🚀 載入示範教材 · 高中物理',
     'upload.parsed_ready': '教材已建立索引，可開始教學設計',
     'preview.editable_hint': '<b>✎ 就地手動編修</b>：點擊下方任何標題、講稿、條列或題目文字均可直接免費修改，系統將自動同步並套用於匯出檔案。',
     'settings.title': '教學設計工作台',
@@ -153,7 +157,7 @@ const translations = {
     'settings.duration': '課程時間',
     'settings.slide_count': '簡報頁數',
     'settings.language': '輸出語言',
-    'settings.web_search': '開啟網路補充搜尋（延伸案例數據）',
+    'settings.web_search': '開啟網路補充搜尋 · 延伸案例數據',
     'settings.generate_btn': '生成教學內容',
     'settings.estimate': '預計需要 1–2 分鐘，可留在此頁等待',
     'value.01_title': '實證為本',
@@ -163,38 +167,38 @@ const translations = {
     'value.03_title': '即刻匯出',
     'value.03_desc': '一鍵匯出 PPTX 簡報、Word 講義與測驗試卷',
 
-    'workspace.common_title': '✦ 共通教學設定 (通用於下方三大產出模組)',
-    'workspace.generate_all': '🚀 一鍵生成全套教案 (講義+簡報+試卷)',
+    'workspace.common_title': '✦ 共通教學設定 · 通用於下方三大產出模組',
+    'workspace.generate_all': '🚀 循序生成全套 · 講義 ➔ 簡報 & 試卷',
     'handout.badge': '📝 模組 1',
     'handout.title': '隨堂講義',
     'handout.desc': 'A4 導讀手冊、核心觀念與研讀建議',
     'handout.audience': '適用對象',
     'handout.detail': '詳細程度',
-    'handout.web_search': '開啟網路知識補充（整合時事案例）',
+    'handout.web_search': '開啟網路知識補充 · 整合時事案例',
     'handout.btn_to_workbench': '🎯 參考講義調整教學設計',
-    'handout.btn_print': '🖨️ A4 預覽列印 (另存 PDF)',
-    'handout.btn_download_docx': '📄 下載 Word (.docx)',
+    'handout.btn_print': '🖨️ A4 預覽列印 · 另存 PDF',
+    'handout.btn_download_docx': '📄 下載 Word 文件',
     'handout.btn': '📝 生成 A4 隨堂講義',
     'deck.badge': '🎯 模組 2',
     'deck.title': '教學簡報',
     'deck.desc': '投影片大綱、視覺圖解與逐頁講稿',
-    'deck.web_search': '開啟網路補充搜尋（延伸案例數據）',
+    'deck.web_search': '開啟網路補充搜尋 · 延伸案例數據',
     'deck.btn': '✦ 生成教學簡報',
-    'deck.btn_pdf': '📑 下載簡報 (PDF)',
-    'deck.btn_pptx': '📊 下載簡報 (.pptx)',
-    'deck.btn_print_handout': '🖨️ 講稿列印 (另存 PDF)',
-    'deck.btn_docx': '📄 下載講稿 (.docx)',
-    'deck.btn_download_docx': '📄 下載講稿 (.docx)',
+    'deck.btn_pdf': '📑 下載簡報 PDF',
+    'deck.btn_pptx': '📊 下載簡報 PPTX',
+    'deck.btn_print_handout': '🖨️ 講稿列印 · 另存 PDF',
+    'deck.btn_docx': '📄 下載講稿 Word',
+    'deck.btn_download_docx': '📄 下載講稿 Word',
     'quiz.badge': '📑 模組 3',
     'quiz.title': '單元試卷',
     'quiz.desc': '隨堂測驗評量、誘答選項與觀念詳解',
     'quiz.count': '出題題數',
     'quiz.difficulty': '試題難度',
-    'quiz.web_search': '開啟外部題庫檢索（搜尋真實考題）',
+    'quiz.web_search': '開啟外部題庫檢索 · 搜尋真實考題',
     'quiz.btn': '📑 生成單元試卷',
-    'quiz.teacher_mode_toggle': '✔ 顯示解答與詳細解析 (教師版)',
-    'quiz.btn_print': '🖨️ 列印考卷 (另存 PDF)',
-    'quiz.btn_download_docx': '📄 下載考卷 (.docx)',
+    'quiz.teacher_mode_toggle': '✔ 顯示解答與詳細解析 · 教師版',
+    'quiz.btn_print': '🖨️ 列印考卷 · 另存 PDF',
+    'quiz.btn_download_docx': '📄 下載考卷 Word',
 
     'opt.audience.college': '大學生',
     'opt.audience.high': '高中生',
@@ -212,24 +216,24 @@ const translations = {
     'opt.handout_aud.pro': '職場專業培訓學員',
     'opt.handout_aud.self': '自學者筆記',
 
-    'opt.handout_det.concise': '重點摘要型 (精簡)',
-    'opt.handout_det.standard': '標準導讀型 (平衡)',
-    'opt.handout_det.detailed': '深入剖析型 (詳盡)',
+    'opt.handout_det.concise': '重點摘要型 · 精簡',
+    'opt.handout_det.standard': '標準導讀型 · 平衡',
+    'opt.handout_det.detailed': '深入剖析型 · 詳盡',
 
-    'opt.quiz_cnt.3': '3 題 (課堂速測)',
-    'opt.quiz_cnt.5': '5 題 (標準小考)',
-    'opt.quiz_cnt.8': '8 題 (單元測驗)',
-    'opt.quiz_cnt.10': '10 題 (總結評量)',
+    'opt.quiz_cnt.3': '3 題 · 課堂速測',
+    'opt.quiz_cnt.5': '5 題 · 標準小考',
+    'opt.quiz_cnt.8': '8 題 · 單元測驗',
+    'opt.quiz_cnt.10': '10 題 · 總結評量',
 
-    'opt.quiz_diff.all': '混合難度 (循序漸進)',
+    'opt.quiz_diff.all': '混合難度 · 循序漸進',
     'opt.quiz_diff.easy': '基礎概念題',
     'opt.quiz_diff.medium': '中等理解題',
     'opt.quiz_diff.hard': '進階論述與計算題',
 
-    'opt.provider.gemini': 'Gemini 雲端 (Cloud API) ✨',
-    'opt.provider.ollama_cloud': 'Ollama 雲端 (Cloud API)',
-    'opt.provider.ollama_local': 'Ollama 本機 (Local LLM)',
-    'opt.provider.openai': 'OpenAI 雲端 (GPT-4o)',
+    'opt.provider.gemini': 'Gemini 雲端 Cloud API ✨',
+    'opt.provider.ollama_cloud': 'Ollama 雲端 Cloud API',
+    'opt.provider.ollama_local': 'Ollama 本機 Local LLM',
+    'opt.provider.openai': 'OpenAI 雲端 GPT-4o',
 
     'opt.duration.20': '20 分鐘',
     'opt.duration.30': '30 分鐘',
@@ -243,16 +247,16 @@ const translations = {
     'opt.slides.12': '12 頁',
     'opt.slides.15': '15 頁',
 
-    'opt.lang.zh_tw': '🇹🇼 中文 (Traditional Chinese)',
+    'opt.lang.zh_tw': '🇹🇼 繁體中文',
     'opt.lang.en': '🇺🇸 English',
-    'opt.lang.auto': '🤖 與教材同語系 (Auto)',
+    'opt.lang.auto': '🤖 與教材同語系',
 
     'deck.eyebrow': '教學內容已就緒',
     'deck.title': '教學簡報',
     'deck.subtitle': '上傳教材後開始生成。',
-    'deck.btn_pdf': '📑 下載簡報 (PDF)',
-    'deck.btn_script': '🖨️ 講稿列印 (另存 PDF)',
-    'deck.btn_pptx': '📊 下載簡報 (.pptx)',
+    'deck.btn_pdf': '📑 下載簡報 PDF',
+    'deck.btn_script': '🖨️ 講稿列印 · 另存 PDF',
+    'deck.btn_pptx': '📊 下載簡報 PPTX',
     'deck.empty_slide': '還沒有簡報',
     'deck.stage_empty_b': '尚未產生內容',
     'deck.stage_empty_s': '回到工作台上傳教材並設定課程',
@@ -272,21 +276,21 @@ const translations = {
     'chat.welcome_p': '上傳文件後，你可以請我解釋概念、比較差異，或從教材中整理重點。我只會根據文件內容回答。',
     'chat.sug_1': '這份教材的三個核心重點是什麼？',
     'chat.sug_2': '用簡單的例子解釋最重要的概念',
-    'chat.web_search': '開啟網路補充搜尋（教材中查無解答時聯網檢索）',
+    'chat.web_search': '開啟網路補充搜尋 · 教材中查無解答時聯網檢索',
     'chat.placeholder': '向教材提問…',
     'chat.shortcut': '<span>↵</span> Enter 傳送 · Shift + Enter 換行',
 
     'admin.eyebrow': '系統權限與用戶審核',
     'admin.title': '👑 管理員控制台',
     'admin.subtitle': '審核新註冊帳號、調整權限、重置密碼與維護全系統使用者。',
-    'admin.btn_create_user': '➕ 新增用戶 / 管理員',
+    'admin.btn_create_user': '➕ 新增用戶 · 管理員',
     'admin.metric_total': '系統總帳號數',
     'admin.metric_pending': '待開通審核',
     'admin.metric_admin': '系統管理員',
     'admin.th_id': 'ID',
     'admin.th_username': '帳號名稱',
-    'admin.th_tier': '會員層級 / 角色',
-    'admin.th_daily_usage': '今日使用 / 限額',
+    'admin.th_tier': '會員層級 · 角色',
+    'admin.th_daily_usage': '今日使用 · 限額',
     'admin.th_total_usage': '累計總使用量',
     'admin.th_last_login': '上次上線時間',
     'admin.th_role': '角色',
@@ -294,18 +298,18 @@ const translations = {
     'admin.th_created': '建立時間',
     'admin.th_actions': '管理操作',
     'admin.loading': '載入中…',
-    'admin.create_modal_title': '➕ 新增帳號 (管理員開通)',
+    'admin.create_modal_title': '➕ 新增帳號 · 管理員開通',
     'admin.create_modal_sub': '直接為系統建立已開通權限之一般用戶或管理員帳號',
-    'admin.create_lbl_username': '帳號名稱 (Username)',
-    'admin.create_lbl_password': '初始密碼 (Password)',
-    'admin.create_lbl_role': '身分角色 (Role)',
-    'admin.create_lbl_tier': '會員層級 (Tier)',
+    'admin.create_lbl_username': '帳號名稱',
+    'admin.create_lbl_password': '初始密碼',
+    'admin.create_lbl_role': '身分角色',
+    'admin.create_lbl_tier': '會員層級',
     'admin.create_btn_submit': '確認建立帳號',
-    'admin.opt_role_user': '👤 一般用戶 (user)',
-    'admin.opt_role_admin': '👑 系統管理員 (admin)',
-    'admin.opt_tier_trial': '🎓 教師試用版 (100 點/日)',
-    'admin.opt_tier_pro': '⭐ 教師專業版 (1,000 點/日)',
-    'admin.opt_tier_inst': '🏫 機構/學校版 (10,000 點/日)',
+    'admin.opt_role_user': '👤 一般用戶',
+    'admin.opt_role_admin': '👑 系統管理員',
+    'admin.opt_tier_trial': '🎓 教師試用版 · 100 點/日',
+    'admin.opt_tier_pro': '⭐ 教師專業版 · 1,000 點/日',
+    'admin.opt_tier_inst': '🏫 機構學校版 · 10,000 點/日',
 
     'profile.eyebrow': '個人帳號與安全性設定',
     'profile.title': '⚙️ 個人帳號設定',
@@ -321,7 +325,7 @@ const translations = {
     'profile.lbl_old_pass': '原密碼',
     'profile.lbl_new_pass': '新密碼',
     'profile.ph_old_pass': '輸入原密碼',
-    'profile.ph_new_pass': '輸入新密碼 (至少4字元)',
+    'profile.ph_new_pass': '輸入新密碼 · 至少 4 字元',
     'profile.btn_save_pass': '儲存新密碼',
 
     'auth.tab_login': '用戶登入',
@@ -362,10 +366,11 @@ const translations = {
     'profile.top_badge': '帳號管理中心',
     'profile.btn_refresh': '重新整理',
     'toast.profile_refreshed': '帳號資訊已更新',
+    'modal.confirm_btn': '我已瞭解',
 
     'footer.copyright': '© 2026 ArchCet. All rights reserved.',
-    'footer.terms': '服務條款 (Terms)',
-    'footer.privacy': '隱私權政策 (Privacy)',
+    'footer.terms': '服務條款',
+    'footer.privacy': '隱私權政策',
     'footer.contact': '聯絡我們'
   },
   'en': {
@@ -386,6 +391,8 @@ const translations = {
     'nav.crumb_admin': 'Admin Console',
     'nav.crumb_agent': 'AI Lesson Assistant',
     'nav.crumb_profile': 'Account Settings',
+    'nav.crumb_terms': 'Terms of Service',
+    'nav.crumb_privacy': 'Privacy Policy',
     'nav.sub_home': 'Turn Teaching Materials into Engaging Lessons',
     'nav.sub_workspace': 'Upload Materials & Generate Teaching Assets',
     'nav.sub_deck': 'Preview & Export Slides, Handouts and Quizzes',
@@ -393,6 +400,8 @@ const translations = {
     'nav.sub_agent': 'Multi-department Lesson Prep & Teaching Assistant',
     'nav.sub_profile': 'Manage Account, Tier & Quotas',
     'nav.sub_admin': 'User Management & Permissions',
+    'nav.sub_terms': 'Terms of Use & Credit System Schedule',
+    'nav.sub_privacy': 'Curriculum Privacy & Data Protection',
     'chat.btn_clear': 'New Session',
     'chat.memory_active': 'Multi-turn Memory Active',
     'agent.btn_clear': 'Reset Chat',
@@ -723,6 +732,7 @@ const translations = {
     'profile.top_badge': 'Account Center',
     'profile.btn_refresh': 'Refresh Info',
     'toast.profile_refreshed': 'Account info updated',
+    'modal.confirm_btn': 'I Understand',
 
     'footer.copyright': '© 2026 ArchCet. All rights reserved.',
     'footer.terms': 'Terms of Service',
@@ -734,6 +744,56 @@ const translations = {
 function t(key) {
   const lang = state.lang || 'zh-TW';
   return (translations[lang] && translations[lang][key]) || (translations['zh-TW'] && translations['zh-TW'][key]) || key;
+}
+
+const legalDocCache = {
+  terms: null,
+  privacy: null
+};
+
+async function loadLegalDoc(type) {
+  if (legalDocCache[type]) return legalDocCache[type];
+  try {
+    const res = await fetch(`/${type}.html?v=5.9.0`);
+    if (!res.ok) throw new Error(`Failed to load ${type}.html`);
+    const html = await res.text();
+    const parser = new DOMParser();
+    legalDocCache[type] = parser.parseFromString(html, 'text/html');
+    return legalDocCache[type];
+  } catch (err) {
+    console.error(`Error loading legal doc (${type}):`, err);
+    return null;
+  }
+}
+
+async function renderLegalViews() {
+  const isEn = state.lang === 'en';
+  const termsContainer = $('#termsViewContainer');
+  const privacyContainer = $('#privacyViewContainer');
+
+  if (termsContainer) {
+    const doc = await loadLegalDoc('terms');
+    if (doc) {
+      const card = doc.getElementById(isEn ? 'enCard' : 'zhCard');
+      if (card) {
+        termsContainer.innerHTML = card.outerHTML;
+        const renderedCard = termsContainer.querySelector('.legal-card');
+        if (renderedCard) renderedCard.style.display = 'block';
+      }
+    }
+  }
+
+  if (privacyContainer) {
+    const doc = await loadLegalDoc('privacy');
+    if (doc) {
+      const card = doc.getElementById(isEn ? 'enCard' : 'zhCard');
+      if (card) {
+        privacyContainer.innerHTML = card.outerHTML;
+        const renderedCard = privacyContainer.querySelector('.legal-card');
+        if (renderedCard) renderedCard.style.display = 'block';
+      }
+    }
+  }
 }
 
 function setLanguage(lang) {
@@ -758,6 +818,7 @@ function setLanguage(lang) {
   });
 
   updateSelectOptions();
+  renderLegalViews();
 
   if (state.provider) {
     updateProviderUI({ provider: state.provider });
@@ -1483,12 +1544,14 @@ $('#tabLoginBtn')?.addEventListener('click', () => switchAuthTab('login'));
 $('#tabRegisterBtn')?.addEventListener('click', () => switchAuthTab('register'));
 
 // 登入表單提交
-$('#loginForm').addEventListener('submit', async (e) => {
+$('#loginForm')?.addEventListener('submit', async (e) => {
   e.preventDefault();
-  const username = $('#loginUsername').value.trim();
-  const password = $('#loginPassword').value;
+  const usernameInput = $('#loginUsernameInput') || $('#loginUsername');
+  const passwordInput = $('#loginPasswordInput') || $('#loginPassword');
+  const username = usernameInput ? usernameInput.value.trim() : '';
+  const password = passwordInput ? passwordInput.value : '';
   const errorEl = $('#loginError');
-  errorEl.classList.add('hidden');
+  if (errorEl) errorEl.classList.add('hidden');
 
   try {
     const res = await fetch('/api/auth/login', {
@@ -1506,20 +1569,26 @@ $('#loginForm').addEventListener('submit', async (e) => {
     closeAuthModal();
     toast(state.lang === 'en' ? `Welcome back, ${data.username}!` : `登入成功！歡迎回來，${data.username}`);
   } catch (err) {
-    errorEl.textContent = err.message;
-    errorEl.classList.remove('hidden');
+    if (errorEl) {
+      errorEl.textContent = err.message;
+      errorEl.classList.remove('hidden');
+    } else {
+      toast(err.message, true);
+    }
   }
 });
 
 // 註冊表單提交
-$('#registerForm').addEventListener('submit', async (e) => {
+$('#registerForm')?.addEventListener('submit', async (e) => {
   e.preventDefault();
-  const username = $('#regUsername').value.trim();
-  const password = $('#regPassword').value;
+  const usernameInput = $('#regUsernameInput') || $('#regUsername');
+  const passwordInput = $('#regPasswordInput') || $('#regPassword');
+  const username = usernameInput ? usernameInput.value.trim() : '';
+  const password = passwordInput ? passwordInput.value : '';
   const errorEl = $('#regError');
   const successEl = $('#regSuccess');
-  errorEl.classList.add('hidden');
-  successEl.classList.add('hidden');
+  if (errorEl) errorEl.classList.add('hidden');
+  if (successEl) successEl.classList.add('hidden');
 
   try {
     const res = await fetch('/api/auth/register', {
@@ -1532,17 +1601,24 @@ $('#registerForm').addEventListener('submit', async (e) => {
       throw new Error(data.detail || (state.lang === 'en' ? 'Registration failed' : '註冊失敗'));
     }
 
-    successEl.textContent = data.message || (state.lang === 'en' ? 'Registered! Awaiting admin approval.' : '註冊成功！請等待管理員核准開通。');
-    successEl.classList.remove('hidden');
-    $('#regUsername').value = '';
-    $('#regPassword').value = '';
+    if (successEl) {
+      successEl.textContent = data.message || (state.lang === 'en' ? 'Registered! Awaiting admin approval.' : '註冊成功！請等待管理員核准開通。');
+      successEl.classList.remove('hidden');
+    }
+    if (usernameInput) usernameInput.value = '';
+    if (passwordInput) passwordInput.value = '';
     setTimeout(() => {
       switchAuthTab('login');
-      if ($('#loginUsername')) $('#loginUsername').value = username;
+      const lUser = $('#loginUsernameInput') || $('#loginUsername');
+      if (lUser) lUser.value = username;
     }, 2000);
   } catch (err) {
-    errorEl.textContent = err.message;
-    errorEl.classList.remove('hidden');
+    if (errorEl) {
+      errorEl.textContent = err.message;
+      errorEl.classList.remove('hidden');
+    } else {
+      toast(err.message, true);
+    }
   }
 });
 
@@ -1811,7 +1887,9 @@ function switchView(name) {
     'chat': t('nav.crumb_chat'),
     'profile': t('nav.crumb_profile'),
     'agent': t('nav.crumb_agent'),
-    'admin': t('nav.crumb_admin')
+    'admin': t('nav.crumb_admin'),
+    'terms': t('nav.crumb_terms'),
+    'privacy': t('nav.crumb_privacy')
   };
   const subtitles = {
     'home': t('nav.sub_home'),
@@ -1820,11 +1898,14 @@ function switchView(name) {
     'chat': t('nav.sub_chat'),
     'profile': t('nav.sub_profile'),
     'agent': t('nav.sub_agent'),
-    'admin': t('nav.sub_admin')
+    'admin': t('nav.sub_admin'),
+    'terms': t('nav.sub_terms'),
+    'privacy': t('nav.sub_privacy')
   };
   if ($('#crumb')) $('#crumb').textContent = crumbs[name] || t('nav.crumb_home');
   if ($('#crumbSubtitle')) $('#crumbSubtitle').textContent = subtitles[name] ? ` · ${subtitles[name]}` : '';
   if (innerWidth < 950) toggleSidebar(false);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 
 
   if (name === 'admin') {
@@ -1833,6 +1914,8 @@ function switchView(name) {
     renderProfileView();
   } else if (name === 'deck') {
     renderPreviewPanels();
+  } else if (name === 'terms' || name === 'privacy') {
+    renderLegalViews();
   }
 }
 
@@ -1862,8 +1945,8 @@ function renderProfileView() {
       const used = credits.used || 0;
       if ($('#profileQuotaText')) {
         $('#profileQuotaText').textContent = state.lang === 'en'
-          ? `Remaining: ${rem} / ${lim} pts (Used: ${used} pts)`
-          : `今日剩餘點數：${rem} / ${lim} 點 (已用：${used} 點)`;
+          ? `Remaining: ${rem} / ${lim} pts · Used: ${used} pts`
+          : `今日剩餘點數：${rem} / ${lim} 點 · 已用 ${used} 點`;
       }
       if ($('#profileToolbarQuota')) {
         $('#profileToolbarQuota').textContent = state.lang === 'en'
@@ -2270,7 +2353,7 @@ async function refineActiveSlideNotes() {
     if (res && res.slide) {
       state.deck.slides[slideIndex] = res.slide;
       showSlide(slideIndex);
-      toast('✨ 投影片講稿潤飾完成！(消耗 3 點)');
+      toast('✨ 投影片講稿潤飾完成！');
       await fetchCurrentUser();
     }
   } catch (err) {
@@ -2278,7 +2361,7 @@ async function refineActiveSlideNotes() {
   } finally {
     if (btn) btn.disabled = false;
     if (spinner) spinner.classList.add('hidden');
-    if (lbl) lbl.textContent = '✨ AI 講稿潤飾 (3 點)';
+    if (lbl) lbl.textContent = '✨ AI 講稿潤飾';
   }
 }
 
@@ -3645,7 +3728,7 @@ async function dispatchAgentTask(query) {
 
 function extractCleanDocTitle(query, content) {
   // 1. 優先匹配專有名詞引號內的主題（如：「牛頓第二運動定律」、「光合作用與呼吸作用」）
-  const quoteMatch = (query || '').match(/[「『"']([^「」『』"']{2,25})[」』"']/);
+  const quoteMatch = (query || '').match(/[“‘"'"]([^“‘"'"]{2,25})[”’"'"]/);
   if (quoteMatch && quoteMatch[1].trim()) {
     return quoteMatch[1].trim();
   }
@@ -4674,7 +4757,7 @@ function renderQuizPreview() {
             第 ${idx + 1} 題. <span contenteditable="true" spellcheck="false" data-q-text-idx="${idx}" title="點擊直接修改題目內容">${formatInlineMarkdown(q.question)}</span>
           </h4>
           <div style="display: flex; align-items: center; gap: 6px; flex-shrink: 0;">
-            <button type="button" class="btn-regen-question" data-qidx="${idx}" title="消耗 3 點備課點數抽換此題">🔄 換這題 (3 點)</button>
+            <button type="button" class="btn-regen-question" data-qidx="${idx}" title="抽換此題">🔄 換這題</button>
             <span class="quiz-diff-chip">
               ${diffLabels[q.difficulty] || q.difficulty}
             </span>
@@ -4810,7 +4893,7 @@ function renderQuizModal(quiz) {
         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; gap: 8px;">
           <h4 style="font-size: 15px; font-weight: 700; color: var(--green); margin: 0; flex: 1;">第 ${idx + 1} 題. ${escapeHtml(q.question)}</h4>
           <div style="display: flex; align-items: center; gap: 6px; flex-shrink: 0;">
-            <button type="button" class="btn-regen-question modal-regen-btn" data-qidx="${idx}" title="消耗 3 點備課點數抽換此題">🔄 ${isEn ? 'Replace (3 pts)' : '換這題 (3 點)'}</button>
+            <button type="button" class="btn-regen-question modal-regen-btn" data-qidx="${idx}" title="抽換此題">🔄 ${isEn ? 'Replace' : '換這題'}</button>
             <span style="font-size: 11px; padding: 2px 8px; border-radius: 99px; background: #ecefe8; color: var(--green); border: 1px solid #dce1d9; font-weight: 600; white-space: nowrap;">
               ${diffLabels[q.difficulty] || q.difficulty}
             </span>
@@ -4863,41 +4946,6 @@ $('#quizModal')?.addEventListener('click', (e) => {
   if (e.target === $('#quizModal')) closeQuizModal();
 });
 
-// 服務條款與隱私權政策 Modal 控制
-function openTermsModal() {
-  const modal = $('#termsModal');
-  if (modal) modal.classList.remove('hidden');
-}
-
-function closeTermsModal() {
-  const modal = $('#termsModal');
-  if (modal) modal.classList.add('hidden');
-}
-
-function openPrivacyModal() {
-  const modal = $('#privacyModal');
-  if (modal) modal.classList.remove('hidden');
-}
-
-function closePrivacyModal() {
-  const modal = $('#privacyModal');
-  if (modal) modal.classList.add('hidden');
-}
-
-$('#openTermsBtn')?.addEventListener('click', openTermsModal);
-$('#closeTermsModalBtn')?.addEventListener('click', closeTermsModal);
-$('#confirmTermsBtn')?.addEventListener('click', closeTermsModal);
-$('#termsModal')?.addEventListener('click', (e) => {
-  if (e.target === $('#termsModal')) closeTermsModal();
-});
-
-$('#openPrivacyBtn')?.addEventListener('click', openPrivacyModal);
-$('#closePrivacyModalBtn')?.addEventListener('click', closePrivacyModal);
-$('#confirmPrivacyBtn')?.addEventListener('click', closePrivacyModal);
-$('#privacyModal')?.addEventListener('click', (e) => {
-  if (e.target === $('#privacyModal')) closePrivacyModal();
-});
-
 // 全域 ESC 鍵快速關閉所有 Modal
 window.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' || e.key === 'Esc') {
@@ -4905,8 +4953,6 @@ window.addEventListener('keydown', (e) => {
     if (typeof closeCreateUserModal === 'function') closeCreateUserModal();
     if (typeof closeHandoutModal === 'function') closeHandoutModal();
     if (typeof closeQuizModal === 'function') closeQuizModal();
-    if (typeof closeTermsModal === 'function') closeTermsModal();
-    if (typeof closePrivacyModal === 'function') closePrivacyModal();
   }
 });
 
