@@ -165,9 +165,9 @@ const translations = {
     'value.02_title': '教學設計',
     'value.02_desc': '循序漸進架構，每頁皆有明確教學目標與講稿',
     'value.03_title': '即刻匯出',
-    'value.03_desc': '一鍵匯出 PPTX 簡報、Word 講義與測驗試卷',
-
-    'workspace.common_title': '✦ 共通教學設定 · 通用於下方三大產出模組',
+    'workspace.common_badge': '✨ 共通',
+    'workspace.common_title': '共通教學設定',
+    'workspace.common_subtitle': '通用於下方三大產出模組',
     'workspace.generate_all': '🚀 循序生成全套 · 講義 ➔ 簡報 & 試卷',
     'handout.badge': '📝 模組 1',
     'handout.title': '隨堂講義',
@@ -359,7 +359,10 @@ const translations = {
     'stepper.step3_sub': '確立核心知識母本',
     'stepper.step4_title': '衍生簡報與試卷',
     'stepper.step4_sub': '簡報與試卷',
-    'workspace.generate_all': '🚀 循序生成全套（講義 ➔ 簡報 & 試卷）',
+    'workspace.common_badge': '✨ 共通',
+    'workspace.common_title': '共通教學設定',
+    'workspace.common_subtitle': '通用於下方三大產出模組',
+    'workspace.generate_all': '🚀 循序生成全套 · 講義 ➔ 簡報 & 試卷',
     'handout.badge': '📝 模組 1',
     'deck.badge': '🎯 模組 2',
     'quiz.badge': '📑 模組 3',
@@ -465,7 +468,7 @@ const translations = {
     'quota.upload_label': 'Uploads',
     'quota.guest': 'Guest User',
     'quota.login_hint': 'Click to login',
-    'deck.btn_print_handout': '🖨️ A4 Handout Print',
+    'deck.btn_print_handout': '🖨️ Print Notes (pdf)',
     'deck.btn_deck_to_quiz': '🎯 Generate Quiz from Deck',
     'topbar.status_ready': 'System Ready',
     'topbar.login_reg': 'Sign In / Register',
@@ -528,26 +531,28 @@ const translations = {
     'value.03_title': 'Instant Export',
     'value.03_desc': 'Download PPTX, Word handouts & quizzes',
 
-    'workspace.common_title': '✦ Common Teaching Settings (Applied across all 3 modules)',
-    'workspace.generate_all': '🚀 Generate Complete Package (Handout + Deck + Quiz)',
+    'workspace.common_badge': '✨ Global',
+    'workspace.common_title': 'Common Settings',
+    'workspace.common_subtitle': 'Applied to all 3 modules below',
+    'workspace.generate_all': '🚀 Generate Full Suite · Handout ➔ Deck & Quiz',
     'handout.badge': '📝 Module 1',
     'handout.title': 'Lesson Handout',
     'handout.desc': 'A4 study guide, core takeaways & review notes',
     'handout.audience': 'Target Audience',
     'handout.detail': 'Detail Level',
     'handout.web_search': 'Enable Web Search (Add current cases)',
-    'handout.btn_to_workbench': '🎯 Reference Handout in Workspace',
-    'handout.btn_print': '🖨️ A4 Preview & Print (PDF)',
-    'handout.btn_download_docx': '📄 Download Word (.docx)',
+    'handout.btn_to_workbench': '🎯 Course Setup',
+    'handout.btn_print': '🖨️ Print Handout (pdf)',
+    'handout.btn_download_docx': '📄 Download Handout (.docx)',
     'handout.btn': '📝 Generate A4 Handout',
     'deck.badge': '🎯 Module 2',
     'deck.title': 'Teaching Deck',
     'deck.desc': 'Slide outlines, visual diagrams & speaker scripts',
     'deck.web_search': 'Enable Web Search (Supplement cases & data)',
     'deck.btn': '✦ Generate Slide Deck',
-    'deck.btn_pdf': '📑 Download Deck (PDF)',
+    'deck.btn_pdf': '📑 Print Deck (pdf)',
     'deck.btn_pptx': '📊 Download Deck (.pptx)',
-    'deck.btn_print_handout': '🖨️ Speaker Notes Print (PDF)',
+    'deck.btn_print_handout': '🖨️ Print Notes (pdf)',
     'deck.btn_docx': '📄 Download Notes (.docx)',
     'deck.btn_download_docx': '📄 Download Notes (.docx)',
     'quiz.badge': '📑 Module 3',
@@ -557,8 +562,8 @@ const translations = {
     'quiz.difficulty': 'Difficulty',
     'quiz.web_search': 'Enable Question Search (Real exams & questions)',
     'quiz.btn': '📑 Generate Unit Quiz',
-    'quiz.teacher_mode_toggle': '✔ Show Answers & Explanations (Teacher Mode)',
-    'quiz.btn_print': '🖨️ Print Quiz (PDF)',
+    'quiz.teacher_mode_toggle': '✔ Teacher Mode (Keys & Rationales)',
+    'quiz.btn_print': '🖨️ Print Quiz (pdf)',
     'quiz.btn_download_docx': '📄 Download Quiz (.docx)',
 
     'opt.audience.college': 'College Students',
@@ -615,8 +620,8 @@ const translations = {
     'deck.eyebrow': 'Lesson Content Ready',
     'deck.title': 'Teaching Deck',
     'deck.subtitle': 'Upload materials to start generating.',
-    'deck.btn_pdf': '📑 Download Deck (PDF)',
-    'deck.btn_script': '🖨️ Speaker Notes Print (PDF)',
+    'deck.btn_pdf': '📑 Print Deck (pdf)',
+    'deck.btn_script': '🖨️ Print Notes (pdf)',
     'deck.btn_pptx': '📊 Download Deck (.pptx)',
     'deck.empty_slide': 'No slides yet',
     'deck.stage_empty_b': 'No Content Generated',
@@ -670,7 +675,7 @@ const translations = {
     'admin.opt_role_admin': '👑 System Admin',
     'admin.opt_tier_trial': '🎓 Teacher Free Trial (100 pts/day)',
     'admin.opt_tier_pro': '⭐ Teacher Pro (1,000 pts/day)',
-    'admin.opt_tier_inst': '🏫 Institution / School (10,000 pts/day)',
+    'admin.opt_tier_inst': '🏫 Institution (10,000 pts/day)',
 
     'profile.eyebrow': 'Account & Security Settings',
     'profile.title': '⚙️ Account Settings',
@@ -725,7 +730,10 @@ const translations = {
     'stepper.step3_sub': 'Core Knowledge Base',
     'stepper.step4_title': 'Derive Deck & Quiz',
     'stepper.step4_sub': 'Slides & Quizzes',
-    'workspace.generate_all': '🚀 Generate Full Suite (Handout ➔ Deck & Quiz)',
+    'workspace.common_badge': '✨ Global',
+    'workspace.common_title': 'Common Settings',
+    'workspace.common_subtitle': 'Applied to all 3 modules below',
+    'workspace.generate_all': '🚀 Generate Full Suite · Handout ➔ Deck & Quiz',
     'handout.badge': '📝 Module 1',
     'deck.badge': '🎯 Module 2',
     'quiz.badge': '📑 Module 3',
@@ -1176,7 +1184,7 @@ function getTierInfo(user) {
     },
     'institution': {
       tierKey: 'institution',
-      badge: isEn ? '🏫 Institution / School' : '🏫 機構/學校版',
+      badge: isEn ? '🏫 Institution' : '🏫 機構/學校版',
       deckLimit: 100,
       handoutLimit: 150,
       quizLimit: 200,
@@ -1283,17 +1291,11 @@ function updateAuthUI(user) {
     const remCredits = isUnlimited ? -1 : (credits.remaining !== undefined ? credits.remaining : 100);
     const limCredits = isUnlimited ? -1 : (credits.daily_limit || 100);
 
-    const quotaLabel = isUnlimited
-      ? tier.badge
-      : (state.lang === 'en'
-        ? `${tier.badge} · ${remCredits}/${limCredits} pts`
-        : `${tier.badge} · 剩餘 ${remCredits}/${limCredits} 點`);
-
     if (container) {
       container.innerHTML = `
         <div class="auth-user-chip">
           <strong>👤 ${escapeHtml(user.username)}</strong>
-          <small>${quotaLabel}</small>
+          <small class="auth-tier-badge">${tier.badge}</small>
           <button class="auth-logout-btn" id="logoutBtn" type="button">${t('topbar.logout')}</button>
         </div>
       `;
@@ -1470,15 +1472,28 @@ function logoutUser(notify = true) {
 // Modal 控制
 function openAuthModal(tab = 'login') {
   switchAuthTab(tab);
-  $('#loginError').classList.add('hidden');
-  $('#regError').classList.add('hidden');
-  $('#regSuccess').classList.add('hidden');
+  $('#loginError')?.classList.add('hidden');
+  $('#regError')?.classList.add('hidden');
+  $('#regSuccess')?.classList.add('hidden');
   const modal = $('#authModal');
-  modal.classList.remove('hidden');
+  if (modal) {
+    modal.classList.remove('hidden');
+    document.body.classList.add('modal-open');
+    setTimeout(() => {
+      const firstInput = modal.querySelector('input:not([type="hidden"])');
+      if (firstInput) firstInput.focus();
+    }, 50);
+  }
 }
 
 function closeAuthModal() {
-  $('#authModal').classList.add('hidden');
+  const modal = $('#authModal');
+  if (modal) {
+    modal.classList.add('hidden');
+    if (!document.querySelector('.auth-modal-overlay:not(.hidden)')) {
+      document.body.classList.remove('modal-open');
+    }
+  }
 }
 
 function switchAuthTab(tab) {
@@ -1542,6 +1557,24 @@ $('#authModal')?.addEventListener('click', (e) => {
 });
 $('#tabLoginBtn')?.addEventListener('click', () => switchAuthTab('login'));
 $('#tabRegisterBtn')?.addEventListener('click', () => switchAuthTab('register'));
+
+// 全域 Esc 鍵關閉所有開啟的 Modal 與行動端側邊欄
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' || e.key === 'Esc') {
+    let closedAny = false;
+    $$('.auth-modal-overlay:not(.hidden)').forEach(modal => {
+      modal.classList.add('hidden');
+      closedAny = true;
+    });
+    if (closedAny) {
+      document.body.classList.remove('modal-open');
+    }
+    const sidebar = $('.sidebar');
+    if (sidebar && sidebar.classList.contains('open') && window.innerWidth <= 950) {
+      toggleSidebar(false);
+    }
+  }
+});
 
 // 登入表單提交
 $('#loginForm')?.addEventListener('submit', async (e) => {
@@ -1981,6 +2014,11 @@ function toggleSidebar(forceState) {
   const isOpen = typeof forceState === 'boolean' ? forceState : !sidebar.classList.contains('open');
   sidebar.classList.toggle('open', isOpen);
   if (overlay) overlay.classList.toggle('active', isOpen);
+  if (window.innerWidth <= 950) {
+    document.body.classList.toggle('sidebar-locked', isOpen);
+  } else {
+    document.body.classList.remove('sidebar-locked');
+  }
 }
 
 if ($('.menu-toggle')) {
@@ -2799,6 +2837,11 @@ async function fetchPendingCount() {
     const count = data.pending_users ? data.pending_users.length : 0;
     if ($('#pendingBadge')) $('#pendingBadge').textContent = count;
     if ($('#pendingTabCount')) $('#pendingTabCount').textContent = count;
+    const adminBadge = $('#adminNavBadge');
+    if (adminBadge) {
+      adminBadge.textContent = String(count);
+      adminBadge.classList.toggle('hidden', count === 0);
+    }
   } catch (e) {
     // 靜默處理
   }
@@ -4197,18 +4240,9 @@ async function generateAllAction() {
   loading(
     true,
     isEn ? 'Generating Complete Lesson Package...' : '正在一鍵生成全套教案…',
-    isEn ? 'Step 1/2: Generating A4 Handout Master…' : '步驟 1/2：正在生成 A4 隨堂講義母本…',
-    isEn ? [
-      `Step 1/2: Crafting A4 Handout with ${tone} style for ${audience}…`,
-      'Step 2/2: Deriving Slide Deck and Quiz in parallel…',
-      'Writing speaker notes and comprehensive quiz explanations…',
-      'Finalizing all 3 teaching materials in parallel…'
-    ] : [
-      `步驟 1/2：以【${tone}】風格為【${audience}】編撰 A4 隨堂講義母本…`,
-      '步驟 2/2：依據講義母本並行生成教學簡報與單元試卷…',
-      '撰寫逐頁演講稿與試卷詳細解析…',
-      '即將完成講義、簡報、試卷全套教案…'
-    ]
+    isEn
+      ? `【Step 1/2】Generating A4 Handout Master (with ${tone} tone for ${audience})…`
+      : `【步驟 1/2】正在以「${tone}」風格為「${audience}」編撰 A4 隨堂講義母本…`
   );
 
   try {
@@ -4216,6 +4250,13 @@ async function generateAllAction() {
     const handoutSuccess = await generateHandoutAction(true, false);
 
     // 步驟 2：由講義母本並行衍生簡報與試卷 (雙軌融合，極低 Token 消耗)
+    const copyEl = $('#loadingCopy');
+    if (copyEl) {
+      copyEl.textContent = isEn
+        ? '【Step 2/2】Handout Master ready! Deriving Slide Deck and Unit Quiz in parallel…'
+        : '【步驟 2/2】講義母本已就緒，正在並行生成教學簡報與單元試卷…';
+    }
+
     const results = await Promise.allSettled([
       generateDeckAction(true, false),
       generateQuizAction(true, false),
@@ -4280,13 +4321,14 @@ $$('.preview-tab-btn').forEach(btn => {
 });
 
 function updatePreviewCountBadge() {
-  const el = $('#deckCount');
-  if (!el) return;
+  const badge = $('#previewNavBadge') || $('#deckCount');
+  if (!badge) return;
   let count = 0;
-  if (state.deck) count++;
   if (state.handout) count++;
+  if (state.deck) count++;
   if (state.quiz) count++;
-  el.textContent = String(count);
+  badge.textContent = String(count);
+  badge.classList.toggle('hidden', count === 0);
 }
 
 function renderPreviewPanels() {
@@ -4582,15 +4624,53 @@ async function regenerateSingleQuizQuestion(qIndex, targetBtn) {
   }
 }
 
+function sanitizeLatexEscapes(str) {
+  if (!str) return '';
+  let s = String(str)
+    .replace(/\x08/g, '\\b')
+    .replace(/\x0c/g, '\\f')
+    .replace(/\x07/g, '\\a')
+    .replace(/\x0b/g, '\\v')
+    .replace(/\t(heta|imes|an|au|op|ext|o|ilde|tfrac|quad|qquad)\b/g, '\\t$1')
+    .replace(/\r(ight|ho|ightarrow|angle|floor|ceil)\b/g, '\\r$1')
+    .replace(/\n(eq|abla|u|otin|ot|atural|earrow|warrow)\b/g, '\\n$1');
+
+  // 修復常見畸變之裸 frac 模式 (例如 fracab -> \frac{a}{b}, frac13 -> \frac{1}{3}, frac100100 -> \frac{100}{100})
+  s = s.replace(/\bfrac([a-zA-Z])([a-zA-Z])\b/g, '\\frac{$1}{$2}')
+       .replace(/\bfrac([0-9])([0-9])\b/g, '\\frac{$1}{$2}')
+       .replace(/\bfrac([0-9]+)\s+([0-9]+)\b/g, '\\frac{$1}{$2}')
+       .replace(/\bfrac100100\b/g, '\\frac{100}{100}')
+       .replace(/\bfrac([a-zA-Z0-9]+)\s*\+\s*([a-zA-Z0-9]+)\s+([a-zA-Z0-9]+)\s*\+\s*([a-zA-Z0-9]+)\b/g, '\\frac{$1+$2}{$3+$4}')
+       .replace(/\bfracatimescbtimesd\b/g, '\\frac{a \\times c}{b \\times d}');
+
+  // 修復常見運算子 (neq0 -> \neq 0, times -> \times 等)
+  s = s.replace(/\bneq\s*([0-9a-zA-Z])/g, '\\neq $1');
+  s = s.replace(/\\times/g, '%%ESCAPEDTIMES%%');
+  s = s.replace(/\btimes\b/g, '\\times');
+  s = s.replace(/%%ESCAPEDTIMES%%/g, '\\times');
+  s = s.replace(/\\\\([a-zA-Z]+|[{}[\](),;])/g, '\\$1');
+
+  return s;
+}
+
 function wrapBareLatex(text) {
-  if (!text || typeof text !== 'string' || !text.includes('\\')) return text;
+  if (!text) return '';
+  text = sanitizeLatexEscapes(text);
   const parts = text.split(/(\$\$[\s\S]*?\$\$|\$[^$\n]+?\$|\\\[[\s\S]*?\\\]|\\\([\s\S]*?\\\))/g);
-  const cmdPattern = /(\\(?:vec|frac|sqrt|alpha|beta|gamma|delta|Delta|lambda|Lambda|theta|Theta|omega|Omega|sigma|Sigma|pi|Pi|sum|int|partial|infty|times|cdot|approx|pm|le|ge|neq|equiv|rightarrow|leftarrow|mathbf|mathrm|text|left|right|quad)\b[^\n,，。！？；;]*?(?=[,，。！？；;\s]|$))/g;
+  
+  const atom = '(?:\\\\left[\\[(][\\s\\S]*?\\\\right[\\])]|\\\\[a-zA-Z]+(?:\\[[^\\]\\n]*\\])?(?:\\{[^}\\n]*\\})*|[0-9a-zA-Z]+(?:\\^|\\_)(?:\\{[^}\\n]*\\}|[0-9a-zA-Z+\\-]+)|\\([^\\u4e00-\\u9fff\\n()]+\\)|\\[[^\\u4e00-\\u9fff\\n\\[\\]]+\\]|[0-9a-zA-Z\\.\']+|[+\\-/=<>~×÷≤≥≠≈≡±∓∝∂∇→←⇒⇐∑∫⊕·°])';
+  const opOrSpace = '(?:\\s*[\\s+\\-/=<>~×÷≤≥≠≈≡±∓∝∂∇→←⇒⇐∑∫⊕·°|^_]\\s*|\\s*\\\\(?:times|div|cdot|approx|sim|neq|equiv|pm|mp|le|ge|leq|geq|in|notin|subset|cap|cup|rightarrow|to|oplus|otimes|circ)\\s*)';
+  const fullExpr = new RegExp(`(?:${atom}(?:${opOrSpace}${atom})*)`, 'g');
+
   return parts.map((part, idx) => {
     if (idx % 2 === 1) return part;
-    return part.replace(cmdPattern, (m) => {
+    if (!part) return '';
+    return part.replace(fullExpr, (m) => {
       const s = m.trim();
-      return s.startsWith('$') ? s : `$${s}$`;
+      if (!s || s.startsWith('$')) return m;
+      if (s.startsWith('*') || s.endsWith('*') || s.startsWith('`') || s.endsWith('`')) return m;
+      if (!/[\\\[\]{}^=+\-/<>~×÷≤≥≠≈≡±∓→←⊕·°]/.test(s) && !s.includes('\\') && !s.includes('^') && !s.includes('_')) return m;
+      return `$${s}$`;
     });
   }).join('');
 }
@@ -5007,5 +5087,5 @@ $('#loadSampleBtn')?.addEventListener('click', async () => {
   }
 });
 
-
-
+// 初始化產出計數標籤狀態
+updatePreviewCountBadge();

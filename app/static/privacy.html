@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>隱私權政策 · 課伴 LessonFlow</title>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <link rel="stylesheet" href="/styles.css?v=5.9.0">
+  <link rel="stylesheet" href="/styles.css?v=6.0.8">
   <style>
     body {
       background: var(--bg, #f4f6f8);
@@ -169,6 +169,28 @@
       color: var(--ink, #1e293b);
     }
 
+    .legal-back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: #f8fafc;
+      border: 1px solid var(--line, #e2e8f0);
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink, #1e293b);
+      border-radius: 6px;
+      text-decoration: none;
+      transition: all 0.15s ease;
+      touch-action: manipulation;
+    }
+
+    .legal-back-btn:hover {
+      background: #ffffff;
+      color: var(--green, #10b981);
+      border-color: var(--green, #10b981);
+    }
+
     .legal-footer {
       text-align: center;
       padding: 20px;
@@ -179,8 +201,14 @@
     }
 
     @media (max-width: 768px) {
+      .legal-page-header {
+        padding: 10px 14px;
+      }
       .legal-card {
-        padding: 18px 16px;
+        padding: 18px 14px;
+      }
+      .legal-header-crumb .crumb-sub {
+        display: none;
       }
     }
   </style>
@@ -192,6 +220,7 @@
       <a href="/">課伴</a><i>/</i><strong>隱私權政策</strong><span class="crumb-sub">· 教材私隱與資料保護規範</span>
     </div>
     <div class="legal-header-actions">
+      <a href="/" class="legal-back-btn" id="legalBackBtn">← 返回工作台</a>
       <div class="legal-lang-switch">
         <button type="button" class="legal-lang-btn active" id="btnZh" onclick="switchLegalLang('zh-TW')">繁體中文</button>
         <button type="button" class="legal-lang-btn" id="btnEn" onclick="switchLegalLang('en')">English</button>
@@ -305,6 +334,11 @@
         crumb.innerHTML = isEn 
           ? '<a href="/">LessonFlow</a><i>/</i><strong>Privacy Policy</strong><span class="crumb-sub">· Curriculum Privacy & Data Protection</span>'
           : '<a href="/">課伴</a><i>/</i><strong>隱私權政策</strong><span class="crumb-sub">· 教材私隱與資料保護規範</span>';
+      }
+
+      const backBtn = document.getElementById('legalBackBtn');
+      if (backBtn) {
+        backBtn.textContent = isEn ? '← Back to App' : '← 返回工作台';
       }
 
       const footer = document.getElementById('legalFooter');

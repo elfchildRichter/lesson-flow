@@ -673,6 +673,126 @@ def test_make_deck_slides_html():
     assert "乘法分配律是多項式運算與因式分解的核心基石。" in html
 
 
+def test_sanitize_latex_escapes_and_json():
+    from app.services import sanitize_latex_escapes, _clean_and_load_json, _format_handout_text
+
+    # 1. Test \x0c formfeed restoration
+    corrupted_str = " \x0crac{c}{d} \\sim \\frac{c'}{d'}"
+    repaired_str = sanitize_latex_escapes(corrupted_str)
+    assert "\\frac{c}{d}" in repaired_str
+    assert "\\sim" in repaired_str
+
+    # 2. Test JSON parsing with bare LaTeX backslashes (\frac, \beta, \theta, \sim)
+    raw_json = r'{"question": "已知 $\frac{c}{d} \sim \frac{c\'}{d\'}$，且 $\beta = \theta \times \nabla$", "answer": "B"}'
+    parsed = _clean_and_load_json(raw_json)
+    assert "\\frac{c}{d}" in parsed["question"]
+    assert "\\beta" in parsed["question"]
+    assert "\\theta" in parsed["question"]
+    assert "\\times" in parsed["question"]
+    assert "\\nabla" in parsed["question"]
+
+    # 3. Test HTML formatter with bare and wrapped latex
+    fmt = _format_handout_text("已知 \x0crac{c}{d} \\sim \\frac{c'}{d'}")
+    assert "\\frac{c}{d}" in fmt
+
+    # 4. Test complex bare formulas from user PDF
+    fmt_fracab = _format_handout_text("分數 fracab 與 fraccd (b, d neq0)")
+    assert "\\frac{a}{b}" in fmt_fracab
+    assert "\\frac{c}{d}" in fmt_fracab
+    assert "\\neq" in fmt_fracab
+
+    fmt_left = _format_handout_text(r"加法定義為 \left[\frac{a}{b}\right] + \left[\frac{c}{d}\right] = \left[\frac{ad+bc}{bd}\right]")
+    assert r"\left[\frac{a}{b}\right]" in fmt_left
+
+    fmt_indices = _format_handout_text("指數映射 10^{-a} \\cdot 10^{-b} = 10^{-(a+b+1)} 及 2^{-2} times 5^{-2}")
+    assert "10^{-a}" in fmt_indices
+    assert "\\times" in fmt_indices
+
+    fmt_series = _format_handout_text("迷思 frac13 + frac12 = frac25 及 frac78 與 frac38")
+    assert "\\frac{1}{3}" in fmt_series
+    assert "\\frac{1}{2}" in fmt_series
+    assert "\\frac{2}{5}" in fmt_series
+    assert "\\frac{7}{8}" in fmt_series
+    assert "\\frac{3}{8}" in fmt_series
+
+
+def test_auto_repair_math_expressions_times_and_symbols():
+    from app.services import auto_repair_math_expressions, clean_latex_to_unicode
+
+    # 1. Test \times and bare times operator
+    res1 = auto_repair_math_expressions(r"2 \times 10^{-2}")
+    assert res1 == r"$2 \times 10^{-2}$"
+
+    res2 = auto_repair_math_expressions(r"2 times 10^{-2}")
+    assert res2 == r"$2 \times 10^{-2}$"
+
+    res3 = auto_repair_math_expressions(r"計算 3 times 5 的值")
+    assert "$3 \\times 5$" in res3
+
+    # 2. Test similarity symbol and prime fractions
+    res4 = auto_repair_math_expressions(r"\frac{c}{d} \sim \frac{c'}{d'}")
+    assert res4 == r"$\frac{c}{d} \sim \frac{c'}{d'}$"
+
+    # 3. Test clean_latex_to_unicode for times and symbols
+    uni1 = clean_latex_to_unicode(r"2 \times 10^{-2}")
+    assert "2 × 10⁻²" == uni1
+
+    uni2 = clean_latex_to_unicode(r"2 times 10^{-2}")
+    assert "2 × 10⁻²" == uni2
+
+    uni3 = clean_latex_to_unicode(r"\frac{c}{d} \sim \frac{c'}{d'}")
+    assert "c/d ∼ c'/d'" == uni3
+
+    # 4. Test \bar{x} and ASCII control character recovery
+    res5 = auto_repair_math_expressions("獲得數據平均值為 \x08ar{x} = 4.05 \\times 10^{-6} m ，標準差為 \x08ar x 及 (\\frac{\\sigma}{\x08ar{x}})")
+    assert r"\bar{x}" in res5
+    assert r"\bar x" in res5
+    assert r"\bar{x}" in res5
+
+    # 5. Test JSON pre-escape & sanitization
+    from app.services import _clean_and_load_json
+    raw_json = '{"question": "平均值為 \\bar{x} = 4.05 \\times 10^{-6} m", "opt": "\\frac{\\sigma}{\\bar{x}}"}'
+    parsed = _clean_and_load_json(raw_json)
+    assert "\\bar{x}" in parsed["question"]
+    assert "\\bar{x}" in parsed["opt"]
+
+
+def test_make_deck_slides_html_print_and_katex():
+    from app.models import Deck, Slide
+    from app.services import make_deck_slides_html
+
+    deck = Deck(
+        id="d_print_test",
+        document_id="doc_1",
+        title="牛頓運動定律簡報",
+        subtitle="高中物理",
+        duration=45,
+        mode="gemini",
+        slides=[
+            Slide(
+                title="牛頓第二定律 $\\vec{F}=m\\vec{a}$",
+                bullets=["合力與加速度成正比", "平均測量值 $\\bar{x} = 4.05 \\times 10^{-6}$"],
+                speaker_notes="解說 $\\vec{F}=m\\vec{a}$ 與 $\\bar{x}$",
+                visual_description="力與加速度向量示意圖",
+                icon="🚀",
+                source_pages=[1, 2],
+            )
+        ],
+    )
+
+    html_out = make_deck_slides_html(deck)
+    assert "triggerPrint()" in html_out
+    assert "katexOptions" in html_out
+    assert "unescapeMathInElement" in html_out
+    assert "document.fonts.ready" in html_out
+    assert "牛頓第二定律" in html_out
+    assert "A4 landscape" in html_out
+
+
+
+
+
+
 
 
 

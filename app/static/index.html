@@ -17,7 +17,7 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="alternate icon" href="/favicon.ico">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-  <link rel="stylesheet" href="/styles.css?v=5.9.0">
+  <link rel="stylesheet" href="/styles.css?v=6.0.8">
 </head>
 
 <body>
@@ -33,7 +33,7 @@
       <button class="nav-item" data-view="workspace"><span class="icon">📄</span><span
           data-i18n="nav.workspace">工作台</span></button>
       <button class="nav-item" data-view="deck"><span class="icon">▤</span><span
-          data-i18n="nav.deck">產出預覽</span></button>
+          data-i18n="nav.deck">產出預覽</span><span class="nav-badge hidden" id="previewNavBadge">0</span></button>
       <button class="nav-item" data-view="chat"><span class="icon">📖</span><span
           data-i18n="nav.chat">教材問答</span></button>
       <button class="nav-item" data-view="agent" id="agentNavBtn"><span class="icon">💡</span><span
@@ -41,7 +41,7 @@
       <button class="nav-item user-only hidden" data-view="profile" id="profileNavBtn"><span class="icon">⚙️</span><span
           data-i18n="nav.profile">個人帳號設定</span></button>
       <button class="nav-item admin-only hidden" data-view="admin"><span class="icon">👑</span><span
-          data-i18n="nav.admin">管理員控制台</span></button>
+          data-i18n="nav.admin">管理員控制台</span><span class="nav-badge hidden" id="adminNavBadge">0</span></button>
     </nav>
     <div class="sidebar-spacer"></div>
     <div class="provider-card">
@@ -320,7 +320,11 @@
           <!-- 全域課程通用設定 -->
           <div class="common-settings-card">
             <div class="common-settings-head">
-              <span class="common-settings-title" data-i18n="workspace.common_title">✦ 共通教學設定 · 通用於下方三大產出模組</span>
+              <div class="common-settings-title-group">
+                <span class="module-badge common-badge" data-i18n="workspace.common_badge">✨ 共通</span>
+                <h3 class="common-settings-title" data-i18n="workspace.common_title">共通教學設定</h3>
+                <small class="common-settings-subtitle" data-i18n="workspace.common_subtitle">通用於下方三大產出模組</small>
+              </div>
               <button type="button" class="btn-generate-all" id="generateAllBtn" disabled>
                 <span class="btn-inline-spinner hidden"></span>
                 <span class="btn-lbl" data-i18n="workspace.generate_all">🚀 循序生成全套 · 講義 ➔ 簡報 & 試卷</span>
@@ -1117,7 +1121,7 @@
     <div class="loading-track"><span></span></div>
   </div>
 
-  <script src="/app.js?v=5.9.1"></script>
+  <script src="/app.js?v=6.0.8"></script>
 </body>
 
 </html>

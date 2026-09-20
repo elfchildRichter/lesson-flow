@@ -210,7 +210,7 @@ def generate_questions_node(state: QuizState) -> QuizState:
         "【出題規範】：\n"
         "1. 題型分配 (type)：綜合包含 'single_choice' (單選題, 4 個 options A/B/C/D), "
         "'multiple_choice' (多選題, 4~5 個 options), 或 'problem_solving' (計算/論述推導題, options 為空陣列 [])。\n"
-        "2. 題目與數學公式：公式請務必使用標準 LaTeX 語法（例如 `$E=mc^2$` 或 `$$\\frac{-b \\pm \\sqrt{b^2-4ac}}{2a}$$`）。\n"
+        "2. 題目與數學公式極致規範：凡涉及任何數學公式、分數、指數、希臘字母、運算符號（如 $a$, $b$, $\\frac{a}{b}$, $\\times$, $\\div$, $\\neq$, $\\pm$, $\\in$, $\\mathbb{Q}$, $\\mathbb{Z}$, $\\sim$, $\\cdot$, $10^{-2}$, $2^{-2} \\times 5^{-2}$ 等），一律 100% 使用 $...$（行內）或 $$...$$（獨立行）完整包裹！嚴禁輸出未包裹 $ 的裸 LaTeX 指令（嚴禁寫 \\frac{a}{b} 或 fracab，必須寫 $\\frac{a}{b}$）！在 JSON 輸出中反斜線必須轉義為 \\\\。\n"
         "3. 正確答案 (answer)：單選題給代號如 'B'，多選題如 'A, C'，計算題給出最終答案數值與單位。\n"
         "4. 詳解 (explanation)：必須包含完整推導邏輯、觀念剖析與常見錯誤陷阱說明（建議 80~150 字）。\n"
         "5. 來源頁碼 (source_pages)：標註教材確切頁碼陣列（例如 [2, 3]）。"
@@ -318,6 +318,8 @@ def finalize_quiz_node(state: QuizState) -> QuizState:
     outline = state.get("quiz_outline", {})
     raw_questions = state.get("raw_questions", [])
 
+    from app.services import auto_repair_math_expressions
+
     quiz_questions = []
     for idx, item in enumerate(raw_questions, 1):
         q_id = f"Q{idx:02d}"
@@ -325,18 +327,19 @@ def finalize_quiz_node(state: QuizState) -> QuizState:
         if q_type not in ("single_choice", "multiple_choice", "problem_solving"):
             q_type = "single_choice"
 
-        options = item.get("options", [])
-        if not isinstance(options, list):
-            options = []
+        raw_options = item.get("options", [])
+        if not isinstance(raw_options, list):
+            raw_options = []
+        options = [auto_repair_math_expressions(opt) for opt in raw_options]
 
         quiz_questions.append(
             QuizQuestion(
                 id=q_id,
                 type=q_type,
-                question=item.get("question", "評量題目"),
+                question=auto_repair_math_expressions(item.get("question", "評量題目")),
                 options=options,
-                answer=item.get("answer", "A"),
-                explanation=item.get("explanation", "詳解說明"),
+                answer=auto_repair_math_expressions(item.get("answer", "A")),
+                explanation=auto_repair_math_expressions(item.get("explanation", "詳解說明")),
                 source_pages=item.get("source_pages", [1]),
                 difficulty=item.get("difficulty", "medium"),
             )

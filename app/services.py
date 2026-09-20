@@ -276,18 +276,47 @@ def _prepare_openai_strict_schema(schema: dict) -> dict:
     return cleaned
 
 
+def _sanitize_obj_latex(obj: Any) -> Any:
+    """Recursively repair corrupted LaTeX control characters (e.g. \\x08ar -> \\bar, \\x0crac -> \\frac) in dict/list/str."""
+    if isinstance(obj, str):
+        s = obj
+        s = re.sub(r"[\x08]", lambda m: r"\b", s)
+        s = re.sub(r"[\x0c]", lambda m: r"\f", s)
+        s = re.sub(r"[\x07]", lambda m: r"\a", s)
+        s = re.sub(r"[\x0b]", lambda m: r"\v", s)
+        s = re.sub(r"\t(heta|imes|an|au|op|ext|o|ilde|tfrac|quad|qquad)\b", lambda m: r"\t" + m.group(1), s)
+        s = re.sub(r"\r(ight|ho|ightarrow|angle|floor|ceil)\b", lambda m: r"\r" + m.group(1), s)
+        s = re.sub(r"\n(eq|abla|u|otin|ot|atural|earrow|warrow)\b", lambda m: r"\n" + m.group(1), s)
+        return s
+    elif isinstance(obj, dict):
+        return {k: _sanitize_obj_latex(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [_sanitize_obj_latex(elem) for elem in obj]
+    return obj
+
+
 def _clean_and_load_json(json_str: str) -> dict:
     try:
-        return json.loads(json_str)
+        loaded = json.loads(json_str)
+        return _sanitize_obj_latex(loaded)
     except json.JSONDecodeError:
-        # 修復 LaTeX 數學公式中未正確轉義的反斜線 (如 \frac, \alpha, \sum 等)
-        repaired = re.sub(r'\\(?!["\\/bfnrt]|u[0-9a-fA-F]{4})', r'\\\\', json_str)
-        try:
-            return json.loads(repaired)
-        except Exception:
-            # 二次積極修復：修復除了雙引號與反斜線外的所有孤立反斜線
-            repaired2 = re.sub(r'\\(?![\\"])', r'\\\\', json_str)
-            return json.loads(repaired2)
+        pass
+
+    # 修復未正確轉義的 LaTeX 反斜線與無效 JSON 轉義字元
+    # 1. 將常與 JSON 控制跳脫衝突或遺失雙反斜線的 LaTeX 關鍵字補全雙反斜線
+    latex_escapes = r"(?<!\\)\\(frac|beta|mathbf|mathrm|begin|bar|binom|bmod|bullet|boldsymbol|big|Big|bigg|Bigg|bot|box|braket|brace|breve|theta|times|tan|tau|top|text|to|tilde|nabla|neq|nu|notin|not|natural|nearrow|nwarrow|right|rho|rightarrow|rangle|vec|alpha|approx|ast|angle|acute|sim|partial|Delta|delta|gamma|lambda|sigma|mu|omega|pi|phi|psi|chi|epsilon|sum|int|div|prime|left|right)\b"
+    s = re.sub(latex_escapes, r"\\\\\1", json_str)
+    # 2. 修復所有其餘非合法 JSON 轉義的單反斜線 (如 \', \s, \a, \d 等)
+    s = re.sub(r'(?<!\\)\\(?!["\\/bfnrt]|u[0-9a-fA-F]{4})', r"\\\\", s)
+
+    try:
+        loaded = json.loads(s)
+        return _sanitize_obj_latex(loaded)
+    except Exception:
+        # 二次積極修復：修復除了雙引號與反斜線外的所有孤立反斜線
+        repaired2 = re.sub(r'(?<!\\)\\(?!["\\])', r"\\\\", json_str)
+        loaded = json.loads(repaired2)
+        return _sanitize_obj_latex(loaded)
 
 
 def _parse_json_response(content: str) -> dict:
@@ -1077,31 +1106,94 @@ GREEK_AND_SYMBOLS_MAP = {
     r"\nabla": "∇", r"\rightarrow": "→", r"\to": "→", r"\leftarrow": "←",
     r"\Rightarrow": "⇒", r"\Leftarrow": "⇐",
     r"\degree": "°", r"\circ": "°", r"\sum": "∑", r"\int": "∫",
+    r"\sim": "∼", r"\div": "÷", r"\in": "∈", r"\notin": "∉",
+    r"\subset": "⊂", r"\subseteq": "⊆", r"\cap": "∩", r"\cup": "∪",
     r"\,": " ", r"\;": " ", r"\quad": "  ", r"\qquad": "   ",
 }
 
 
-def _wrap_bare_latex(text: str) -> str:
-    """Auto-wrap bare LaTeX expressions in $...$ if not already wrapped."""
-    if not text or "\\" not in text:
-        return text
+def sanitize_latex_escapes(text: str) -> str:
+    """Repair corrupted LaTeX escape sequences caused by JSON / ASCII escape parsing (e.g. \\x08ar -> \\bar, \\x0crac -> \\frac)."""
+    if not text:
+        return ""
     import re
+    s = str(text)
+    s = re.sub(r"[\x08]", lambda m: r"\b", s)
+    s = re.sub(r"[\x0c]", lambda m: r"\f", s)
+    s = re.sub(r"[\x07]", lambda m: r"\a", s)
+    s = re.sub(r"[\x0b]", lambda m: r"\v", s)
+    s = re.sub(r"\t(heta|imes|an|au|op|ext|o|ilde|tfrac|quad|qquad)\b", lambda m: r"\t" + m.group(1), s)
+    s = re.sub(r"\r(ight|ho|ightarrow|angle|floor|ceil)\b", lambda m: r"\r" + m.group(1), s)
+    s = re.sub(r"\n(eq|abla|u|otin|ot|atural|earrow|warrow)\b", lambda m: r"\n" + m.group(1), s)
+    return s
+
+
+def auto_repair_math_expressions(text: str) -> str:
+    """Comprehensive normalizer and repair engine for LaTeX formulas, control characters, bare math expressions and corrupted tokens."""
+    if not text:
+        return ""
+    import re
+    s = str(text)
+
+    # 1. 修復 ASCII 控制字元 (\x0crac -> \frac, \x08eta -> \beta 等)
+    s = sanitize_latex_escapes(s)
+
+    # 2. 修復常見畸變之裸 frac 模式 (例如 fracab -> \frac{a}{b}, frac13 -> \frac{1}{3}, frac100100 -> \frac{100}{100})
+    s = re.sub(r'\bfrac([a-zA-Z])([a-zA-Z])\b', r'\\frac{\1}{\2}', s)
+    s = re.sub(r'\bfrac([0-9])([0-9])\b', r'\\frac{\1}{\2}', s)
+    s = re.sub(r'\bfrac([0-9]+)\s+([0-9]+)\b', r'\\frac{\1}{\2}', s)
+    s = re.sub(r'\bfrac100100\b', r'\\frac{100}{100}', s)
+    s = re.sub(r'\bfrac([a-zA-Z0-9]+)\s*\+\s*([a-zA-Z0-9]+)\s+([a-zA-Z0-9]+)\s*\+\s*([a-zA-Z0-9]+)\b', r'\\frac{\1+\2}{\3+\4}', s)
+    s = re.sub(r'\bfracatimescbtimesd\b', r'\\frac{a \\times c}{b \\times d}', s)
+
+    # 3. 修復常見運算子 (neq0 -> \neq 0, times -> \times 等)
+    s = re.sub(r'\bneq\s*([0-9a-zA-Z])', r'\\neq \1', s)
+    s = re.sub(r"(?<=[0-9a-zA-Z}\^\-\)\'\"\]])(\s*)times(\s*)(?=[0-9a-zA-Z{\\\(\'\"\[])", r"\1\\times\2", s)
+    s = re.sub(r'(?<![\\a-zA-Z])\btimes\b(?![a-zA-Z])', r'\\times', s)
+
+    # 4. 修復雙反斜線混用 (\\left, \\frac, \\right, \\times -> \left, \frac, \right, \times)
+    s = re.sub(r'\\\\([a-zA-Z]+|[{}[\](),;])', r'\\\1', s)
+
+    # 5. 將所有尚未被 $ 包裹的完整數學表達式與 LaTeX 指令包裹於 $...$
+    return _wrap_bare_latex(s)
+
+
+def _wrap_bare_latex(text: str) -> str:
+    """Auto-wrap bare LaTeX expressions and complex mathematical formulas in $...$ if not already wrapped."""
+    if not text:
+        return ""
+    import re
+    text = sanitize_latex_escapes(text)
+
+    # 分割出已用 $...$ 或 $$...$$ 或 \[...\] 或 \(...\) 包裹的片段
     parts = re.split(r'(\$\$[\s\S]*?\$\$|\$[^$\n]+?\$|\\\[[\s\S]*?\\\]|\\\([\s\S]*?\\\))', text)
     result = []
-    latex_cmd_pattern = re.compile(
-        r'(\\(?:vec|frac|sqrt|alpha|beta|gamma|delta|Delta|lambda|Lambda|theta|Theta|omega|Omega|sigma|Sigma|pi|Pi|sum|int|partial|infty|times|cdot|approx|pm|le|ge|neq|equiv|rightarrow|leftarrow|mathbf|mathrm|text|left|right|quad)\b[^\n,，。！？；;]*?(?=[,，。！？；;\s]|$))'
-    )
+
+    atom = r'(?:\\left[\[(][\s\S]*?\\right[\])]|\\[a-zA-Z]+(?:\[[^\]\n]*\])?(?:\{[^{}\n]*\})*|[0-9a-zA-Z]+(?:\^|\_)(?:\{[^{}\n]*\}|[0-9a-zA-Z+\-]+)|\([^\u4e00-\u9fff\n()]+\)|\[[^\u4e00-\u9fff\n\[\]]+\]|[0-9a-zA-Z\.\']+|[+\-/=<>~×÷≤≥≠≈≡±∓∝∂∇→←⇒⇐∑∫⊕·°])'
+    op_or_space = r'(?:\s*[\s+\-/=<>~×÷≤≥≠≈≡±∓∝∂∇→←⇒⇐∑∫⊕·°|^_]\s*|\s*\\(?:times|div|cdot|approx|sim|neq|equiv|pm|mp|le|ge|leq|geq|in|notin|subset|cap|cup|rightarrow|to|oplus|otimes|circ)\s*)'
+    full_expr = rf'(?:{atom}(?:{op_or_space}{atom})*)'
+    expr_regex = re.compile(full_expr)
+
     for i, part in enumerate(parts):
         if i % 2 == 1:
             result.append(part)
         else:
+            if not part:
+                continue
             def _wrap(m):
-                s = m.group(0).strip()
-                if not s.startswith('$'):
-                    return f"${s}$"
-                return s
-            wrapped = latex_cmd_pattern.sub(_wrap, part)
+                val = m.group(0).strip()
+                if not val or val.startswith('$'):
+                    return m.group(0)
+                # Ignore markdown emphasis/backticks
+                if val.startswith('*') or val.endswith('*') or val.startswith('`') or val.endswith('`'):
+                    return m.group(0)
+                if not re.search(r'[\\[\]{}^=+\-/<>~×÷≤≥≠≈≡±∓→←⊕·°]', val) and '\\' not in val and '^' not in val and '_' not in val:
+                    return m.group(0)
+                return f"${val}$"
+
+            wrapped = expr_regex.sub(_wrap, part)
             result.append(wrapped)
+
     return "".join(result)
 
 
@@ -1109,6 +1201,7 @@ def clean_latex_to_unicode(latex_text: str) -> str:
     """Convert LaTeX formula text into clean Unicode mathematical representation."""
     if not latex_text:
         return ""
+    latex_text = sanitize_latex_escapes(latex_text)
     import re
 
     text = latex_text.strip()
@@ -1125,9 +1218,11 @@ def clean_latex_to_unicode(latex_text: str) -> str:
     text = re.sub(r"\\(?:text|mathrm|mathbf|mathit|textbf|textit)\{([^}]*)\}", r"\1", text)
     text = re.sub(r"\\(?:left|right)\b", "", text)
 
-    # 2. Vector: \vec{F} -> F⃗, \vec{a} -> a⃗
+    # 2. Vector & Bar: \vec{F} -> F⃗, \vec{a} -> a⃗, \bar{x} -> x̄
     text = re.sub(r"\\vec\{([A-Za-z])\}", r"\1⃗", text)
     text = re.sub(r"\\vec\s*([A-Za-z])", r"\1⃗", text)
+    text = re.sub(r"\\bar\{([A-Za-z0-9])\}", lambda m: f"{m.group(1)}\u0304", text)
+    text = re.sub(r"\\bar\s*([A-Za-z0-9])", lambda m: f"{m.group(1)}\u0304", text)
 
     # 3. Fractions: \frac{a}{b} -> a/b
     def _frac_sub(m):
@@ -1140,23 +1235,27 @@ def clean_latex_to_unicode(latex_text: str) -> str:
     text = re.sub(r"\\sqrt\[([^]]+)\]\{([^}]+)\}", r"\1√(\2)", text)
     text = re.sub(r"\\sqrt\{([^}]+)\}", r"√(\1)", text)
 
-    # 5. Greek letters & symbols
+    # 5. Times operator repair
+    text = re.sub(r"(?<=[0-9a-zA-Z}\^\-\)\'\"\]])(\s*)times(\s*)(?=[0-9a-zA-Z{\\\(\'\"\[])", r"\1\\times\2", text)
+    text = re.sub(r'(?<![\\a-zA-Z])\btimes\b(?![a-zA-Z])', r'\\times', text)
+
+    # 6. Greek letters & symbols
     for cmd, sym in GREEK_AND_SYMBOLS_MAP.items():
         text = text.replace(cmd, sym)
 
-    # 6. Superscripts: x^{2} or x^2
+    # 7. Superscripts: x^{2} or x^2
     def _sup_sub(m):
         raw = m.group(1) or m.group(2)
         return "".join(SUPERSCRIPTS_MAP.get(c, c) for c in raw)
     text = re.sub(r"\^\{([^}]+)\}|\^([0-9a-zA-Z+\-()])", _sup_sub, text)
 
-    # 7. Subscripts: m_{1} or m_1
+    # 8. Subscripts: m_{1} or m_1
     def _sub_sub(m):
         raw = m.group(1) or m.group(2)
         return "".join(SUBSCRIPTS_MAP.get(c, c) for c in raw)
     text = re.sub(r"_\{([^}]+)\}|_([0-9a-zA-Z+\-()])", _sub_sub, text)
 
-    # 8. Clean residual braces or backslashes
+    # 9. Clean residual braces or backslashes
     text = text.replace("{", "").replace("}", "")
     text = re.sub(r"\\[a-zA-Z]+", "", text)
 
@@ -1476,7 +1575,7 @@ def _format_handout_text(text: str) -> str:
     import re
     import html
 
-    text = _wrap_bare_latex(str(text))
+    text = auto_repair_math_expressions(str(text))
 
     # 1. Stash Math tokens ($$...$$, $...$, \[...\], \(...\))
     math_tokens = []
@@ -2350,15 +2449,37 @@ body {{
 
 /* ========== 列印媒體查詢 (@media print) ========== */
 @media print {{
-    body {{
+    *, *:before, *:after {{
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        box-sizing: border-box !important;
+    }}
+    html, body {{
         background: #ffffff !important;
+        color: #0f172a !important;
+        margin: 0 !important;
         padding: 0 !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: auto !important;
+        overflow: visible !important;
+        position: static !important;
     }}
     .print-control-bar {{
         display: none !important;
     }}
     .slides-doc-wrapper {{
         max-width: 100% !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        display: block !important;
+        position: static !important;
+        box-shadow: none !important;
+    }}
+    .slides-container {{
+        display: block !important;
+        width: 100% !important;
         margin: 0 !important;
         padding: 0 !important;
     }}
@@ -2366,42 +2487,141 @@ body {{
         border: 1px solid #cbd5e1 !important;
         box-shadow: none !important;
         border-radius: 8px !important;
+        display: block !important;
+        overflow: hidden !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+        -webkit-column-break-inside: avoid !important;
+        margin: 0 0 16px 0 !important;
+        padding: 18px 22px !important;
+        background: #ffffff !important;
+        color: #0f172a !important;
+        height: auto !important;
+        min-height: auto !important;
+        position: relative !important;
+    }}
+    .slide-accent-bar {{
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        bottom: 0 !important;
+        width: 6px !important;
+    }}
+    .slide-inner-card {{
+        display: block !important;
+        width: 100% !important;
+        height: auto !important;
+        position: relative !important;
+        padding-left: 6px !important;
+    }}
+    .slide-body-grid {{
+        display: flex !important;
+        flex-direction: row !important;
+        gap: 16px !important;
+        width: 100% !important;
+        align-items: flex-start !important;
+    }}
+    .slide-bullets-col {{
+        flex: 1.15 !important;
+        width: 55% !important;
+    }}
+    .slide-visual-col {{
+        flex: 1 !important;
+        width: 45% !important;
     }}
     
-    /* 1 Slide per page: 每一張投影片強迫獨立換頁 */
+    /* 1 Slide per page: 每一張投影片獨立換頁 */
     .layout-1 .slide-page-item {{
         page-break-after: always !important;
         break-after: page !important;
-        min-height: 88vh;
+        margin-bottom: 0 !important;
+    }}
+    .layout-1 .slide-page-item:last-child {{
+        page-break-after: auto !important;
+        break-after: auto !important;
     }}
     
     /* 2 Slides per page: 每 2 張換一頁 */
+    .layout-2 .slides-container {{
+        display: block !important;
+    }}
+    .layout-2 .slide-page-item {{
+        margin-bottom: 15px !important;
+    }}
     .layout-2 .slide-page-item:nth-child(2n) {{
         page-break-after: always !important;
         break-after: page !important;
+        margin-bottom: 0 !important;
+    }}
+    .layout-2 .slide-page-item:last-child {{
+        page-break-after: auto !important;
+        break-after: auto !important;
     }}
     
     /* 3 Slides per page: 每 3 張換一頁 */
+    .layout-3 .slides-container {{
+        display: block !important;
+    }}
+    .layout-3 .slide-page-item {{
+        margin-bottom: 12px !important;
+    }}
     .layout-3 .slide-page-item:nth-child(3n) {{
         page-break-after: always !important;
         break-after: page !important;
+        margin-bottom: 0 !important;
+    }}
+    .layout-3 .slide-page-item:last-child {{
+        page-break-after: auto !important;
+        break-after: auto !important;
     }}
     
-    /* 4 Slides per page: 每 4 張換一頁 */
+    /* 4 Slides per page: 每 4 張換一頁 (2x2) */
+    .layout-4 .slides-container {{
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 12px !important;
+    }}
+    .layout-4 .slide-page-item {{
+        width: 48% !important;
+        margin-bottom: 12px !important;
+    }}
     .layout-4 .slide-page-item:nth-child(4n) {{
         page-break-after: always !important;
         break-after: page !important;
     }}
+    .layout-4 .slide-page-item:last-child {{
+        page-break-after: auto !important;
+        break-after: auto !important;
+    }}
     
-    /* 6 Slides per page: 每 6 張換一頁 */
+    /* 6 Slides per page: 每 6 張換一頁 (2x3) */
+    .layout-6 .slides-container {{
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 8px !important;
+    }}
+    .layout-6 .slide-page-item {{
+        width: 48% !important;
+        margin-bottom: 8px !important;
+    }}
     .layout-6 .slide-page-item:nth-child(6n) {{
         page-break-after: always !important;
         break-after: page !important;
     }}
+    .layout-6 .slide-page-item:last-child {{
+        page-break-after: auto !important;
+        break-after: auto !important;
+    }}
+
+    .katex-display {{
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+        overflow-x: visible !important;
+    }}
 }}
 
 @page {{
-    size: auto;
+    size: A4 landscape;
     margin: 8mm 10mm;
 }}
 </style>
@@ -2432,7 +2652,7 @@ body {{
         </div>
     </div>
     <div class="ctrl-right">
-        <button type="button" class="action-print-btn" onclick="window.print()">🖨️ 列印 / 另存為 PDF</button>
+        <button type="button" class="action-print-btn" onclick="triggerPrint()">🖨️ 列印 / 另存為 PDF</button>
         <button type="button" class="action-close-btn" onclick="window.close()">✕ 關閉</button>
     </div>
 </div>
@@ -2444,19 +2664,89 @@ body {{
 </div>
 
 <script>
+var katexOptions = {{
+    delimiters: [
+        {{ left: '$$', right: '$$', display: true }},
+        {{ left: '$', right: '$', display: false }},
+        {{ left: '\\\\(', right: '\\\\)', display: false }},
+        {{ left: '\\\\[', right: '\\\\]', display: true }}
+    ],
+    throwOnError: false
+}};
+
+function unescapeMathInElement(element) {{
+    if (!element) return;
+    var html = element.innerHTML;
+    html = html.replace(/(\\$\\$[\\s\\S]*?\\$\\$|\\$[^$\\n]+?\\$|\\\\\\[[\\s\\S]*?\\\\\\]|\\\\\\([\\s\\S]*?\\\\\\))/g, function(match) {{
+        return match
+            .replace(/&amp;/g, '&')
+            .replace(/&lt;/g, '<')
+            .replace(/&gt;/g, '>')
+            .replace(/&quot;/g, '"')
+            .replace(/&#39;/g, "'");
+    }});
+    element.innerHTML = html;
+}}
+
+var mathRendered = false;
+function doRenderMath() {{
+    if (mathRendered) return;
+    if (window.renderMathInElement) {{
+        try {{
+            var container = document.querySelector('.slides-container');
+            if (container) {{
+                unescapeMathInElement(container);
+                renderMathInElement(container, katexOptions);
+            }}
+            mathRendered = true;
+        }} catch(e) {{
+            console.warn('KaTeX error:', e);
+        }}
+    }}
+}}
+
+document.addEventListener('DOMContentLoaded', doRenderMath);
+window.addEventListener('load', function() {{
+    doRenderMath();
+    if (document.fonts && document.fonts.ready) {{
+        document.fonts.ready.then(function() {{
+            console.log('Fonts ready for slide printing');
+        }});
+    }}
+}});
+
+function triggerPrint() {{
+    doRenderMath();
+    var btn = document.querySelector('.action-print-btn');
+    if (btn) btn.disabled = true;
+
+    var executePrint = function() {{
+        setTimeout(function() {{
+            window.print();
+            if (btn) btn.disabled = false;
+        }}, 150);
+    }};
+
+    if (document.fonts && document.fonts.ready) {{
+        document.fonts.ready.then(executePrint).catch(executePrint);
+    }} else {{
+        executePrint();
+    }}
+}}
+
 function setOrientation(mode) {{
     document.body.classList.remove('orientation-landscape', 'orientation-portrait');
     document.body.classList.add('orientation-' + mode);
     document.getElementById('btnLandscape').classList.toggle('active', mode === 'landscape');
     document.getElementById('btnPortrait').classList.toggle('active', mode === 'portrait');
     
-    let styleEl = document.getElementById('dynamicPageStyle');
+    var styleEl = document.getElementById('dynamicPageStyle');
     if (!styleEl) {{
         styleEl = document.createElement('style');
         styleEl.id = 'dynamicPageStyle';
         document.head.appendChild(styleEl);
     }}
-    styleEl.innerHTML = '@page {{ size: ' + mode + '; margin: 8mm 10mm; }}';
+    styleEl.innerHTML = '@page {{ size: A4 ' + mode + '; margin: 8mm 10mm; }}';
 }}
 
 function setLayout(count) {{
@@ -2468,24 +2758,10 @@ function setLayout(count) {{
 }}
 
 function toggleNotes(show) {{
-    document.querySelectorAll('.slide-notes-drawer').forEach(el => {{
+    document.querySelectorAll('.slide-notes-drawer').forEach(function(el) {{
         el.classList.toggle('hidden', !show);
     }});
 }}
-
-document.addEventListener('DOMContentLoaded', () => {{
-    if (window.renderMathInElement) {{
-        renderMathInElement(document.body, {{
-            delimiters: [
-                {{ left: '$$', right: '$$', display: true }},
-                {{ left: '$', right: '$', display: false }},
-                {{ left: '\\\\(', right: '\\\\)', display: false }},
-                {{ left: '\\\\[', right: '\\\\]', display: true }}
-            ],
-            throwOnError: false
-        }});
-    }}
-}});
 </script>
 </body>
 </html>

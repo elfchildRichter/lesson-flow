@@ -53,7 +53,7 @@ TIER_CONFIGS: Dict[str, TierLimits] = {
     "institution": {
         "tier_key": "institution",
         "name_zh": "機構/學校版",
-        "name_en": "Institution / School",
+        "name_en": "Institution",
         "daily_credits": 10000,
         "enable_web_search": True,
         "enable_vlm": True,
