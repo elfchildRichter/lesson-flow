@@ -54,6 +54,7 @@ flowchart TD
 
 ### 2. 教材智能問答工作流 (Self-RAG + CRAG QA Flow)
 
+- 整合多輪對話歷史上下文記憶 (Multi-turn RAG)，在連續追問中維持教材討論脈絡與持久化儲存。
 - `retrieve` 檢索教材片段。
 - `grade_documents` 進行相關性審查：
   - 若教材相關：進入 `generate_answer` 生成回答並標示頁碼，接續執行 `check_hallucination`（Self-RAG 防幻覺審查）。若審查合規即輸出；若偵測到幻覺則帶入 `hallucination_feedback` 回溯修正（最多重試 1 次）。
@@ -228,10 +229,13 @@ HUGGINGFACE_EMBEDDING_MODEL=sentence-transformers/paraphrase-multilingual-MiniLM
 │   │   ├── router.py    # CompanyRouter 多部門調度狀態圖
 │   │   ├── registry.py  # Agent Skills 註冊表與意圖關鍵字對照
 │   │   └── handlers/    # 教務、營運、技術、行銷四大部門處理器
-│   └── static/          # 前端展示首頁、控制台 UI 與 i18n 雙語模組
+│   └── static/          # 前端展示首頁、控制台 UI、雙語條款 (terms.html/privacy.html) 與 i18n
 └── tests/
     ├── test_api.py
+    ├── test_permissions.py
+    ├── test_qa_history.py
     ├── test_services.py
+    ├── test_tiers.py
     └── test_workflows.py
 ```
 
